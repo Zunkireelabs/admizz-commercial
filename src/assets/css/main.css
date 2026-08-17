@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =====================================================
+   CSS Variables - Theme
+   ===================================================== */
+:root {
+  --background: #ffffff;
+  --background-alt: #f8fafc;
+  --background-muted: #f1f5f9;
+
+  --foreground: #0f172a;
+  --foreground-muted: #64748b;
+  --foreground-subtle: #94a3b8;
+
+  --card: #ffffff;
+  --card-hover: #f8fafc;
+
+  --border: #e2e8f0;
+  --border-muted: #f1f5f9;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-muted: #eff6ff;
+
+  --header-bg: #ffffff;
+  --header-border: #e5e7eb;
+
+  --footer-bg: #0f172a;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased;
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  ::selection {
+    @apply bg-brand-100 text-brand-900;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--background-alt);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 3px;
+  }
+}
+
+@layer components {
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:bg-brand-600 focus:text-white focus:px-4 focus:py-2 focus:rounded;
+  }
+}

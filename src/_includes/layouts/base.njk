@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <!-- Google Analytics -->
+  {% if env.GA_MEASUREMENT_ID %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ env.GA_MEASUREMENT_ID }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ env.GA_MEASUREMENT_ID }}');
+  </script>
+  {% endif %}
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title or site.meta.title }}</title>
+  <meta name="description" content="{{ description or site.description }}">
+
+  <!-- Robots: noindex for non-production environments -->
+  {% if env.ELEVENTY_ENV != 'production' %}
+  <meta name="robots" content="noindex, nofollow">
+  {% endif %}
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ title or site.meta.title }}">
+  <meta property="og:description" content="{{ description or site.description }}">
+  <meta property="og:image" content="{{ site.url }}{{ site.meta.ogImage }}">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:site_name" content="{{ site.name }}">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ title or site.meta.title }}">
+  <meta name="twitter:description" content="{{ description or site.description }}">
+  <meta name="twitter:image" content="{{ site.url }}{{ site.meta.ogImage }}">
+
+  <!-- Canonical URL -->
+  {% if canonicalUrl %}
+  <link rel="canonical" href="{{ site.url }}{{ canonicalUrl }}">
+  {% else %}
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+  {% endif %}
+
+  <!-- Schema.org - Organization (Global) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "{{ site.url }}/#organization",
+    "name": "{{ site.name }}",
+    "url": "{{ site.url }}",
+    "description": "{{ site.description }}",
+    "sameAs": [
+      "{{ site.social.twitter }}",
+      "{{ site.social.linkedin }}",
+      "{{ site.social.github }}"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "sales",
+      "email": "{{ site.email }}",
+      "telephone": "{{ site.phone }}",
+      "url": "{{ site.url }}/contact/"
+    }
+  }
+  </script>
+
+  {% if page.url == "/" %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "{{ site.name }}",
+    "url": "{{ site.url }}/",
+    "description": "{{ site.description }}"
+  }
+  </script>
+  {% endif %}
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon.png">
+</head>
+<body class="font-sans antialiased overflow-x-hidden">
+
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  {% include "partials/header.njk" %}
+
+  <main id="main-content">
+    {{ content | safe }}
+  </main>
+
+  {% include "partials/footer.njk" %}
+
+  <!-- Main JS + CSS (bundled via Vite) -->
+  <script type="module" src="/assets/js/main.js"></script>
+
+</body>
+</html>

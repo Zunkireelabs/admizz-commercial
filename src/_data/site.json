@@ -1,0 +1,17 @@
+{
+  "name": "Admizz Commercial",
+  "tagline": "",
+  "description": "",
+  "url": "http://localhost:8080",
+  "email": "",
+  "phone": "",
+  "social": {
+    "twitter": "",
+    "linkedin": "",
+    "github": ""
+  },
+  "meta": {
+    "title": "Admizz Commercial",
+    "ogImage": "/assets/images/og-image.svg"
+  }
+}
