@@ -3,64 +3,178 @@
 @tailwind utilities;
 
 /* =====================================================
-   CSS Variables - Theme
+   Base
    ===================================================== */
-:root {
-  --background: #ffffff;
-  --background-alt: #f8fafc;
-  --background-muted: #f1f5f9;
-
-  --foreground: #0f172a;
-  --foreground-muted: #64748b;
-  --foreground-subtle: #94a3b8;
-
-  --card: #ffffff;
-  --card-hover: #f8fafc;
-
-  --border: #e2e8f0;
-  --border-muted: #f1f5f9;
-
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-muted: #eff6ff;
-
-  --header-bg: #ffffff;
-  --header-border: #e5e7eb;
-
-  --footer-bg: #0f172a;
-}
-
 @layer base {
   html {
-    scroll-behavior: smooth;
+    /* Deliberately no `scroll-behavior: smooth` — it fights Lenis smooth-scroll. */
   }
 
   body {
-    @apply antialiased;
-    background-color: var(--background);
-    color: var(--foreground);
+    font-variation-settings: "wght" 380;
   }
 
   ::selection {
-    @apply bg-brand-100 text-brand-900;
+    background-color: theme("colors.gold.DEFAULT");
+    color: theme("colors.navy.deep");
   }
 
   ::-webkit-scrollbar {
     width: 6px;
   }
-
   ::-webkit-scrollbar-track {
-    background-color: var(--background-alt);
+    background-color: theme("colors.paper.DEFAULT");
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: theme("colors.rule.strong");
+    border-radius: 3px;
   }
 
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--border);
-    border-radius: 3px;
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme("colors.gold.text");
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  [x-cloak] {
+    display: none !important;
+  }
+
+  /* Non-integer variable weights per section — free de-templating (CLAUDE.md §5) */
+  .font-book   { font-variation-settings: "wght" 460; }
+  .font-med    { font-variation-settings: "wght" 530; }
+  .font-semi   { font-variation-settings: "wght" 590; }
+}
+
+/* =====================================================
+   Components
+   ===================================================== */
+@layer components {
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4;
+    @apply focus:bg-gold focus:text-navy-deep focus:px-4 focus:py-2 focus:rounded-md focus:font-medium;
+  }
+
+  .shell {
+    @apply mx-auto max-w-shell px-gutter;
+  }
+
+  .eyebrow {
+    @apply font-mono text-label uppercase text-gold-text font-medium block;
+  }
+
+  .eyebrow-on-navy {
+    @apply font-mono text-label uppercase text-gold font-medium block;
+  }
+
+  /* Index numeral — used only where order is real information (register, timeline) */
+  .index-num {
+    @apply font-mono text-small text-gold-text font-medium tabular-nums;
+  }
+
+  .rule {
+    @apply border-t border-rule;
+  }
+
+  .rule-strong {
+    @apply border-t border-rule-strong;
+  }
+
+  /* Buttons — two variants only. No pill shapes. */
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-md px-5 py-3 text-small font-medium;
+    @apply transition-colors duration-press ease-signature;
+  }
+  .btn-primary {
+    @apply btn bg-gold text-navy-deep hover:bg-white;
+  }
+  .btn-ghost-on-navy {
+    @apply btn border border-navy-on-muted/40 text-navy-on hover:border-gold hover:text-gold;
+  }
+  .btn-ghost {
+    @apply btn border border-rule-strong text-ink hover:border-gold-text hover:text-gold-text;
+  }
+
+  .link-underline {
+    @apply underline decoration-rule-strong decoration-1 underline-offset-4;
+    @apply hover:decoration-gold-text transition-colors duration-press ease-signature;
+  }
+
+  .prose-body {
+    @apply max-w-measure text-body text-ink-muted;
+  }
+
+  /* Register row — the recurring "indexed list, not cards" pattern */
+  .register-row {
+    @apply grid grid-cols-1 md:grid-cols-[4.5rem_1fr] gap-x-6 gap-y-3;
+    @apply py-8 md:py-10 border-b border-rule;
+  }
+  .register-row:last-child {
+    @apply border-b-0;
   }
 }
 
-@layer components {
-  .skip-link {
-    @apply sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:bg-brand-600 focus:text-white focus:px-4 focus:py-2 focus:rounded;
+/* =====================================================
+   Utilities
+   ===================================================== */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
+
+  /* Reduced motion: kill everything gated behind [data-motion], the JS layer
+     never even attaches Lenis/GSAP scroll behaviour when this matches. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-motion] {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
+
+/* =====================================================
+   The one bespoke interaction: the register hairline draw
+   ===================================================== */
+
+/* Progressive enhancement, on purpose: .fade-up / .grow-line render fully
+   VISIBLE by default — real content, no-JS visitors, and any tool that doesn't simulate
+   real scroll (screenshotters, some crawlers) all see the finished page. JS opts elements
+   INTO the hidden-then-reveal animation by adding .js-armed right before observing them
+   (main.js). Content visibility must never depend on JS running correctly. */
+
+.grow-line {
+  transform: scaleY(1);
+  transform-origin: top;
+}
+.grow-line.js-armed {
+  transform: scaleY(0);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .grow-line.js-armed[data-drawn="true"] {
+    transition: transform 1.1s theme("transitionTimingFunction.signature");
+  }
+}
+.grow-line.js-armed[data-drawn="true"] {
+  transform: scaleY(1);
+}
+
+.fade-up.js-armed {
+  opacity: 0;
+  transform: translateY(12px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fade-up.js-armed[data-revealed="true"] {
+    animation: fade-up-in theme("transitionDuration.enter") theme("transitionTimingFunction.signature") forwards;
+  }
+}
+.fade-up.js-armed[data-revealed="true"] {
+  opacity: 1;
+  transform: none;
+}
+@keyframes fade-up-in {
+  to { opacity: 1; transform: none; }
 }

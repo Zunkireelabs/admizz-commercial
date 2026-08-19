@@ -1,0 +1,44 @@
+[
+  {
+    "index": "01",
+    "id": "institute",
+    "stage": "Prepare",
+    "name": "Admizz Institute",
+    "vertical": "Test Preparation",
+    "description": "We equip students with expert-led test prep for IELTS, PTE, SAT, GRE, GMAT and other international exams, ensuring confidence and high scores. Our strategic preparation methods help students gain admission to prestigious institutions worldwide.",
+    "verticalLine": "Preparing students for success in language and competitive tests for global opportunities.",
+    "exams": ["IELTS", "PTE", "SAT", "GRE", "GMAT"],
+    "href": "#",
+    "hrefLabel": "No public site yet",
+    "cta": "Prepare With Admizz",
+    "source": "admizz"
+  },
+  {
+    "index": "02",
+    "id": "education",
+    "stage": "Study",
+    "name": "Admizz Education",
+    "vertical": "Higher Education",
+    "description": "Admizz Education, a global leader in study abroad, provides test prep, counseling, scholarships, and visa support for top universities worldwide.",
+    "verticalLine": "Making post-secondary pathways more accessible and outcomes-oriented.",
+    "exams": [],
+    "href": "https://admizzeducation.com/",
+    "hrefLabel": "admizzeducation.com",
+    "cta": "Explore Education",
+    "source": "admizz"
+  },
+  {
+    "index": "03",
+    "id": "workforce",
+    "stage": "Work",
+    "name": "Admizz Workforce Solutions",
+    "vertical": "Workforce Solutions",
+    "description": "Admizz Workforce Solutions offers personalized pathways to success. Through innovative education, hands-on training, and expert guidance, we help individuals navigate career transitions and secure jobs aligned with their skills.",
+    "verticalLine": "Upskilling our most critical workers and helping them live a life of purpose.",
+    "exams": [],
+    "href": "https://admizzworks.com/",
+    "hrefLabel": "admizzworks.com",
+    "cta": "Explore Careers",
+    "source": "admizz"
+  }
+]

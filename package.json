@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "ELEVENTY_ENV=development eleventy --serve",
-    "build": "ELEVENTY_ENV=production eleventy",
-    "clean": "rm -rf dist"
+    "build": "ELEVENTY_ENV=production eleventy --quiet && ELEVENTY_ENV=production eleventy",
+    "clean": "rm -rf dist src/assets/images/optimized"
   },
   "license": "UNLICENSED",
   "dependencies": {
     "@11ty/eleventy": "^3.1.2",
+    "@11ty/eleventy-img": "^7.0.0",
     "@11ty/eleventy-plugin-vite": "^7.0.0",
     "@alpinejs/collapse": "^3.15.8",
     "alpinejs": "^3.15.2",
@@ -23,6 +24,6 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
-    "sharp": "^0.34.5"
+    "sharp": "^0.35.3"
   }
 }

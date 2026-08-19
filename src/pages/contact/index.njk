@@ -1,0 +1,116 @@
+---
+layout: base.njk
+title: Contact — Admizz Group
+description: Get in touch with Admizz Group — Denver, Colorado.
+permalink: /contact/
+---
+
+{#
+  Front-end complete; not yet wired to a backend. The CRM already has an Admizz Education
+  tenant with a public submission endpoint (see CLAUDE.md §7) — wiring this form to it is
+  next, pending confirmation of the endpoint contract, API key and allowed CORS origin.
+  Today this shows a real confirmation state client-side so the interaction can be reviewed
+  end to end, without pretending to have submitted anywhere.
+#}
+
+<section class="bg-paper py-section">
+  <div class="shell grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-14 md:gap-20">
+
+    <div class="fade-up">
+      <span class="eyebrow">Get in Touch</span>
+      <h1 class="mt-4 font-display font-light text-display-2 text-ink max-w-[14ch] text-balance">Let's talk.</h1>
+      <p class="mt-6 text-body-lg text-ink-muted max-w-measure leading-relaxed">
+        Whether you're a student, a partner institution, or exploring a career move — tell us a little about what you're looking for and we'll point you to the right part of Admizz.
+      </p>
+
+      <div class="mt-12 flex flex-col gap-6">
+        <div>
+          <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">Address</span>
+          <p class="mt-1 text-body text-ink">{{ site.address }}</p>
+        </div>
+        <div>
+          <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">Phone</span>
+          <p class="mt-1 text-body text-ink"><a href="{{ site.phoneHref }}" class="link-underline">{{ site.phone }}</a></p>
+        </div>
+        <div>
+          <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">Email</span>
+          <p class="mt-1 text-body text-ink"><a href="mailto:{{ site.email }}" class="link-underline">{{ site.email }}</a></p>
+        </div>
+      </div>
+
+      <div class="mt-12">
+        <span class="eyebrow">Or Go Straight To A Venture</span>
+        <ul class="mt-4 flex flex-col">
+          {% for v in ventures %}
+          <li class="py-3 border-t border-rule first:border-t-0">
+            <a href="{{ v.href }}" class="inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
+              {{ v.name }}
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div
+      x-data="{ sent: false, submitting: false }"
+      class="bg-paper-raised border border-rule rounded-lg p-8 md:p-10 fade-up"
+      style="animation-delay:100ms"
+    >
+      <form
+        x-show="!sent"
+        @submit.prevent="submitting = true; setTimeout(() => { submitting = false; sent = true }, 500)"
+        class="flex flex-col gap-6"
+        novalidate
+      >
+        <div>
+          <label for="name" class="block text-small font-medium text-ink mb-2">Full name</label>
+          <input id="name" name="name" type="text" required autocomplete="name"
+            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-gold-text focus:outline-none transition-colors duration-press"
+            placeholder="Your name">
+        </div>
+
+        <div>
+          <label for="email" class="block text-small font-medium text-ink mb-2">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email"
+            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-gold-text focus:outline-none transition-colors duration-press"
+            placeholder="you@example.com">
+        </div>
+
+        <div>
+          <label for="interest" class="block text-small font-medium text-ink mb-2">I'm interested in</label>
+          <select id="interest" name="interest"
+            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink focus:border-gold-text focus:outline-none transition-colors duration-press">
+            <option value="general">General enquiry</option>
+            {% for v in ventures %}
+            <option value="{{ v.id }}">{{ v.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label for="message" class="block text-small font-medium text-ink mb-2">Message</label>
+          <textarea id="message" name="message" rows="4" required
+            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-gold-text focus:outline-none transition-colors duration-press resize-none"
+            placeholder="Tell us a little about what you're looking for"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary justify-center" :disabled="submitting">
+          <span x-show="!submitting">Send message</span>
+          <span x-show="submitting" x-cloak>Sending&hellip;</span>
+        </button>
+      </form>
+
+      <div x-show="sent" x-cloak class="py-12 text-center">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" class="mx-auto mb-4" aria-hidden="true">
+          <circle cx="20" cy="20" r="19" stroke="#8A6200" stroke-width="1.4"/>
+          <path d="M12 20l6 6 10-12" stroke="#8A6200" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h2 class="text-h4 font-display font-book text-ink">Thanks — we'll be in touch.</h2>
+        <p class="mt-2 text-small text-ink-muted max-w-measure-tight mx-auto">A member of the Admizz team will reach out shortly.</p>
+      </div>
+    </div>
+
+  </div>
+</section>

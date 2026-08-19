@@ -1,10 +1,193 @@
 ---
 layout: base.njk
-title: Admizz Commercial
-description: Admizz Commercial — coming soon.
+navyHeader: true
+title: Admizz Group — Transforming Education & Careers Globally
+description: Admizz Group is a global education and workforce development company — connecting students and professionals with the preparation, guidance and pathways to reach their next opportunity.
 permalink: /
 ---
-<section class="mx-auto max-w-content px-6 py-24 text-center">
-  <h1 class="text-h1 font-display" style="color: var(--foreground);">Admizz Commercial</h1>
-  <p class="mt-4 text-body-lg" style="color: var(--foreground-muted);">Project scaffold is live. Content coming soon.</p>
+
+{# ============================================================ HERO #}
+<section class="relative overflow-hidden bg-navy-deep min-h-[92vh] flex flex-col justify-center">
+  {% include "partials/facet-field.njk" %}
+
+  <div class="shell relative py-32 md:py-0 w-full">
+    <span class="eyebrow-on-navy fade-up">Est. 2015 &middot; Denver, Colorado</span>
+
+    <h1 class="mt-6 font-display font-light text-display-1 text-navy-on max-w-[18ch] fade-up" style="animation-delay:80ms">
+      Transforming education<br>and careers, <em class="italic text-gold font-book">globally.</em>
+    </h1>
+
+    <p class="mt-8 text-body-lg text-navy-on-muted max-w-measure-tight fade-up" style="animation-delay:160ms">
+      {{ site.description }}
+    </p>
+
+    <div class="mt-10 flex flex-wrap items-center gap-4 fade-up" style="animation-delay:220ms">
+      <a href="#ventures" class="btn-primary">Explore our ventures</a>
+      <a href="/contact/" class="btn-ghost-on-navy">Get in touch</a>
+    </div>
+  </div>
+
+  <div class="relative border-t border-white/10 py-5">
+    <div class="shell">
+      <p class="font-mono text-micro uppercase tracking-widest text-navy-on-muted/70 flex flex-wrap gap-x-3 gap-y-1">
+        {% for v in ventures %}<span>{{ v.name }}{% if not loop.last %} &middot;{% endif %}</span>{% endfor %}
+      </p>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ THE STATEMENT #}
+<section class="bg-paper py-section">
+  <div class="shell grid grid-cols-1 md:grid-cols-[14rem_1fr] gap-8 md:gap-14">
+    <div class="fade-up">
+      <span class="eyebrow">The Opportunity</span>
+    </div>
+    <div class="fade-up" style="animation-delay:80ms">
+      <p class="font-display font-light text-h2 text-ink leading-snug max-w-measure text-balance">
+        Admizz Group is a leading education and workforce development company committed to helping students and professionals achieve their dreams.
+      </p>
+      <p class="mt-6 text-body-lg text-ink-muted max-w-measure leading-relaxed">
+        With a strong presence in higher education, career development, and test preparation, we create pathways to success through innovation, expertise, and global partnerships.
+      </p>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ THE ECOSYSTEM (register) #}
+<section id="ventures" class="bg-paper pb-section">
+  <div class="shell">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4 fade-up">
+      <div>
+        <span class="eyebrow">One Ecosystem</span>
+        <h2 class="mt-3 font-display font-light text-h2 text-ink">Many ways forward.</h2>
+      </div>
+      <p class="text-body text-ink-muted max-w-measure-tight md:text-right">
+        Three ventures, three stages of the same journey — from readiness, to admission, to career.
+      </p>
+    </div>
+
+    {% include "partials/ventures-register.njk" %}
+
+    <a href="/ventures/" class="mt-10 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
+      View all ventures in detail
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+{# ============================================================ STATEMENT BAND #}
+<section class="relative overflow-hidden bg-navy py-section-sm">
+  <div class="shell relative">
+    <p class="font-display font-light text-display-2 text-navy-on max-w-[18ch] leading-tight text-balance fade-up">
+      From vision to reality, <em class="italic text-gold font-book">shaping futures</em> through innovation, collaboration, and a commitment to quality education.
+    </p>
+    <span class="mt-8 block font-mono text-micro uppercase tracking-widest text-navy-on-muted fade-up" style="animation-delay:100ms">&mdash; Admizz Group</span>
+  </div>
+</section>
+
+{# ============================================================ THE RECORD (timeline) #}
+<section class="bg-paper py-section">
+  <div class="shell">
+    <div class="mb-12 fade-up">
+      <span class="eyebrow">Our Story</span>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink">Building since 2015.</h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+      {% for t in timeline %}
+      <div class="py-6 md:py-2 md:px-8 border-t md:border-t-0 md:border-l border-rule first:border-t-0 md:first:border-l-0 fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
+        <span class="font-mono text-small text-gold-text font-medium">{{ t.year }}</span>
+        <h3 class="mt-2 text-h4 font-display font-book text-ink">{{ t.label }}</h3>
+        <p class="mt-2 text-small text-ink-muted leading-relaxed">{{ t.text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <a href="/about/" class="mt-10 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
+      Read our full story
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+{# ============================================================ FOUNDER #}
+<section class="bg-paper-sunk py-section">
+  <div class="shell grid grid-cols-1 md:grid-cols-[minmax(0,22rem)_1fr] gap-10 md:gap-16 items-start">
+    <div class="fade-up">
+      <div class="rounded-lg overflow-hidden bg-navy-deep">
+        {% imageEager "src/assets/images/people/founder.png", "Manish K Sah, Founder & CEO of Admizz Group", "(min-width: 768px) 22rem, 90vw", [400, 640, 900] %}
+      </div>
+    </div>
+    <div class="fade-up" style="animation-delay:100ms">
+      <span class="eyebrow">Leadership</span>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink max-w-[16ch] text-balance">A vision for what's next.</h2>
+      <blockquote class="mt-8 font-display italic font-book text-h3 text-ink leading-snug max-w-measure text-balance">
+        &ldquo;{{ site.founder.quote }}&rdquo;
+      </blockquote>
+      <p class="mt-6 text-body font-medium text-ink">{{ site.founder.name }}</p>
+      <p class="text-small text-ink-muted">{{ site.founder.title }}, {{ site.founder.org }}</p>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ INSIGHTS #}
+<section class="bg-paper py-section">
+  <div class="shell">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12 fade-up">
+      <div>
+        <span class="eyebrow">Insights</span>
+        <h2 class="mt-3 font-display font-light text-h2 text-ink">Ideas for what's next.</h2>
+      </div>
+      <a href="/insights/" class="text-small font-medium text-ink link-underline shrink-0">View all insights</a>
+    </div>
+
+    {% set lead = insights[0] %}
+    <article class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center pb-10 border-b border-rule fade-up">
+      <a href="/insights/{{ lead.slug }}/" class="block rounded-lg overflow-hidden bg-navy-deep">
+        {% image "src/assets/images/insights/" + lead.image, lead.imageAlt, "(min-width: 768px) 50vw, 100vw" %}
+      </a>
+      <div>
+        <span class="font-mono text-micro uppercase tracking-widest text-gold-text">{{ lead.venture }}</span>
+        <h3 class="mt-3 font-display font-book text-h3 text-ink">
+          <a href="/insights/{{ lead.slug }}/" class="hover:text-gold-text transition-colors duration-press ease-signature">{{ lead.title }}</a>
+        </h3>
+        <p class="mt-4 text-body text-ink-muted max-w-measure">{{ lead.deck }}</p>
+        <a href="/insights/{{ lead.slug }}/" class="mt-5 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">Read the piece</a>
+      </div>
+    </article>
+
+    <div class="mt-2">
+      {% for post in insights %}
+      {% if not loop.first %}
+      <article class="register-row fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
+        <a href="/insights/{{ post.slug }}/" class="block rounded-lg overflow-hidden bg-navy-deep aspect-[4/3] md:aspect-square">
+          {% image "src/assets/images/insights/" + post.image, post.imageAlt, "9rem" %}
+        </a>
+        <div>
+          <span class="font-mono text-micro uppercase tracking-widest text-gold-text">{{ post.venture }}</span>
+          <h3 class="mt-2 text-h4 font-display font-book text-ink">
+            <a href="/insights/{{ post.slug }}/" class="hover:text-gold-text transition-colors duration-press ease-signature">{{ post.title }}</a>
+          </h3>
+          <p class="mt-2 text-small text-ink-muted max-w-measure">{{ post.deck }}</p>
+        </div>
+      </article>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ============================================================ CLOSE #}
+<section class="relative overflow-hidden bg-navy-deep py-section">
+  {% include "partials/facet-field.njk" %}
+  <div class="shell relative text-center flex flex-col items-center">
+    <span class="eyebrow-on-navy fade-up">Get in touch</span>
+    <h2 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
+      Let's talk about <em class="italic text-gold font-book">what's next.</em>
+    </h2>
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4 fade-up" style="animation-delay:160ms">
+      <a href="/contact/" class="btn-primary">Get in touch</a>
+      <a href="mailto:{{ site.email }}" class="btn-ghost-on-navy">{{ site.email }}</a>
+    </div>
+  </div>
 </section>

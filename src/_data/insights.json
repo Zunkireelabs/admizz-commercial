@@ -1,0 +1,35 @@
+[
+  {
+    "slug": "navigating-your-path-to-global-opportunities",
+    "title": "Navigating Your Path to Global Opportunities",
+    "deck": "Explore how our tailored guidance in higher education is transforming dreams into reality for students worldwide.",
+    "venture": "Admizz Education",
+    "ventureHref": "https://admizzeducation.com/",
+    "image": "global-opportunities.jpg",
+    "imageAlt": "Graduates celebrating, caps thrown in the air",
+    "body": "The journey to studying abroad begins with the right guidance and preparation. At Admizz Education, we specialize in helping students unlock doors to international universities, ensuring every step of their higher education journey is seamless. From selecting the best-fit institutions to assisting with applications and visa processes, our team is dedicated to turning dreams into reality. Discover how we've empowered countless students to achieve their academic goals globally.",
+    "source": "admizz"
+  },
+  {
+    "slug": "empowering-careers-through-lifelong-learning",
+    "title": "Empowering Careers Through Lifelong Learning",
+    "deck": "Discover how innovative training and education programs are shaping a skilled and future-ready workforce.",
+    "venture": "Admizz Workforce Solutions",
+    "ventureHref": "https://admizzworks.com/",
+    "image": "lifelong-learning.jpg",
+    "imageAlt": "Colleagues in conversation at a modern workspace",
+    "body": "In today's ever-evolving job market, staying competitive means embracing lifelong learning. Admizz Workforce Solutions bridges the gap between skills and opportunities by offering advanced training programs tailored to industry needs. Our focus on workforce development empowers individuals to excel in their careers while fostering economic growth. Read more to find out how we are transforming lives through education and upskilling initiatives.",
+    "source": "admizz"
+  },
+  {
+    "slug": "ace-your-exams-unlock-your-future",
+    "title": "Ace Your Exams, Unlock Your Future",
+    "deck": "Learn the secrets to excelling in test preparation and securing admissions to top institutions abroad.",
+    "venture": "Admizz Institute",
+    "ventureHref": "#",
+    "image": "exams.jpg",
+    "imageAlt": "Student filling in an answer sheet during an exam",
+    "body": "Preparation is the key to success, and at Admizz Institute, we provide students with the tools they need to excel in tests like IELTS and other standardized exams. Our structured courses, expert trainers, and personalized coaching ensure students achieve their target scores. Whether it's improving language proficiency or mastering challenging test components, we are here to guide every step of the way. Dive into the secrets of test success with Admizz Institute.",
+    "source": "admizz"
+  }
+]

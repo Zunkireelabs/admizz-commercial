@@ -1,0 +1,37 @@
+{# Shared "indexed register, not cards" component for the three ventures.
+   Used on the homepage (teaser context) and /ventures/ (full context).
+   Params: showLine (bool, default true) — the gold connecting line, desktop only. #}
+<div class="relative mt-10">
+  {% if showLine != false %}
+  <div class="hidden md:block absolute left-[2.15rem] inset-y-2 w-px bg-rule-strong" aria-hidden="true"></div>
+  <div class="hidden md:block absolute left-[2.15rem] inset-y-2 w-px bg-gold grow-line" aria-hidden="true"></div>
+  {% endif %}
+
+  {% for v in ventures %}
+  <article class="register-row fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
+    <div class="flex md:flex-col items-baseline md:items-start gap-3 md:gap-2">
+      <span class="index-num relative z-10 bg-paper md:pr-1">{{ v.index }}</span>
+      <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">{{ v.stage }}</span>
+    </div>
+    <div>
+      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <h3 class="font-display font-book text-h3 text-ink">{{ v.name }}</h3>
+        <span class="font-mono text-micro uppercase tracking-widest text-gold-text">{{ v.vertical }}</span>
+      </div>
+      <p class="mt-3 text-body text-ink-muted max-w-measure">{{ v.description }}</p>
+      {% if v.verticalLine %}
+      <p class="mt-2 text-small text-ink-faint max-w-measure italic">{{ v.verticalLine }}</p>
+      {% endif %}
+      {% if v.exams.length %}
+      <ul class="mt-4 flex flex-wrap gap-2">
+        {% for e in v.exams %}<li class="font-mono text-micro uppercase tracking-wide text-ink-faint border border-rule rounded-sm px-2 py-1">{{ e }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+      <a href="{{ v.href }}" class="mt-5 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
+        {{ v.cta }}
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </article>
+  {% endfor %}
+</div>

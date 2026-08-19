@@ -1,5 +1,41 @@
-<footer style="background-color: var(--footer-bg); color: #ffffff;">
-  <div class="mx-auto max-w-content px-6 py-10 text-small">
-    <p>&copy; {% year %} {{ site.name }}. All rights reserved.</p>
+<footer class="bg-navy-deep text-navy-on">
+  <div class="shell py-16 md:py-20">
+    <div class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr] gap-12 md:gap-8">
+
+      <div>
+        <img src="/assets/images/brand/mark-white.png" alt="{{ site.name }}" width="150" height="45" class="h-9 w-auto mb-6">
+        <p class="text-small text-navy-on-muted max-w-measure-tight leading-relaxed">{{ site.description }}</p>
+      </div>
+
+      <div>
+        <span class="eyebrow-on-navy mb-4">Our Ventures</span>
+        <ul class="flex flex-col gap-3">
+          {% for v in ventures %}
+          <li>
+            <a href="{{ v.href }}" class="text-small text-navy-on-muted hover:text-gold transition-colors duration-press ease-signature">{{ v.name }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div>
+        <span class="eyebrow-on-navy mb-4">Get in Touch</span>
+        <ul class="flex flex-col gap-3 text-small text-navy-on-muted">
+          <li>{{ site.address }}</li>
+          <li><a href="{{ site.phoneHref }}" class="hover:text-gold transition-colors duration-press ease-signature">{{ site.phone }}</a></li>
+          <li><a href="mailto:{{ site.email }}" class="hover:text-gold transition-colors duration-press ease-signature">{{ site.email }}</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <p class="text-micro text-navy-on-muted/80 uppercase tracking-wide">&copy; {% year %} {{ site.legalName }}. All rights reserved.</p>
+      <nav class="flex gap-6" aria-label="Legal">
+        <a href="/ventures/" class="text-micro text-navy-on-muted/80 uppercase tracking-wide hover:text-gold transition-colors duration-press ease-signature">Our Ventures</a>
+        <a href="/about/" class="text-micro text-navy-on-muted/80 uppercase tracking-wide hover:text-gold transition-colors duration-press ease-signature">Our Story</a>
+        <a href="/contact/" class="text-micro text-navy-on-muted/80 uppercase tracking-wide hover:text-gold transition-colors duration-press ease-signature">Contact</a>
+      </nav>
+    </div>
   </div>
 </footer>

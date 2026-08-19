@@ -1,14 +1,76 @@
-<header class="sticky top-0 z-40 border-b" style="background-color: var(--header-bg); border-color: var(--header-border);">
-  <div class="mx-auto flex max-w-content items-center justify-between px-6 py-4">
-    <a href="/" class="text-h4 font-display font-semibold" style="color: var(--foreground);">
-      {{ site.name }}
+<header
+  {# navyHeader (page front-matter) = the page's first section is a full-bleed navy band,
+     so the header can start transparent with light text over it. Pages that open on the
+     paper ground (about, insights index, contact) must NEVER get the transparent/light
+     state — light text on paper is close to illegible. #}
+  x-data="{ open: false, scrolled: false, navyHeader: {{ 'true' if navyHeader else 'false' }} }"
+  x-init="scrolled = window.scrollY > 40; window.addEventListener('scroll', () => scrolled = window.scrollY > 40, { passive: true })"
+  x-effect="document.body.classList.toggle('overflow-hidden', open)"
+  class="fixed inset-x-0 top-0 z-50 transition-colors duration-slow ease-signature"
+  :class="(navyHeader && !scrolled && !open) ? 'bg-transparent border-b border-transparent' : 'bg-paper/95 backdrop-blur border-b border-rule'"
+>
+  <div class="shell flex items-center justify-between h-20">
+    <a href="/" class="flex items-center gap-2 shrink-0" aria-label="{{ site.name }} — home">
+      <img
+        src="/assets/images/brand/mark-navy.png"
+        alt="{{ site.name }}"
+        width="140"
+        height="42"
+        class="h-8 w-auto transition-opacity duration-press"
+        :class="(navyHeader && !scrolled && !open) ? 'brightness-0 invert' : ''"
+      >
     </a>
-    <nav class="flex items-center gap-6">
+
+    <nav class="hidden md:flex items-center gap-9" aria-label="Primary">
       {% for item in navigation.main %}
-      <a href="{{ item.href }}" class="text-small font-medium" style="color: var(--foreground-muted);">
-        {{ item.label }}
-      </a>
+      <a
+        href="{{ item.href }}"
+        class="text-small font-medium transition-colors duration-press ease-signature"
+        :class="(navyHeader && !scrolled && !open) ? 'text-navy-on-muted hover:text-gold' : 'text-ink-muted hover:text-gold-text'"
+      >{{ item.label }}</a>
       {% endfor %}
     </nav>
+
+    <a
+      href="/contact/"
+      class="hidden md:inline-flex btn-primary"
+    >Get in touch</a>
+
+    <button
+      type="button"
+      @click="open = !open"
+      class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-md"
+      :class="(navyHeader && !scrolled && !open) ? 'text-navy-on' : 'text-ink'"
+      :aria-expanded="open"
+      aria-controls="mobile-nav"
+      aria-label="Toggle menu"
+    >
+      <svg x-show="!open" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path d="M2 6h18M2 11h18M2 16h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <svg x-show="open" x-cloak width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path d="M4 4l14 14M18 4L4 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
   </div>
+
+  <nav
+    id="mobile-nav"
+    x-show="open"
+    x-cloak
+    x-collapse
+    class="md:hidden bg-paper border-t border-rule min-h-[100dvh]"
+    aria-label="Mobile"
+  >
+    <div class="shell py-6 flex flex-col gap-1">
+      {% for item in navigation.main %}
+      <a
+        href="{{ item.href }}"
+        @click="open = false"
+        class="py-3 text-h4 font-display font-book text-ink border-b border-rule last:border-b-0"
+      >{{ item.label }}</a>
+      {% endfor %}
+      <a href="/contact/" @click="open = false" class="btn-primary mt-5 justify-center">Get in touch</a>
+    </div>
+  </nav>
 </header>

@@ -1,5 +1,8 @@
 {
   "main": [
-    { "label": "Home", "href": "/" }
+    { "label": "Our Ventures", "href": "/ventures/" },
+    { "label": "Our Story", "href": "/about/" },
+    { "label": "Insights", "href": "/insights/" },
+    { "label": "Contact", "href": "/contact/" }
   ]
 }

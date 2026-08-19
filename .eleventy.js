@@ -1,4 +1,5 @@
 import EleventyVitePlugin from "@11ty/eleventy-plugin-vite";
+import Image from "@11ty/eleventy-img";
 import path from "path";
 import fs from "fs";
 
@@ -92,6 +93,70 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("titleCase", function (str) {
     if (!str) return '';
     return str.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  });
+
+  // Responsive image shortcode — AVIF/WebP/JPEG with srcset, async-generated at build time.
+  // Usage: {% image "src/assets/images/people/founder.png", "Manish K Sah, Founder & CEO", "50vw" %}
+  //
+  // KNOWN QUIRK: files these shortcodes generate must already exist on disk before Vite's
+  // asset-graph scan runs, or Vite won't discover/hash/copy them into dist and every <img>
+  // referencing them 404s. Vite scans BEFORE this same build's template pass finishes writing
+  // them. `npm run build` therefore runs eleventy twice — pass 1 generates the files (and may
+  // produce a dist/ with broken image refs, which is fine, it's discarded), pass 2 finds them
+  // already on disk and Vite hashes them correctly. eleventy-img caches by content hash, so
+  // the second pass is fast, not a full re-encode. Do not "simplify" this to a single build.
+  eleventyConfig.addAsyncShortcode("image", async function (src, alt, sizes = "100vw", widths = [480, 768, 1200, 1800]) {
+    if (!alt && alt !== "") {
+      throw new Error(`Missing alt text for image: ${src}`);
+    }
+    // Output lands inside src/assets/images/optimized/ — the SAME tree already covered
+    // by the existing `addPassthroughCopy({ "src/assets/images": "assets/images" })` rule
+    // below. A separate top-level cache dir (e.g. .image-cache/) does NOT reliably survive
+    // this Vite plugin's build (its passthrough-copy target and the plugin's actual working
+    // dir disagree) — proven by testing. Generated, so it's gitignored; safe to delete anytime.
+    const metadata = await Image(src, {
+      widths: [...widths, null], // null = original width, for the fallback
+      formats: ["avif", "webp", "jpeg"],
+      outputDir: "./src/assets/images/optimized/",
+      urlPath: "/assets/images/optimized/",
+      filenameFormat: (id, srcPath, width, format) => {
+        const name = path.basename(srcPath, path.extname(srcPath));
+        return `${name}-${width}w.${format}`;
+      },
+    });
+    const fallback = metadata.jpeg[metadata.jpeg.length - 1];
+    return Image.generateHTML(metadata, {
+      alt,
+      sizes,
+      loading: "lazy",
+      decoding: "async",
+      width: fallback.width,
+      height: fallback.height,
+    });
+  });
+
+  // Same as above but eager + high fetch priority, for the one hero-critical image per page.
+  eleventyConfig.addAsyncShortcode("imageEager", async function (src, alt, sizes = "100vw", widths = [480, 768, 1200, 1800]) {
+    const metadata = await Image(src, {
+      widths: [...widths, null],
+      formats: ["avif", "webp", "jpeg"],
+      outputDir: "./src/assets/images/optimized/",
+      urlPath: "/assets/images/optimized/",
+      filenameFormat: (id, srcPath, width, format) => {
+        const name = path.basename(srcPath, path.extname(srcPath));
+        return `${name}-${width}w.${format}`;
+      },
+    });
+    const fallback = metadata.jpeg[metadata.jpeg.length - 1];
+    return Image.generateHTML(metadata, {
+      alt,
+      sizes,
+      loading: "eager",
+      fetchpriority: "high",
+      decoding: "async",
+      width: fallback.width,
+      height: fallback.height,
+    });
   });
 
   return {
