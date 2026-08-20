@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "Admizz Commercial website",
   "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "ELEVENTY_ENV=development eleventy --serve",
-    "build": "ELEVENTY_ENV=production eleventy --quiet && ELEVENTY_ENV=production eleventy",
+    "build": "eleventy --quiet && eleventy",
     "clean": "rm -rf dist src/assets/images/optimized"
   },
   "license": "UNLICENSED",

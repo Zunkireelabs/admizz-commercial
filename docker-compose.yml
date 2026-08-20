@@ -1,0 +1,43 @@
+# ⚠️ SCAFFOLD, NOT LIVE — PROD_DOMAIN is decided (admizz.com) but nothing should deploy here yet.
+#
+# Decided 2026-08-20: production replaces admizz.com itself once dev/staging work is finished.
+# Until then: don't push to `main`, don't set the `PROD_DOMAIN` GitHub Variable to admizz.com
+# and trigger a deploy, don't point DNS at this VPS for admizz.com. See .github/workflows/deploy.yml
+# header and CLAUDE.md.
+
+services:
+  app:
+    container_name: admizz-commercial-web-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ELEVENTY_ENV: production
+    networks:
+      - hosting
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=hosting"
+      # HTTPS router — primary domain
+      - "traefik.http.routers.admizz-commercial-web-prod.rule=Host(`admizz.com`)"
+      - "traefik.http.routers.admizz-commercial-web-prod.entrypoints=websecure"
+      - "traefik.http.routers.admizz-commercial-web-prod.tls=true"
+      - "traefik.http.routers.admizz-commercial-web-prod.tls.certresolver=letsencrypt"
+      # HTTP → HTTPS redirect
+      - "traefik.http.routers.admizz-commercial-web-prod-http.rule=Host(`admizz.com`)"
+      - "traefik.http.routers.admizz-commercial-web-prod-http.entrypoints=web"
+      - "traefik.http.routers.admizz-commercial-web-prod-http.middlewares=admizz-commercial-web-prod-redirect"
+      - "traefik.http.middlewares.admizz-commercial-web-prod-redirect.redirectscheme.scheme=https"
+      # Service port
+      - "traefik.http.services.admizz-commercial-web-prod.loadbalancer.server.port=80"
+
+networks:
+  hosting:
+    external: true

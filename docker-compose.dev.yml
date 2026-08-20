@@ -1,0 +1,36 @@
+services:
+  app:
+    container_name: admizz-commercial-web-stage
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ELEVENTY_ENV: staging
+    networks:
+      - hosting
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=hosting"
+      # HTTPS router
+      - "traefik.http.routers.admizz-commercial-web-stage.rule=Host(`dev-web.admizz.com`)"
+      - "traefik.http.routers.admizz-commercial-web-stage.entrypoints=websecure"
+      - "traefik.http.routers.admizz-commercial-web-stage.tls=true"
+      - "traefik.http.routers.admizz-commercial-web-stage.tls.certresolver=letsencrypt"
+      # HTTP → HTTPS redirect
+      - "traefik.http.routers.admizz-commercial-web-stage-http.rule=Host(`dev-web.admizz.com`)"
+      - "traefik.http.routers.admizz-commercial-web-stage-http.entrypoints=web"
+      - "traefik.http.routers.admizz-commercial-web-stage-http.middlewares=admizz-commercial-web-stage-redirect"
+      - "traefik.http.middlewares.admizz-commercial-web-stage-redirect.redirectscheme.scheme=https"
+      # Service port
+      - "traefik.http.services.admizz-commercial-web-stage.loadbalancer.server.port=80"
+
+networks:
+  hosting:
+    external: true
