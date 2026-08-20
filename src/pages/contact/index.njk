@@ -23,18 +23,18 @@ permalink: /contact/
         Whether you're a student, a partner institution, or exploring a career move — tell us a little about what you're looking for and we'll point you to the right part of Admizz.
       </p>
 
-      <div class="mt-12 flex flex-col gap-6">
-        <div>
-          <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">Address</span>
-          <p class="mt-1 text-body text-ink">{{ site.address }}</p>
+      <div class="mt-12">
+        <div class="data-row">
+          <span class="data-label">Address</span>
+          <span class="text-body text-ink text-right">{{ site.address }}</span>
         </div>
-        <div>
-          <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">Phone</span>
-          <p class="mt-1 text-body text-ink"><a href="{{ site.phoneHref }}" class="link-underline">{{ site.phone }}</a></p>
+        <div class="data-row">
+          <span class="data-label">Phone</span>
+          <a href="{{ site.phoneHref }}" class="text-body text-ink link-underline">{{ site.phone }}</a>
         </div>
-        <div>
-          <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">Email</span>
-          <p class="mt-1 text-body text-ink"><a href="mailto:{{ site.email }}" class="link-underline">{{ site.email }}</a></p>
+        <div class="data-row">
+          <span class="data-label">Email</span>
+          <a href="mailto:{{ site.email }}" class="text-body text-ink link-underline">{{ site.email }}</a>
         </div>
       </div>
 
@@ -65,23 +65,23 @@ permalink: /contact/
         novalidate
       >
         <div>
-          <label for="name" class="block text-small font-medium text-ink mb-2">Full name</label>
+          <label for="name" class="data-label block mb-2">Full name</label>
           <input id="name" name="name" type="text" required autocomplete="name"
-            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-gold-text focus:outline-none transition-colors duration-press"
+            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-navy focus:outline-none transition-colors duration-press"
             placeholder="Your name">
         </div>
 
         <div>
-          <label for="email" class="block text-small font-medium text-ink mb-2">Email</label>
+          <label for="email" class="data-label block mb-2">Email</label>
           <input id="email" name="email" type="email" required autocomplete="email"
-            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-gold-text focus:outline-none transition-colors duration-press"
+            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-navy focus:outline-none transition-colors duration-press"
             placeholder="you@example.com">
         </div>
 
         <div>
-          <label for="interest" class="block text-small font-medium text-ink mb-2">I'm interested in</label>
+          <label for="interest" class="data-label block mb-2">I'm interested in</label>
           <select id="interest" name="interest"
-            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink focus:border-gold-text focus:outline-none transition-colors duration-press">
+            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink focus:border-navy focus:outline-none transition-colors duration-press">
             <option value="general">General enquiry</option>
             {% for v in ventures %}
             <option value="{{ v.id }}">{{ v.name }}</option>
@@ -90,9 +90,9 @@ permalink: /contact/
         </div>
 
         <div>
-          <label for="message" class="block text-small font-medium text-ink mb-2">Message</label>
+          <label for="message" class="data-label block mb-2">Message</label>
           <textarea id="message" name="message" rows="4" required
-            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-gold-text focus:outline-none transition-colors duration-press resize-none"
+            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-navy focus:outline-none transition-colors duration-press resize-none"
             placeholder="Tell us a little about what you're looking for"></textarea>
         </div>
 
@@ -104,8 +104,8 @@ permalink: /contact/
 
       <div x-show="sent" x-cloak class="py-12 text-center">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" class="mx-auto mb-4" aria-hidden="true">
-          <circle cx="20" cy="20" r="19" stroke="#8A6200" stroke-width="1.4"/>
-          <path d="M12 20l6 6 10-12" stroke="#8A6200" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="20" cy="20" r="19" stroke="#8A5E10" stroke-width="1.4"/>
+          <path d="M12 20l6 6 10-12" stroke="#8A5E10" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <h2 class="text-h4 font-display font-book text-ink">Thanks — we'll be in touch.</h2>
         <p class="mt-2 text-small text-ink-muted max-w-measure-tight mx-auto">A member of the Admizz team will reach out shortly.</p>

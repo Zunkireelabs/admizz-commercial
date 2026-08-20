@@ -15,8 +15,8 @@
   }
 
   ::selection {
-    background-color: theme("colors.gold.DEFAULT");
-    color: theme("colors.navy.deep");
+    background-color: theme("colors.navy.DEFAULT");
+    color: theme("colors.white");
   }
 
   ::-webkit-scrollbar {
@@ -35,7 +35,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid theme("colors.gold.text");
+    outline: 2px solid theme("colors.navy.DEFAULT");
     outline-offset: 3px;
     border-radius: 2px;
   }
@@ -64,16 +64,16 @@
   }
 
   .eyebrow {
-    @apply font-mono text-label uppercase text-gold-text font-medium block;
+    @apply font-mono text-label uppercase text-navy-soft font-medium block;
   }
 
   .eyebrow-on-navy {
-    @apply font-mono text-label uppercase text-gold font-medium block;
+    @apply font-mono text-label uppercase text-navy-on-muted font-medium block;
   }
 
   /* Index numeral — used only where order is real information (register, timeline) */
   .index-num {
-    @apply font-mono text-small text-gold-text font-medium tabular-nums;
+    @apply font-mono text-small text-navy-soft font-medium tabular-nums;
   }
 
   .rule {
@@ -90,18 +90,33 @@
     @apply transition-colors duration-press ease-signature;
   }
   .btn-primary {
-    @apply btn bg-gold text-navy-deep hover:bg-white;
+    @apply btn bg-navy text-white hover:bg-navy-soft;
   }
   .btn-ghost-on-navy {
-    @apply btn border border-navy-on-muted/40 text-navy-on hover:border-gold hover:text-gold;
+    @apply btn border border-navy-on-muted/40 text-navy-on hover:border-white hover:text-white;
   }
   .btn-ghost {
-    @apply btn border border-rule-strong text-ink hover:border-gold-text hover:text-gold-text;
+    @apply btn border border-rule-strong text-ink hover:border-navy hover:text-navy;
   }
 
   .link-underline {
     @apply underline decoration-rule-strong decoration-1 underline-offset-4;
-    @apply hover:decoration-gold-text transition-colors duration-press ease-signature;
+    @apply hover:decoration-navy-soft transition-colors duration-press ease-signature;
+  }
+
+  /* Primary-nav hover underline — a thin rule that grows in on the same
+     signature curve as everything else, rather than a bare color change. */
+  .nav-link {
+    @apply relative;
+  }
+  .nav-link::after {
+    content: '';
+    @apply absolute left-0 right-0 h-px bg-current origin-left scale-x-0;
+    @apply transition-transform duration-press ease-signature;
+    bottom: -6px;
+  }
+  .nav-link:hover::after {
+    @apply scale-x-100;
   }
 
   .prose-body {
@@ -115,6 +130,21 @@
   }
   .register-row:last-child {
     @apply border-b-0;
+  }
+
+  /* Dense mono-labeled data row — "At a Glance" facts, contact details, timeline
+     entries. The denser, more "engineered" counterpart to the site's prose blocks. */
+  .data-row {
+    @apply flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4 border-t border-rule;
+  }
+  .data-row:last-child {
+    @apply border-b-0;
+  }
+  .data-label {
+    @apply font-mono text-micro uppercase tracking-widest text-ink-faint;
+  }
+  .data-label-on-navy {
+    @apply font-mono text-micro uppercase tracking-widest text-navy-on-muted;
   }
 }
 

@@ -1,11 +1,14 @@
 {# Reusable background texture, derived from the Admizz mark's own triangular facets —
    used only on the two navy bookend sections (hero + close). A signature motif, not decoration
-   sprinkled everywhere. Pure inline SVG: no raster asset, no JS, scales to any viewport. #}
-<svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+   sprinkled everywhere. Pure inline SVG: no raster asset, no JS, scales to any viewport.
+
+   Overscanned 8% top/bottom (vs. a plain inset-0) so main.js can apply a slow ambient
+   parallax drift (texture only, never content) without exposing blank edges. #}
+<svg class="facet-field absolute inset-x-0 pointer-events-none" style="top:-8%; height:116%;" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
   <defs>
     <pattern id="admizz-facets" width="72" height="62" patternUnits="userSpaceOnUse">
-      <polygon points="36,0 72,20 36,40 0,20" fill="none" stroke="#8CB1FF" stroke-width="0.75" opacity="0.14"/>
-      <polygon points="36,40 72,60 36,80 0,60" fill="none" stroke="#FDD63F" stroke-width="0.75" opacity="0.10"/>
+      <polygon points="36,0 72,20 36,40 0,20" fill="none" stroke="#7C93FF" stroke-width="0.75" opacity="0.20"/>
+      <polygon points="36,40 72,60 36,80 0,60" fill="none" stroke="#AEB4E8" stroke-width="0.75" opacity="0.14"/>
     </pattern>
   </defs>
   <rect width="100%" height="100%" fill="url(#admizz-facets)"/>

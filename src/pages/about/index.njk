@@ -5,20 +5,21 @@ description: Founded in 2015, Admizz Group has grown from a single idea into thr
 permalink: /about/
 ---
 
-{# ============================================================ PAGE HEADER #}
+{# ============================================================ PAGE HEADER
+   A full-width masthead stack, deliberately not the 14rem/1fr split grid used
+   elsewhere (Contact's header uses that grid for genuinely different content —
+   a details list beside a form; reusing it here for a single text block was
+   the repeated-module problem). Ventures' header is navy full-bleed; this one
+   is paper, single-column — a real structural difference, not just a recolor. #}
 <section class="bg-paper py-section">
-  <div class="shell grid grid-cols-1 md:grid-cols-[14rem_1fr] gap-8 md:gap-14">
-    <div class="fade-up">
-      <span class="eyebrow">Our Story</span>
-    </div>
-    <div class="fade-up" style="animation-delay:80ms">
-      <h1 class="font-display font-light text-display-2 text-ink max-w-[16ch] text-balance">
-        Building since <em class="italic text-gold-text font-book">2015.</em>
-      </h1>
-      <p class="mt-6 text-body-lg text-ink-muted max-w-measure leading-relaxed">
-        {{ site.description }}
-      </p>
-    </div>
+  <div class="shell max-w-measure">
+    <span class="eyebrow fade-up">Our Story</span>
+    <h1 class="mt-4 font-display font-light text-display-2 text-ink max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
+      Building since <em class="italic text-navy font-book">2015.</em>
+    </h1>
+    <p class="mt-6 text-body-lg text-ink-muted leading-relaxed fade-up" style="animation-delay:140ms">
+      {{ site.description }}
+    </p>
   </div>
 </section>
 
@@ -26,10 +27,11 @@ permalink: /about/
 <section class="bg-paper-sunk py-section">
   <div class="shell">
     <span class="eyebrow fade-up">The Record</span>
-    <div class="mt-8 max-w-measure">
+    <div class="mt-8 max-w-measure relative">
+      <div class="hidden md:block absolute left-8 inset-y-2 w-px bg-rule-strong" aria-hidden="true"></div>
       {% for t in timeline %}
-      <div class="flex gap-6 md:gap-10 py-8 border-t border-rule first:border-t-0 fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
-        <span class="font-mono text-small text-gold-text font-medium shrink-0 w-16">{{ t.year }}</span>
+      <div class="relative flex gap-6 md:gap-10 py-8 border-t border-rule first:border-t-0 fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
+        <span class="font-mono text-small text-navy-soft font-medium tabular-nums shrink-0 w-16 relative z-10 bg-paper-sunk">{{ t.year }}</span>
         <div>
           <h2 class="text-h3 font-display font-book text-ink">{{ t.label }}</h2>
           <p class="mt-2 text-body text-ink-muted leading-relaxed">{{ t.text }}</p>
@@ -66,7 +68,7 @@ permalink: /about/
   <div class="shell relative text-center flex flex-col items-center">
     <span class="eyebrow-on-navy fade-up">Our Ventures</span>
     <h2 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
-      See where <em class="italic text-gold font-book">we operate.</em>
+      See where <em class="italic text-navy-accent font-book">we operate.</em>
     </h2>
     <div class="mt-10 fade-up" style="animation-delay:160ms">
       <a href="/ventures/" class="btn-primary">Explore our ventures</a>

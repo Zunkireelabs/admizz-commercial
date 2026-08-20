@@ -4,48 +4,55 @@ import typography from '@tailwindcss/typography';
 export default {
   content: ['./src/**/*.{html,njk,md,js}'],
   theme: {
-    // Deliberately NOT extending the default palette — the stock Tailwind colours
-    // (blue-600 etc.) are the single most-cited "generated site" tell. Only the
-    // recovered Admizz brand exists here.
+    // 2026-08-20 rebrand: token KEYS unchanged (navy.*, gold.*, paper.*, ink.*)
+    // so every existing utility class (bg-navy-deep, text-gold-text, ...) keeps
+    // working — only the VALUES moved from the recovered navy/gold identity to
+    // a blue-led palette, a deliberate direction change (see CLAUDE.md §5).
+    // `navy` now carries the primary brand blue; `gold` is demoted to a rare,
+    // deliberate warm accent (the ventures-register line, the confirmation
+    // check) rather than the default accent everywhere. All pairs below are
+    // freshly contrast-verified, not eyeballed — see CLAUDE.md §5 for ratios.
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
       white: '#FFFFFF',
       black: '#000000',
 
-      // Ground — warm, near-neutral document stock
+      // Ground — cool, near-neutral document stock
       paper: {
-        DEFAULT: '#F6F6F3',
+        DEFAULT: '#F4F5FB',
         raised: '#FFFFFF',
-        sunk: '#EDEDE7',
+        sunk: '#EAEBF6',
       },
 
       // Ink — never pure black
       ink: {
-        DEFAULT: '#10192B',
-        muted: '#4F5A6B',
-        faint: '#868F9C',
+        DEFAULT: '#151833',
+        muted: '#4A5068',
+        faint: '#868DA6',
       },
 
-      // Brand navy — ink and punctuation, NEVER the default canvas
+      // Brand blue (token key stays `navy`) — ink, punctuation and the two
+      // full-bleed bookend bands; still never the default page canvas.
       navy: {
-        DEFAULT: '#002856',
-        deep: '#001B3B',
-        soft: '#0F3560',
-        on: '#EEF1F5',
-        'on-muted': '#9FB0C4',
+        DEFAULT: '#3D5AFE',
+        deep: '#161B4D',
+        soft: '#2B3FA0',
+        on: '#EDEFFC',
+        'on-muted': '#AEB4E8',
+        accent: '#7C93FF', // lighter emphasis blue — headline em-phrases on navy (5.76:1)
       },
 
-      // Brand gold — foil only. Fails contrast as text on light (1.41) by design.
+      // Gold — demoted secondary accent, used sparingly and deliberately now.
       gold: {
-        DEFAULT: '#FDD63F',
-        text: '#8A6200', // 5.49 on white — the only gold-toned text allowed on light
-        sunk: '#FFF8E0',
+        DEFAULT: '#F2B33D',
+        text: '#8A5E10', // 5.23:1 on paper — AA on light, matches the old ratio's spirit
+        sunk: '#FFF3DC',
       },
 
       rule: {
-        DEFAULT: '#DFDFD7',
-        strong: '#C3C3B8',
+        DEFAULT: '#E1E2ED',
+        strong: '#C7C9DC',
       },
 
       // Semantic — separate from the accent, per the design system

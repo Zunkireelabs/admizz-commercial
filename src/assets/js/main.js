@@ -18,14 +18,17 @@ if (document.readyState === 'loading') {
 // ---------------------------------------------------------------------------
 // Motion layer
 //
-// Lenis is only ever imported/instantiated when the user has NOT asked for
-// reduced motion — reduced motion here means "no smooth-scroll hijacking",
-// not "shorter smooth-scroll hijacking" (CLAUDE.md §5, motion section).
+// Lenis, GSAP and ScrollTrigger are only ever imported when the user has NOT
+// asked for reduced motion — reduced motion here means "these never load",
+// not "load them but shorten them" (CLAUDE.md §5, motion section).
 //
 // Reveals (fade-up / hairline draw) are plain CSS transitions triggered by
-// an IntersectionObserver. Under reduced motion the CSS itself skips the
-// @keyframes and jumps straight to the end state, so the observer still
-// runs — it just produces an instant, jank-free result either way.
+// an IntersectionObserver and work identically whether or not GSAP is present.
+// GSAP only adds three specific, purposeful moments — the hero entrance
+// choreography, the "At a Glance" stagger, and a slow facet-field parallax —
+// none of which gate content visibility: every element it touches renders
+// fully visible in the base HTML/CSS and is only hidden-then-revealed once
+// GSAP has actually loaded and run.
 // ---------------------------------------------------------------------------
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -38,6 +41,72 @@ if (!prefersReducedMotion) {
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
+  });
+
+  const heroField = document.querySelector('.hero-field');
+  if (heroField) {
+    import('./hero-field.js').then(({ initHeroField }) => initHeroField(heroField));
+  }
+
+  Promise.all([
+    import('gsap'),
+    import('gsap/ScrollTrigger'),
+    import('gsap/CustomEase'),
+  ]).then(([{ gsap }, { ScrollTrigger }, { CustomEase }]) => {
+    gsap.registerPlugin(ScrollTrigger, CustomEase);
+    // The exact same curve as the CSS `ease-signature` utility (tailwind.config.js) —
+    // one signature easing curve, shared between CSS transitions and JS timelines.
+    CustomEase.create('signature', '.23,1,.32,1');
+
+    // Hero entrance — a real sequence instead of a uniform fade-up stagger.
+    // [data-hero-in] elements carry no hiding CSS of their own; only once this
+    // code has actually run do they get set to opacity:0 and animated in.
+    const heroEls = gsap.utils.toArray('[data-hero-in]');
+    if (heroEls.length) {
+      gsap.set(heroEls, { opacity: 0, y: 14 });
+      gsap.timeline({ defaults: { ease: 'signature', duration: 0.7 } })
+        .to(heroEls, { opacity: 1, y: 0, stagger: 0.12 });
+    }
+
+    // Header scroll-progress line — real scroll fraction, not a decorative
+    // loop. No `trigger` means it tracks the whole document (start 0, end max).
+    const scrollProgress = document.querySelector('.scroll-progress');
+    if (scrollProgress) {
+      gsap.to(scrollProgress, {
+        scaleX: 1,
+        ease: 'none',
+        scrollTrigger: { start: 0, end: 'max', scrub: 0.3 },
+      });
+    }
+
+    // "At a Glance" facts band — rows step in together as the band scrolls
+    // into view, once, not scrubbed (a considered reveal, not a scroll toy).
+    document.querySelectorAll('[data-glance]').forEach((band) => {
+      const rows = band.querySelectorAll('[data-glance-row]');
+      if (!rows.length) return;
+      gsap.set(rows, { opacity: 0, y: 10 });
+      gsap.to(rows, {
+        opacity: 1,
+        y: 0,
+        stagger: 0.09,
+        ease: 'signature',
+        duration: 0.6,
+        scrollTrigger: { trigger: band, start: 'top 80%' },
+      });
+    });
+
+    // Facet-field texture — a slow, ambient parallax drift on the texture
+    // only, never the content sitting on top of it (CLAUDE.md: ambient loops
+    // belong in the 2000ms+ tier; this is the scroll-scrubbed equivalent).
+    gsap.utils.toArray('.facet-field').forEach((field) => {
+      const section = field.closest('section');
+      if (!section) return;
+      gsap.to(field, {
+        yPercent: 8,
+        ease: 'none',
+        scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 1.2 },
+      });
+    });
   });
 }
 
