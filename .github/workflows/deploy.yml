@@ -55,9 +55,13 @@ jobs:
             REPO="${{ github.event.repository.name }}"
             DIR="/home/zunkireelabs/devprojects/websiteprojects/${REPO}-web-prod"
 
-            # First-push bootstrap: create directory and clone if missing
-            if [ ! -d "$DIR" ]; then
-              echo "First deployment — bootstrapping $DIR"
+            # First-push bootstrap: create directory and clone if missing.
+            # Checks for $DIR/.git rather than just $DIR so a directory left behind by a
+            # failed clone (mkdir succeeded, git clone didn't) gets wiped and re-cloned
+            # instead of silently skipping straight to a doomed `git fetch`.
+            if [ ! -d "$DIR/.git" ]; then
+              echo "First deployment (or broken clone) — bootstrapping $DIR"
+              rm -rf "$DIR"
               mkdir -p "$DIR"
               git clone -b main git@github.com:${{ github.repository }}.git "$DIR"
             fi
