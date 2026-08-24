@@ -43,11 +43,6 @@ if (!prefersReducedMotion) {
     requestAnimationFrame(raf);
   });
 
-  const heroGlobe = document.querySelector('.hero-globe');
-  if (heroGlobe) {
-    import('./hero-globe.js').then(({ initHeroGlobe }) => initHeroGlobe(heroGlobe));
-  }
-
   Promise.all([
     import('gsap'),
     import('gsap/ScrollTrigger'),
@@ -78,22 +73,6 @@ if (!prefersReducedMotion) {
         scrollTrigger: { start: 0, end: 'max', scrub: 0.3 },
       });
     }
-
-    // "At a Glance" facts band — rows step in together as the band scrolls
-    // into view, once, not scrubbed (a considered reveal, not a scroll toy).
-    document.querySelectorAll('[data-glance]').forEach((band) => {
-      const rows = band.querySelectorAll('[data-glance-row]');
-      if (!rows.length) return;
-      gsap.set(rows, { opacity: 0, y: 10 });
-      gsap.to(rows, {
-        opacity: 1,
-        y: 0,
-        stagger: 0.09,
-        ease: 'signature',
-        duration: 0.6,
-        scrollTrigger: { trigger: band, start: 'top 80%' },
-      });
-    });
 
     // Facet-field texture — a slow, ambient parallax drift on the texture
     // only, never the content sitting on top of it (CLAUDE.md: ambient loops
