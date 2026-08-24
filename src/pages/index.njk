@@ -23,11 +23,17 @@ permalink: /
    Every element renders fully visible in plain HTML/CSS first; GSAP only
    choreographs entrance once it has actually loaded (see main.js comment). #}
 <section class="relative bg-paper overflow-hidden">
-  {# Photo layer — absolute, spans the section's full rendered height (set by
-     the min-height on the content wrapper below), right-biased, no rounding,
-     no contained box. This is what makes it read as atmospheric/full-bleed
-     instead of a boxed panel. #}
-  <div class="absolute inset-y-0 right-0 w-full lg:w-[58%] overflow-hidden">
+  {# Photo layer — absolute, right-biased, no rounding, no contained box.
+     Starts BELOW the fixed nav (top-[100px] — the nav pill's own measured
+     bottom edge is 93.5px at every viewport width, so this is a tight,
+     deliberate margin, not a guess) rather than spanning the section's full
+     height behind it. Earlier versions let the photo extend behind the nav
+     for a more edge-to-edge look, but that meant anything near the top of
+     the source photo — specifically the thrown caps — could end up partly
+     hidden under the nav pill depending on viewport size, and no amount of
+     crop tuning fixed it reliably at every size. Starting below the nav
+     guarantees zero overlap regardless of viewport, full stop. #}
+  <div class="absolute right-0 top-[100px] bottom-0 w-full lg:w-[58%] overflow-hidden">
     {# The parallax target is this inner, overscanned (-6% top/bottom)
        wrapper — GSAP moves it within the statically sized, overflow-hidden
        layer so scrolling never exposes a gap (same technique as .facet-field).
@@ -35,7 +41,7 @@ permalink: /
        "admizz" watermark baked into its top-left corner (known defect,
        docs/RESUME-PROMPT.md) — this crop keeps it out of view without
        needing a re-exported asset. #}
-    <div class="hero-photo-parallax absolute -inset-y-[2%] inset-x-0 [&_picture]:contents [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[38%_0%]">
+    <div class="hero-photo-parallax absolute -inset-y-[2%] inset-x-0 [&_picture]:contents [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[60%_0%] [&_img]:scale-110">
       {% imageEager "src/assets/images/insights/global-opportunities.jpg", "Graduates celebrating, caps thrown in the air", "(min-width: 1024px) 64vw, 100vw" %}
     </div>
     {# Brand-shape watermark — the logo mark's chevron silhouette, simplified
