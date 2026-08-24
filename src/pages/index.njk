@@ -6,50 +6,115 @@ permalink: /
 ---
 
 {# ============================================================ HERO
-   Full-bleed real photo (one of the three real, Admizz-branded images already
-   in this repo — see CLAUDE.md §4) clipped by a soft curve (SVG clipPath,
-   objectBoundingBox so it scales with the box at any viewport) into the paper
-   ground below, in place of the fake-app-mockup pattern this layout is
-   normally built around. Placeholder image — swap for dedicated photography
-   when available; the crop/clip structure will hold regardless of which
-   photo lands here.
-   Entrance is choreographed by GSAP (main.js, [data-hero-in]) when motion is
-   allowed; every element here renders fully visible in plain HTML/CSS first,
-   so a no-JS visitor or reduced-motion user sees the complete page either way. #}
-<section class="relative bg-paper">
-  <svg width="0" height="0" class="absolute" aria-hidden="true">
-    <defs>
-      <clipPath id="hero-wave" clipPathUnits="objectBoundingBox">
-        <path d="M0,0 L1,0 L1,0.62 C0.9,0.65 0.85,0.71 0.75,0.705 C0.6,0.7 0.55,0.63 0.4,0.56 C0.25,0.52 0.15,0.5 0,0.5 Z" />
-      </clipPath>
-    </defs>
-  </svg>
+   Full-bleed photo layer (absolute, right-biased, no frame) with text
+   overlaid — rebuilt 2026-08-24 v2 after side-by-side comparison against the
+   reference showed the first pass reading as a boxed/contained photo panel
+   with too much vertical padding, not the reference's edge-to-edge, tightly
+   composed atmosphere. This version: photo is an absolute layer spanning the
+   full section height (visible behind the fixed nav at the very top, same
+   as the reference), no rounded frame, a wide gradient blend into paper
+   instead of a hard edge, and a shorter, denser hero overall.
+   Reuses existing site infrastructure rather than inventing new systems —
+   the [data-hero-in] GSAP stagger (main.js) for entrance, the same
+   overscan-then-transform parallax pattern already used on .facet-field,
+   and the existing btn-primary/btn-ghost component classes.
+   Eyebrow pill is back, deliberately overriding the earlier Impeccable-driven
+   removal — explicit ask this round.
+   Every element renders fully visible in plain HTML/CSS first; GSAP only
+   choreographs entrance once it has actually loaded (see main.js comment). #}
+<section class="relative bg-paper overflow-hidden">
+  {# Photo layer — absolute, spans the section's full rendered height (set by
+     the min-height on the content wrapper below), right-biased, no rounding,
+     no contained box. This is what makes it read as atmospheric/full-bleed
+     instead of a boxed panel. #}
+  <div class="absolute inset-y-0 right-0 w-full lg:w-[58%] overflow-hidden">
+    {# The parallax target is this inner, overscanned (-6% top/bottom)
+       wrapper — GSAP moves it within the statically sized, overflow-hidden
+       layer so scrolling never exposes a gap (same technique as .facet-field).
+       object-position biased right-of-frame: the source photo has an
+       "admizz" watermark baked into its top-left corner (known defect,
+       docs/RESUME-PROMPT.md) — this crop keeps it out of view without
+       needing a re-exported asset. #}
+    <div class="hero-photo-parallax absolute -inset-y-[2%] inset-x-0 [&_picture]:contents [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[38%_0%]">
+      {% imageEager "src/assets/images/insights/global-opportunities.jpg", "Graduates celebrating, caps thrown in the air", "(min-width: 1024px) 64vw, 100vw" %}
+    </div>
+    {# Brand-shape watermark — the logo mark's chevron silhouette, simplified
+       to a single flat translucent band and layered ON TOP of the photo.
+       Blurred: the previous crisp-edged version rendered as a visible hard
+       diagonal seam cutting across the faces/arms — looked like a rendering
+       bug, not a brand shape. The reference's version reads as soft ambient
+       light, not a cut geometric edge, so a real blur (not just low opacity)
+       is what actually fixes it. #}
+    <svg class="absolute left-1/2 top-[3%] -translate-x-1/2 w-[105%] max-w-[820px] h-auto pointer-events-none blur-2xl" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <path d="M200,5 L340,105 L280,105 L200,50 L120,105 L60,105 Z" fill="#FFFFFF" opacity="0.18"/>
+      <path d="M200,120 L390,250 L305,250 L200,175 L95,250 L10,250 Z" fill="#FFFFFF" opacity="0.15"/>
+    </svg>
+    <div class="absolute inset-0 bg-gradient-to-t from-navy-deep/18 via-transparent to-transparent"></div>
+    {# Atmospheric blend into the paper ground — width-controlled via Tailwind's
+       gradient stop positions. Narrowed twice now (first pass: via-75%/to-90%;
+       this pass: via-38%/to-58%) so most of the photo stays fully saturated —
+       only enough coverage to keep the text column clean, not a wash across
+       the whole frame. #}
+    <div class="absolute inset-0 bg-gradient-to-r from-paper from-0% via-paper/65 via-22% to-transparent to-58% lg:to-50%"></div>
+  </div>
 
-  <div class="relative">
-    <div
-      class="relative h-[88vh] min-h-[320px] max-h-[1100px] overflow-hidden [&_picture]:contents [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[center_35%]"
-      style="clip-path: url(#hero-wave);"
-    >
-      {% imageEager "src/assets/images/insights/global-opportunities.jpg", "Graduates celebrating, caps thrown in the air", "100vw" %}
-      <div class="absolute inset-0 bg-gradient-to-t from-navy-deep/70 via-navy-deep/5 to-navy-deep/25"></div>
+  <div class="shell relative pt-28 pb-3 md:pt-28 md:pb-4">
+    <div class="min-h-[320px] md:min-h-[380px] lg:min-h-[430px] flex items-center">
+      <div class="relative z-10 max-w-xl">
+        {# Dot-grid globe motif, anchored to THIS text column (not the raw
+           section) — the earlier version was positioned against the
+           full-width section, so on wide viewports the shell centers with a
+           growing left margin and the circle rendered mostly off-screen,
+           clipped to a meaningless sliver instead of a visible globe. #}
+        <svg class="absolute -left-16 -top-14 w-[560px] h-[560px] opacity-[0.16] pointer-events-none hidden lg:block -z-10" viewBox="0 0 560 560" aria-hidden="true">
+          <defs>
+            <pattern id="hero-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="1.5" cy="1.5" r="1.5" fill="#161B4D"/>
+            </pattern>
+            <clipPath id="hero-dots-circle"><circle cx="280" cy="280" r="280"/></clipPath>
+          </defs>
+          <rect width="560" height="560" fill="url(#hero-dots)" clip-path="url(#hero-dots-circle)"/>
+        </svg>
+
+        <span class="eyebrow-pill" data-hero-in>
+          <span class="w-1.5 h-1.5 rounded-full bg-navy"></span>
+          Shaping futures. Building possibilities.
+        </span>
+
+        {# Hero-scoped heading size, smaller than the shared .text-display-1
+           token — that clamp scales to 96px on real desktop widths, and four
+           wrapped lines at that size alone ate ~370px, which is what forced
+           scrolling on shorter real browser windows. This keeps the same
+           fluid/responsive behavior, just with a lower ceiling. #}
+        <h1 class="mt-4 max-w-[680px] font-display font-light text-[clamp(1.85rem,1.25rem+2.5vw,3.4rem)] leading-[1.08] text-ink" data-hero-in>
+          Transforming education and careers, <em class="italic text-navy font-book">globally.</em>
+        </h1>
+
+        <p class="mt-3 text-body-lg text-ink-muted max-w-measure-tight" data-hero-in>
+          {{ site.description }}
+        </p>
+
+        <div class="mt-4 flex flex-wrap items-center gap-4" data-hero-in>
+          <a href="#ventures" class="btn-primary group">
+            Explore our ventures
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="transition-transform duration-press ease-signature group-hover:translate-x-0.5"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="/contact/" class="btn-ghost">Get in touch</a>
+        </div>
+      </div>
     </div>
 
     {# Real trust badge — Admizz Education's ICEF accreditation, independently
        verified against ICEF's public API (docs/01-AUDIT.md §2), not a claim
-       taken from marketing copy. Links to the actual public verification
-       record rather than sitting there as decoration. Standing in for the
-       fake "New Connection" / "120+ joined today" card pattern this layout
-       is normally built around — one real credential instead of two fake
-       ones, correctly attributed to the venture that holds it, not the
-       parent Group. Sits as a sibling of the clipped photo (not a child of
-       it) so it can straddle the curve's edge, same placement as the
-       reference, instead of being clipped away by the wave mask. #}
+       taken from marketing copy. Anchored to the shell so it aligns with the
+       curve below, positioned over the photo layer via z-index. #}
     <a
       href="https://accreditations.icef.com/certificate?id=c8a7212a-a25c-469f-8a7b-2b2f047e8c0c"
       target="_blank"
       rel="noopener noreferrer"
-      class="absolute -bottom-6 right-6 md:right-10 z-10 flex items-center gap-3 rounded-2xl bg-white/95 backdrop-blur-sm shadow-xl border border-rule px-4 py-3 max-w-[240px] hover:shadow-2xl transition-shadow duration-press ease-signature"
       data-hero-in
+      data-motion
+      class="badge-float absolute bottom-0 right-gutter z-10 flex items-center gap-3 rounded-2xl bg-white/95 backdrop-blur-sm shadow-xl border border-rule px-4 py-3 max-w-[240px] hover:shadow-2xl transition-shadow duration-press ease-signature"
     >
       <span class="shrink-0 w-9 h-9 rounded-full bg-navy/10 flex items-center justify-center text-navy">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -64,27 +129,51 @@ permalink: /
     </a>
   </div>
 
-  <div class="shell relative mt-8 md:mt-[calc(-44vh+40px)] pb-6 md:pb-8">
-    <div class="max-w-2xl" data-hero-in>
-      <span class="eyebrow inline-flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-navy-accent inline-block shrink-0" aria-hidden="true"></span>
-        Est. 2015 &middot; Denver, Colorado
-      </span>
-
-      <h1 class="mt-3 font-display font-light text-[clamp(2rem,1.15rem+3vw,3.5rem)] leading-[1.05] text-ink">
-        Transforming education and careers, <em class="italic text-navy font-book">globally.</em>
-      </h1>
-
-      <p class="mt-3 text-body text-ink-muted max-w-measure-tight">
-        {{ site.description }}
-      </p>
-
-      <div class="mt-5 flex flex-wrap items-center gap-4">
-        <a href="#ventures" class="btn-primary">
-          Explore our ventures
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <a href="/contact/" class="btn-ghost">Get in touch</a>
+  {# Curved cap transitioning the paper hero into the navy value band —
+     SVG rather than clip-path here since it's bridging two stacked sections,
+     not masking a single element; preserveAspectRatio="none" stretches it
+     to full width, a standard, responsive technique for this shape.
+     The seam bug: the SVG's fill edge anti-aliases against whatever sits
+     behind the <svg> element itself, and the old 1px overlap (-mt-px)
+     wasn't reliable across zoom levels/DPRs — at some scales a hairline of
+     paper showed through as a visible line. Pulling the navy div up by a
+     few real pixels (-mt-2) instead of one guarantees the overlap survives
+     sub-pixel rounding at any scale. #}
+  <div class="relative mt-4 md:mt-5">
+    <svg viewBox="0 0 1440 140" preserveAspectRatio="none" class="block w-full h-[32px] md:h-[48px]" aria-hidden="true">
+      <path d="M0,140 L0,45 C 480,135 900,-5 1440,80 L1440,140 Z" fill="#161B4D"/>
+    </svg>
+    <div class="bg-navy-deep -mt-2 relative overflow-hidden">
+      {# Soft diagonal light sweep — the reference's value band has real
+         depth (a lighter-blue glow crossing the upper-left), not a flat
+         single navy fill. A large, heavily blurred gradient shape reads as
+         ambient light rather than a hard-edged decoration. #}
+      <div class="absolute -top-1/2 -left-1/4 w-[75%] h-[220%] bg-gradient-to-br from-navy-soft/55 via-navy/20 to-transparent rotate-12 blur-3xl pointer-events-none" aria-hidden="true"></div>
+      <div class="shell py-5 md:py-6 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 divide-y divide-navy-on-muted/15 md:divide-y-0 md:divide-x">
+          {% set heroValues = [
+            { icon: "globe", title: "Global Reach", text: "Opportunities worldwide" },
+            { icon: "people", title: "Student First", text: "Guiding every step" },
+            { icon: "rocket", title: "Future Ready", text: "Careers that grow" }
+          ] %}
+          {% for v in heroValues %}
+          <div class="flex items-center gap-4 py-5 md:py-0 md:px-8 first:pt-0 last:pb-0 md:first:pl-0 md:last:pr-0 fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
+            <span class="shrink-0 text-navy-on-muted">
+              {% if v.icon == "globe" %}
+              <svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 10h15M10 2.5c2.5 2 2.5 13 0 15M10 2.5c-2.5 2-2.5 13 0 15" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              {% elif v.icon == "people" %}
+              <svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="7.5" cy="6.5" r="2.75" stroke="currentColor" stroke-width="1.3"/><path d="M2 17c0-3 2.5-5 5.5-5s5.5 2 5.5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="14" cy="7.5" r="2.1" stroke="currentColor" stroke-width="1.2" opacity="0.7"/><path d="M12.5 17c.3-2.2 2-4 4-4.2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/></svg>
+              {% else %}
+              <svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2c2.2 1.6 3.5 4.4 3.5 7.5 0 1.7-.4 3.2-1 4.3l-2.5 2.7-2.5-2.7c-.6-1.1-1-2.6-1-4.3C6.5 6.4 7.8 3.6 10 2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="10" cy="8.5" r="1.4" stroke="currentColor" stroke-width="1.1"/><path d="M7 13.5l-2 3.5M13 13.5l2 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              {% endif %}
+            </span>
+            <span>
+              <span class="block text-body font-medium text-navy-on">{{ v.title }}</span>
+              <span class="block text-small text-navy-on-muted">{{ v.text }}</span>
+            </span>
+          </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
