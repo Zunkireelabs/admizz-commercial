@@ -43,9 +43,9 @@ if (!prefersReducedMotion) {
     requestAnimationFrame(raf);
   });
 
-  const heroField = document.querySelector('.hero-field');
-  if (heroField) {
-    import('./hero-field.js').then(({ initHeroField }) => initHeroField(heroField));
+  const heroGlobe = document.querySelector('.hero-globe');
+  if (heroGlobe) {
+    import('./hero-globe.js').then(({ initHeroGlobe }) => initHeroGlobe(heroGlobe));
   }
 
   Promise.all([

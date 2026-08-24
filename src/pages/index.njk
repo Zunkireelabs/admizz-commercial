@@ -1,6 +1,5 @@
 ---
 layout: base.njk
-navyHeader: true
 title: Admizz Group — Transforming Education & Careers Globally
 description: Admizz Group is a global education and workforce development company — connecting students and professionals with the preparation, guidance and pathways to reach their next opportunity.
 permalink: /
@@ -10,41 +9,46 @@ permalink: /
    Entrance is choreographed by GSAP (main.js, [data-hero-in]) when motion is
    allowed; every element here renders fully visible in plain HTML/CSS first,
    so a no-JS visitor or reduced-motion user sees the complete page either way. #}
-<section class="relative overflow-hidden bg-navy-deep min-h-[92vh] flex flex-col justify-center">
-  {% include "partials/facet-field.njk" %}
-  {# WebGL enhancement layer — see hero-field.js. Empty div until JS (if
-     motion is allowed) mounts a canvas into it; the SVG above is the
-     complete, correct background either way. #}
-  <div class="hero-field absolute inset-0 pointer-events-none" aria-hidden="true"></div>
+<section class="relative overflow-hidden bg-gradient-to-br from-paper via-paper to-navy-on min-h-[92vh] flex flex-col justify-center">
+  <div class="shell relative py-32 md:py-0 w-full grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-12 md:gap-6 items-center">
+    <div>
+      <span class="eyebrow inline-flex items-center gap-2" data-hero-in>
+        <span class="w-1.5 h-1.5 bg-navy-accent inline-block shrink-0" aria-hidden="true"></span>
+        Est. 2015 &middot; Denver, Colorado
+      </span>
 
-  <div class="shell relative py-32 md:py-0 w-full">
-    <span class="eyebrow-on-navy inline-flex items-center gap-2" data-hero-in>
-      <span class="w-1.5 h-1.5 bg-navy-accent inline-block shrink-0" aria-hidden="true"></span>
-      Est. 2015 &middot; Denver, Colorado
-    </span>
+      <h1 class="mt-6 font-display font-light text-display-1 text-ink max-w-[16ch]">
+        <span class="block" data-hero-in>Transforming education</span>
+        <span class="block" data-hero-in>and careers, <em class="italic text-navy font-book">globally.</em></span>
+      </h1>
 
-    <h1 class="mt-6 font-display font-light text-display-1 text-navy-on max-w-[18ch]">
-      <span class="block" data-hero-in>Transforming education</span>
-      <span class="block" data-hero-in>and careers, <em class="italic text-navy-accent font-book">globally.</em></span>
-    </h1>
+      <p class="mt-8 text-body-lg text-ink-muted max-w-measure-tight" data-hero-in>
+        {{ site.description }}
+      </p>
 
-    <p class="mt-8 text-body-lg text-navy-on-muted max-w-measure-tight" data-hero-in>
-      {{ site.description }}
-    </p>
-
-    <div class="mt-10 flex flex-wrap items-center gap-4" data-hero-in>
-      <a href="#ventures" class="btn-primary">
-        Explore our ventures
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a href="/contact/" class="btn-ghost-on-navy">Get in touch</a>
+      <div class="mt-10 flex flex-wrap items-center gap-4" data-hero-in>
+        <a href="#ventures" class="btn-primary">
+          Explore our ventures
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="/contact/" class="btn-ghost">Get in touch</a>
+      </div>
     </div>
+
+    {# Real, textured, lit 3D earth — see hero-globe.js for the full
+       rationale (this is a deliberate exception to the anti-globe guidance
+       in docs/02-DIRECTION.md §4, made explicitly, not by default). No
+       country pins, no flight-path arcs, no stats — a visual, not a claim.
+       Empty div until JS mounts a canvas; degrades to nothing (not a
+       broken layout) with no-JS/reduced-motion, since the left column
+       carries the hero's actual message on its own. #}
+    <div class="hero-globe relative aspect-square w-full max-w-[420px] mx-auto md:mx-0 md:justify-self-end" aria-hidden="true" data-hero-in></div>
   </div>
 
-  <div class="relative border-t border-white/10 py-5">
+  <div class="relative border-t border-rule py-5">
     <div class="shell">
-      <p class="font-mono text-micro uppercase tracking-widest text-navy-on-muted/70 flex flex-wrap gap-x-3 gap-y-1" data-hero-in>
-        {% for v in ventures %}<span><span class="text-navy-accent/70 tabular-nums">{{ v.index }}</span> {{ v.name }}{% if not loop.last %} &middot;{% endif %}</span>{% endfor %}
+      <p class="font-mono text-micro uppercase tracking-widest text-ink-faint flex flex-wrap gap-x-3 gap-y-1" data-hero-in>
+        {% for v in ventures %}<span><span class="text-navy-soft tabular-nums">{{ v.index }}</span> {{ v.name }}{% if not loop.last %} &middot;{% endif %}</span>{% endfor %}
       </p>
     </div>
   </div>
