@@ -1,26 +1,29 @@
-{# Shared "indexed register, not cards" component for the three ventures.
-   Used on the homepage (teaser context) and /ventures/ (full context).
-   Params: showLine (bool, default true) — the gold connecting line, desktop only. #}
+{# Connected-sequence component for the three ventures — Prepare → Study →
+   Work, one journey with three stages, not three independent options. No
+   card boxes/borders (research: clay.global carries hierarchy with type +
+   whitespace alone, not chrome — see docs discussion). A gold line runs the
+   full sequence, scroll-scrubbed (main.js, GSAP+Lenis synced); the stage
+   currently in view gets real emphasis, the others recede — genuine scroll
+   feedback about where you are in the journey, not decoration.
+   Used on the homepage (teaser context) and /ventures/ (full context). #}
 <div class="relative mt-10">
-  {% if showLine != false %}
   <div class="hidden md:block absolute left-[2.15rem] inset-y-2 w-px bg-rule-strong" aria-hidden="true"></div>
   <div class="hidden md:block absolute left-[2.15rem] inset-y-2 w-px bg-gold grow-line" aria-hidden="true"></div>
-  {% endif %}
 
   {% for v in ventures %}
-  <article class="register-row fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
+  <article class="sequence-row grid grid-cols-1 md:grid-cols-[4.5rem_1fr] gap-x-6 gap-y-3 py-10 md:py-12 border-b border-rule first:pt-0 last:border-b-0">
     <div class="flex md:flex-col items-baseline md:items-start gap-3 md:gap-2">
-      <span class="index-num relative z-10 bg-paper md:pr-1">{{ v.index }}</span>
+      <span class="sequence-num relative z-10 bg-paper md:pr-1 font-mono text-small text-navy-soft font-medium tabular-nums">{{ v.index }}</span>
       <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">{{ v.stage }}</span>
     </div>
-    <div>
+    <div class="sequence-body max-w-measure">
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <h3 class="font-display font-book text-h3 text-ink">{{ v.name }}</h3>
+        <h3 class="font-display font-book text-h2 text-ink">{{ v.name }}</h3>
         <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ v.vertical }}</span>
       </div>
-      <p class="mt-3 text-body text-ink-muted max-w-measure">{{ v.description }}</p>
+      <p class="mt-3 text-body text-ink-muted">{{ v.description }}</p>
       {% if v.verticalLine %}
-      <p class="mt-2 text-small text-ink-faint max-w-measure italic">{{ v.verticalLine }}</p>
+      <p class="mt-2 text-small text-ink-faint italic">{{ v.verticalLine }}</p>
       {% endif %}
       {% if v.exams.length %}
       <ul class="mt-4 flex flex-wrap gap-2">

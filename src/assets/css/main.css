@@ -67,13 +67,17 @@
     @apply font-mono text-label uppercase text-navy-soft font-medium block;
   }
 
-  .eyebrow-on-navy {
-    @apply font-mono text-label uppercase text-navy-on-muted font-medium block;
+  /* Hero-only eyebrow — a bordered pill instead of the plain .eyebrow label,
+     a deliberate re-add of something removed elsewhere on this page (see
+     index.njk hero comment). Kept out of .eyebrow itself so the rest of the
+     site's labels are unaffected. */
+  .eyebrow-pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-rule-strong bg-white/70 px-4 py-1.5;
+    @apply font-mono text-micro uppercase tracking-widest text-navy-soft;
   }
 
-  /* Index numeral — used only where order is real information (register, timeline) */
-  .index-num {
-    @apply font-mono text-small text-navy-soft font-medium tabular-nums;
+  .eyebrow-on-navy {
+    @apply font-mono text-label uppercase text-navy-on-muted font-medium block;
   }
 
   .rule {
@@ -89,8 +93,11 @@
     @apply inline-flex items-center gap-2 rounded-md px-5 py-3 text-small font-medium;
     @apply transition-colors duration-press ease-signature;
   }
+  /* Gold, not blue — every primary CTA sitewide, not just the nav (2026-08-25).
+     White text on this gold fails contrast (1.86:1); navy-deep on gold
+     measures 11.45:1, so text is pinned to that, not left at the old white. */
   .btn-primary {
-    @apply btn bg-navy text-white hover:bg-navy-soft;
+    @apply btn bg-gold text-navy-deep hover:brightness-95;
   }
   .btn-ghost-on-navy {
     @apply btn border border-navy-on-muted/40 text-navy-on hover:border-white hover:text-white;
@@ -167,29 +174,170 @@
 }
 
 /* =====================================================
-   The one bespoke interaction: the register hairline draw
+   Scroll reveal
    ===================================================== */
 
-/* Progressive enhancement, on purpose: .fade-up / .grow-line render fully
-   VISIBLE by default — real content, no-JS visitors, and any tool that doesn't simulate
-   real scroll (screenshotters, some crawlers) all see the finished page. JS opts elements
-   INTO the hidden-then-reveal animation by adding .js-armed right before observing them
-   (main.js). Content visibility must never depend on JS running correctly. */
+/* Progressive enhancement, on purpose: .fade-up renders fully VISIBLE by
+   default — real content, no-JS visitors, and any tool that doesn't simulate
+   real scroll (screenshotters, some crawlers) all see the finished page. JS
+   opts elements INTO the hidden-then-reveal animation by adding .js-armed
+   right before observing them (main.js). Content visibility must never
+   depend on JS running correctly.
+
+   .grow-line is the one exception: it's scroll-scrubbed by GSAP directly
+   (main.js, synced to Lenis via gsap.ticker), not the .js-armed pattern
+   above, so its only CSS is the fully-drawn no-JS default. */
 
 .grow-line {
   transform: scaleY(1);
   transform-origin: top;
 }
-.grow-line.js-armed {
-  transform: scaleY(0);
+
+/* Hero trust badge — a very slow ambient float. No new reduced-motion query
+   needed: the existing [data-motion] rule above already kills any animation
+   on an element carrying that attribute when reduced motion is requested. */
+@keyframes badge-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grow-line.js-armed[data-drawn="true"] {
-    transition: transform 1.1s theme("transitionTimingFunction.signature");
-  }
+.badge-float {
+  animation: badge-float 6s ease-in-out infinite;
 }
-.grow-line.js-armed[data-drawn="true"] {
-  transform: scaleY(1);
+
+/* Ventures sequence — the row currently being read gets full presence;
+   the others recede, so the journey-through-three-stages reads as real
+   scroll feedback (main.js ScrollTrigger), not a static list. No new
+   color introduced — opacity only, still navy/paper (CLAUDE.md §5). */
+.sequence-row {
+  opacity: 1;
+  transition: opacity theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+}
+.sequence-row.js-scroll-armed {
+  opacity: 0.4;
+}
+.sequence-row.js-scroll-armed.is-active {
+  opacity: 1;
+}
+
+/* Ecosystem story (homepage "One Ecosystem" section, ecosystem-journey.njk,
+   rebuilt 2026-08-25 — the card-grid version was rejected as templated).
+   Sticky photo (CSS position:sticky, not a GSAP pin) crossfades between
+   three stacked images as the matching text block scrolls to center;
+   scrolling itself is never hijacked. Same "armed" principle as
+   .sequence-row above: [data-photo="0"]/[data-block="0"] are the no-JS
+   default (venture 1 showing), and :not(.ecosystem-armed) stops that rule
+   from matching once JS takes over — the exact guard the card version
+   needed after shipping without it once (see the old comment history). */
+/* Scale rides along with the opacity crossfade — a flat opacity swap read
+   as a plain slide-toggle; easing the incoming photo in from a slight
+   zoom (and letting the outgoing one hold rather than snap) gives the
+   transition actual motion instead of a hard swap. */
+.ecosystem-story-photo {
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 1100ms theme("transitionTimingFunction.signature"),
+    transform 1100ms theme("transitionTimingFunction.signature");
+}
+.ecosystem-story-photo[data-photo="0"]:not(.ecosystem-armed),
+.ecosystem-story-photo.ecosystem-armed.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* .ecosystem-block-title no longer has its own active/inactive color swap
+   — its two-tone color (ink + gold-text) is now fixed in the markup, not
+   state-dependent, so a rule here would just be overridden by its child
+   spans and do nothing. Only the label still dims/brightens with .is-active. */
+.ecosystem-block-label {
+  transition: color theme("transitionDuration.slow") theme("transitionTimingFunction.signature");
+}
+.ecosystem-story-block[data-block="0"]:not(.ecosystem-armed) .ecosystem-block-label,
+.ecosystem-story-block.ecosystem-armed.is-active .ecosystem-block-label {
+  @apply text-navy-soft;
+}
+
+/* Progress ticks — minimal stand-in for the timeline nodes the card
+   version had; a short line per venture, the active one longer and gold.
+   Not reintroducing card-style dots/circles, just enough to answer "where
+   am I in the three stages" without new chrome. Fixed width (w-8 in the
+   markup) + transform: scaleX rather than an animated width — animating
+   width/height/padding/margin forces layout on every frame, where
+   transform is compositor-only; scaleX from the right edge (origin-right
+   in the markup) gives the identical "short tick → long tick" visual
+   without the layout cost. */
+.ecosystem-progress-tick {
+  transform: scaleX(0.625);
+  transition: transform theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
+    background-color theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+}
+.ecosystem-progress-tick[data-tick="0"]:not(.ecosystem-armed),
+.ecosystem-progress-tick.ecosystem-armed.is-active {
+  transform: scaleX(1);
+  @apply bg-gold;
+}
+
+/* Story journey ("Our Story", story-journey.njk) — glass-panel-over-photo
+   and the Three.js particle layer are deliberate overrides of this
+   project's own no-glassmorphism/no-gratuitous-3D rules, on explicit
+   instruction (see the partial's header comment). Same "armed" guard
+   pattern as elsewhere: node 0 is the no-JS default. */
+.story-node-dot {
+  transition: background-color theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+}
+.story-node-ring {
+  transition: box-shadow theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+}
+.story-node[data-node="0"]:not(.story-armed) .story-node-dot,
+.story-node.story-armed.is-active .story-node-dot {
+  @apply bg-gold;
+}
+.story-node[data-node="0"]:not(.story-armed) .story-node-ring,
+.story-node.story-armed.is-active .story-node-ring {
+  box-shadow: 0 0 0 4px theme("colors.gold.DEFAULT / 20%");
+}
+
+/* Ruler ticks — plain CSS pattern, not individual DOM elements. */
+.story-scrubber-ruler {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.3) 0,
+    rgba(255, 255, 255, 0.3) 1px,
+    transparent 1px,
+    transparent 7px
+  );
+  background-position: center;
+}
+
+/* A CSS transition on .story-track's own transform would fight GSAP's
+   per-frame positioning during an actual drag — every drag-move frame
+   would ease over 200ms instead of applying instantly, reading as laggy/
+   rubbery instead of 1:1 responsive. GSAP already owns this element's
+   motion entirely (Draggable, the wheel handler, and goTo()'s tween all
+   set x directly); no CSS transition belongs here. */
+
+/* Soft fade at both viewport edges instead of a hard clip on whichever
+   card is mid-cut off-screen — the earlier hard cut read as a layout bug
+   ("Today" sliced clean in half) rather than an intentional "there's
+   more" hint. */
+.story-track-viewport {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 28px, black calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black 28px, black calc(100% - 28px), transparent 100%);
+}
+
+/* Card active/inactive — same armed-gate pattern as .story-node above;
+   the centered card gets full presence, the rest recede slightly, so
+   scrubbing has real per-card feedback instead of only the node dot
+   and scrubber fill changing. */
+.story-card {
+  opacity: 0.55;
+  transform: scale(0.96);
+  transition: opacity theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
+    transform theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+}
+.story-card[data-card="0"]:not(.story-armed),
+.story-card.story-armed.is-active {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .fade-up.js-armed {

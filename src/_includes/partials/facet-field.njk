@@ -3,8 +3,14 @@
    sprinkled everywhere. Pure inline SVG: no raster asset, no JS, scales to any viewport.
 
    Overscanned 8% top/bottom (vs. a plain inset-0) so main.js can apply a slow ambient
-   parallax drift (texture only, never content) without exposing blank edges. #}
-<svg class="facet-field absolute inset-x-0 pointer-events-none" style="top:-8%; height:116%;" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+   parallax drift (texture only, never content) without exposing blank edges.
+
+   `w-full` is load-bearing, not decorative: an <svg> is a replaced element, so `inset-x-0`
+   (left:0;right:0) alone does NOT stretch its width the way it would a <div> — with no
+   intrinsic width/viewBox to size from, it was silently rendering at the UA default replaced-
+   element width of exactly 300px and leaving the rest of the section as flat navy. Confirmed
+   via getBoundingClientRect(), not eyeballed — see docs/RESUME-PROMPT.md. #}
+<svg class="facet-field absolute inset-x-0 w-full pointer-events-none" style="top:-8%; height:116%;" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
   <defs>
     <pattern id="admizz-facets" width="72" height="62" patternUnits="userSpaceOnUse">
       <polygon points="36,0 72,20 36,40 0,20" fill="none" stroke="#7C93FF" stroke-width="0.75" opacity="0.20"/>

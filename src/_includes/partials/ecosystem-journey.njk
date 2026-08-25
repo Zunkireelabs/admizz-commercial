@@ -1,0 +1,124 @@
+{# Homepage-only "One Ecosystem" story — editorial sticky-photo + scrolling
+   text, replacing the earlier card-grid version (rejected: read as a SaaS
+   template despite the polish). No borders, no icon circles, no pinned
+   viewport-lock. The photo column sits sticky (plain CSS position:sticky,
+   not a GSAP pin) while the three text blocks scroll past normally beside
+   it; main.js just crossfades which photo/ghost-number is showing, tied to
+   which text block is centered — the scroll itself is never hijacked.
+
+   Static/no-JS/reduced-motion default: venture 1's photo shows
+   ([data-photo="0"] is opacity:1 unconditionally in CSS), same "armed"
+   pattern used elsewhere on this site (see main.css) so nothing depends on
+   JS to be correct — a no-JS visitor just sees venture 1's photo and can
+   still read and click through all three text blocks normally.
+
+   Photography: all three (src/assets/images/ecosystem/) are user-supplied,
+   cropped with sharp for this panel's portrait aspect. Flagged, not
+   silently used without comment: institute.jpg is a real conference photo
+   but carries unrelated third-party (ABB Robotics) branding on the
+   projector screen; education.jpg and workforce.jpg read as stock/
+   AI-generated (over-uniform lighting, slightly-too-symmetric faces) and
+   are lower resolution than the rest of the site's imagery (1024×768,
+   1200×800 source vs. 1600×900 elsewhere) — in tension with this project's
+   own "no stock, no AI-look imagery" rule (CLAUDE.md, docs/00-BRIEF.md §13).
+   Used per explicit instruction, not a default any future session should
+   repeat without the same explicit ask. #}
+{% set ecosystemImages = {
+  "institute": { file: "institute.jpg", alt: "Audience at a lecture-hall presentation, laptops open, engaged" },
+  "education": { file: "education.jpg", alt: "Graduates in caps and gowns walking together" },
+  "workforce": { file: "workforce.jpg", alt: "Colleagues collaborating around a table, one using a wheelchair" }
+} %}
+<div class="ecosystem-story-grid mt-12 md:mt-16 md:grid md:grid-cols-2 md:items-start">
+  {# Sticky media column — desktop/tablet only. Mobile gets each photo
+     inline inside its own text block instead (below), never this sticky
+     trick — a plain, natural stack is the right call on small screens. #}
+  <div class="ecosystem-story-media hidden md:block sticky top-[112px] h-[calc(100vh-140px)] overflow-hidden bg-navy-deep">
+    {% for v in ventures %}
+    {% set img = ecosystemImages[v.id] %}
+    <div class="ecosystem-story-photo absolute inset-0" data-photo="{{ loop.index0 }}">
+      <div class="absolute inset-0 [&_picture]:contents [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+        {% image "src/assets/images/ecosystem/" + img.file, img.alt, "50vw" %}
+      </div>
+    </div>
+    {% endfor %}
+    <div class="absolute inset-0 bg-gradient-to-t from-navy-deep/85 via-navy-deep/15 to-transparent pointer-events-none"></div>
+
+    {# Progress — three short ticks, the active one longer and gold. Replaces
+       the timeline-node feedback lost when the card version was dropped,
+       without reintroducing card-style dots/circles. #}
+    <div class="ecosystem-story-progress absolute right-8 top-8 flex flex-col items-end gap-2.5 pointer-events-none" aria-hidden="true">
+      {% for v in ventures %}
+      <span class="ecosystem-progress-tick block h-px origin-right bg-white/35 w-8" data-tick="{{ loop.index0 }}"></span>
+      {% endfor %}
+    </div>
+
+    {# Ghost number — the section's one big signature moment: much larger
+       and closer to full-bleed-typography scale, so it reads as deliberate
+       rather than a watermark tucked in the corner. #}
+    {# leading-none (not the earlier leading-[0.8]) — line-height tighter
+       than ~0.9 clips a serif numeral's own curve at this size once combined
+       with a clipping ancestor; this was shipping visibly cut off. No
+       overflow-hidden here either — nothing needs clipping at this level,
+       the media column's own overflow-hidden (above) already contains
+       everything. #}
+    <div class="absolute left-8 md:left-10 bottom-8 right-8 pointer-events-none">
+      <span class="ecosystem-ghost-num block font-display font-light text-[9rem] lg:text-[12rem] leading-none text-white/30">01</span>
+      <span class="ecosystem-ghost-stage block font-mono text-label uppercase tracking-[0.25em] text-white/95 mt-1">Prepare</span>
+    </div>
+  </div>
+
+  {# md:border-l gives the two columns a real shared edge — a considered
+     grid, not two independent halves — and md:min-h-[82vh] (down from
+     min-h-screen) tightens how much empty space sits above/below centered
+     content in each block; against a photo that fills the FULL viewport
+     height, min-h-screen made the text read as floating in a void rather
+     than composed alongside it. #}
+  <div class="ecosystem-story-text px-gutter md:pr-gutter md:border-l md:border-rule">
+    {% for v in ventures %}
+    {% set img = ecosystemImages[v.id] %}
+    <article class="ecosystem-story-block min-h-[75vh] md:min-h-[82vh] flex flex-col justify-center py-10 md:py-0 md:pl-14 lg:pl-20 border-t border-rule first:border-t-0 md:border-t-0" data-block="{{ loop.index0 }}" data-index="{{ v.index }}" data-stage="{{ v.stage }}">
+      <div class="md:hidden mb-6 aspect-[4/3] overflow-hidden rounded-lg bg-navy-deep">
+        {% image "src/assets/images/ecosystem/" + img.file, img.alt, "90vw" %}
+      </div>
+      <span class="ecosystem-block-label eco-field font-mono text-label uppercase tracking-widest text-ink-faint">{{ v.index }} &mdash; {{ v.stage | upper }}</span>
+      {# Two-tone name — "Admizz" one color, the venture-specific word(s) in
+         the gold CTA color — same technique admizzeducation.com's own hero
+         uses (its emphasized word breaks from the base heading color). All
+         three names start "Admizz ", so splitting on the first space
+         reliably separates the two parts without hardcoding per-venture. #}
+      <h3 class="ecosystem-block-title eco-field mt-4 font-display font-light text-display-2 max-w-[14ch] text-balance">
+        <span class="text-ink">{{ v.name.split(' ')[0] }}</span>
+        <span class="text-gold">{{ v.name.split(' ').slice(1).join(' ') }}</span>
+      </h3>
+      <span class="eco-field mt-2 font-mono text-micro uppercase tracking-widest text-navy-soft block">{{ v.vertical }}</span>
+      <p class="eco-field mt-5 text-body-lg text-ink-muted max-w-measure-tight">{{ v.description }}</p>
+      {% if v.verticalLine %}
+      <p class="eco-field mt-2 text-small text-ink-faint italic">{{ v.verticalLine }}</p>
+      {% endif %}
+      {% if v.exams.length %}
+      <ul class="eco-field mt-5 flex flex-wrap gap-2">
+        {% for e in v.exams %}<li class="font-mono text-micro uppercase tracking-wide text-ink-faint border border-rule rounded-sm px-2 py-1">{{ e }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+      <a href="{{ v.href }}" class="eco-field mt-6 inline-flex items-center gap-2 text-small font-medium text-ink link-underline w-fit">
+        {{ v.cta }}
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </article>
+    {% endfor %}
+  </div>
+</div>
+
+{# Closing line — plain text, no card/border, matching the rest of this
+   redesign's move away from boxed chrome. #}
+<div class="shell mt-4 md:mt-8">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pt-10 border-t border-rule">
+    <p class="font-display font-light text-h3 text-ink max-w-[24ch] text-balance">
+      One ecosystem. <em class="italic text-navy font-book">Endless possibilities.</em>
+    </p>
+    <a href="/ventures/" class="btn-primary shrink-0">
+      Let's build your future
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</div>
