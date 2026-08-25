@@ -55,11 +55,35 @@ interaction-level claim, not just something the previous session happened to do:
 
 ---
 
-## Quick state (keep this current — last updated 2026-08-25, end of session)
+## Quick state (keep this current — last updated 2026-08-25, later same day)
 
-**Phase:** Still Phase 4 (homepage), now considerably further along. This session covered four
-substantial pieces of work, all committed locally to `redesign/hero-globe-light-bg` — **nothing
-pushed to origin.** Four new commits since the last resume-prompt update:
+**Phase:** Still Phase 4 (homepage), now considerably further along. Same day as the last update
+below, a second session picked up where it left off — one more commit, `1e62998`, still local to
+`redesign/hero-globe-light-bg` — **nothing pushed to origin, still true.**
+
+- `1e62998` — **Insights section finished, statement band hidden, hero-image duplication fixed.**
+  The previous session had left the Insights section mid-change, uncommitted (text-only cards,
+  no photography — see the now-superseded reasoning in the commit this replaced). This session
+  reversed that: Insights is photo-anchored again, reusing the rounded-lg/bg-navy-deep thumbnail
+  pattern from `/insights/` — number badge overlaid on the photo with a gradient scrim, group-hover
+  zoom, a closing "Read the piece" link. Also caught and fixed a real crop bug: all 3 source photos
+  carry an Admizz logo watermark baked into the left edge, and a centered `object-fit: cover` crop
+  was slicing it in half — biased `object-position` right to clear it, verified against the actual
+  compiled CSS, not just eyeballed.
+  Separately, the homepage hero photo and Insights post 1's thumbnail turned out to be the *same
+  file* (`global-opportunities.jpg`), so it appeared twice in one scroll. Left the hero alone (too
+  much bespoke art direction — parallax target, tuned crop, brand-shape overlay — built around that
+  exact file) and gave post 1 a new thumbnail instead: `study-abroad.jpg`, a licensed Pexels photo
+  (Pexels License — free commercial use, no attribution required), flagged via `insights.json`'s
+  new `imageSource` field and an `index.njk` comment. Same exception pattern as
+  `education.jpg`/`workforce.jpg` in `ecosystem-journey.njk` — see that section below, now a
+  4th instance of it, not a new policy.
+  Also hidden on request: the navy "From vision to reality..." statement band, wrapped in
+  `{% if false %}...{% endif %}` in `index.njk` rather than deleted — a one-line revert if it comes
+  back, not a rebuild.
+
+This session's work sits on top of four commits from earlier the same day, all also local, all
+still unpushed:
 
 - `e061a7d` — **Nav redesign.** Header now defaults to a simple, flush full-width bar (also the
   correct no-JS/reduced-motion state) and morphs into a floating pill via a GSAP ScrollTrigger
@@ -126,7 +150,7 @@ found (not worth the time sink); the fix was just switching to `/90`. **If a col
 doesn't visually show up despite a clean build, don't assume you mis-eyeballed it — grep the
 compiled CSS for the literal class before spending time on anything else.**
 
-### Statement band ("From vision to reality...")
+### Statement band ("From vision to reality...") — hidden, not deleted
 
 Was `max-w-[18ch]` at up to 64px text — an 18-character column forced the ~115-character quote
 across 5-6 towering lines, ballooning the section to ~2 viewport-heights of solid navy with empty
@@ -134,8 +158,12 @@ space beside it. Widened to 42ch + stepped down to `text-h1`. Also given a phras
 staggered reveal (same duration/ease as the hero entrance, just ScrollTrigger-gated) and an ambient
 glow layer — **deliberately not** the `.facet-field` texture, which a code comment explicitly
 restricts to the hero+close "bookend" sections only. **Moved in page order**: was between the
-ecosystem section and "Our Story"; now sits directly below Insights, immediately above the closing
-CTA band, per explicit instruction.
+ecosystem section and "Our Story"; sat directly below Insights, immediately above the closing CTA
+band, per explicit instruction. **Then hidden entirely** later the same day — wrapped in
+`{% if false %}...{% endif %}` in `index.njk`, markup and all the above tuning still in place. The
+page currently flows Insights straight into the closing CTA band. Bringing it back is a one-line
+revert (delete the `{% if false %}`/`{% endif %}` pair), not a rebuild — don't redo this work if
+asked to restore it, just unwrap it.
 
 ### Content-authenticity flags carried forward — read before adding more photography
 
@@ -150,6 +178,15 @@ original admizz.com-sourced insights photos:
   default any future session should repeat without the same explicit ask** — this project's
   content-authenticity rule (CLAUDE.md non-negotiable #1) is otherwise unchanged and still governs
   everything else.
+
+A 4th instance of the same pattern, added later the same day: Insights post 1's thumbnail
+(`src/assets/images/insights/study-abroad.jpg`) is a **licensed Pexels stock photo** (Pexels
+License — free commercial use, no attribution required), not Admizz's own photography. Cause: the
+original `global-opportunities.jpg` was simultaneously the homepage hero photo AND this post's
+thumbnail, so it appeared twice on the same page — swapped just the thumbnail usage, left the
+(heavily art-directed) hero alone. Flagged via `insights.json`'s `imageSource` field on that one
+entry, and a comment in `index.njk`. The other two Insights posts' images
+(`lifelong-learning.jpg`, `exams.jpg`) are still real Admizz-branded originals, untouched.
 
 ### Open items carried forward, still unresolved
 
@@ -190,8 +227,9 @@ not reflexively suppressing them.
 
 ## If you only remember five things
 
-1. **`redesign/hero-globe-light-bg` has 4 new commits this session, all local, nothing pushed.**
-   Working tree is clean. Don't assume anything from this session is live anywhere.
+1. **`redesign/hero-globe-light-bg` has 5 new commits total across today's two sessions
+   (`e061a7d`…`1e62998`), all local, nothing pushed.** Working tree is clean as of `1e62998`.
+   Don't assume anything from this branch is live anywhere.
 2. **The glassmorphism + Three.js in "Our Story" is a confirmed, scoped exception, not a new
    house style.** Don't reuse either elsewhere without the same explicit confirmation this section
    got — every relevant file says so in its own comments.
