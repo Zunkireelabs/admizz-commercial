@@ -40,142 +40,123 @@ redesign pass, not more reactive tweaks — start there.
 
 ---
 
-## Quick state (keep this current — last updated 2026-08-24, end of day)
+## Quick state (keep this current — last updated 2026-08-25)
 
-**Phase:** Homepage hero + nav + ventures section went through a very long, reactive iteration
-cycle this session (globe removed, nav redesigned, hero rebuilt ~6 times, ventures section rebuilt
-3 times). It ends with the user explicitly frustrated ("this site still look like trash"), an
-**honest, agreed diagnosis of why**, and a **standing request for one coherent redesign pass**
-next session — not more isolated section patches. Read "The core diagnosis" below before touching
-anything; it's the most important section in this file.
+**Phase:** The hero section was rebuilt from scratch this session against an explicit visual
+reference the user supplied (screenshots, not a written spec) and iterated through many rounds of
+direct pixel-level comparison — "compare this to that" — rather than abstract feedback. It's now
+committed in two commits on `redesign/hero-globe-light-bg`, both still **local, nothing pushed to
+origin**:
 
-### The core diagnosis — read this first, it's what the next session is actually for
-Asked directly why the site still felt bad despite lots of individually-reasonable fixes, three
-real causes were named and the user agreed with them:
+- `8b4dec2` — the main rebuild: full-bleed split hero (photo as an absolute layer, not a boxed
+  panel), eyebrow pill re-added, dot-grid globe motif, a large translucent Admizz-chevron
+  watermark over the photo, a curved SVG transition into a new navy value band (Global Reach /
+  Student First / Future Ready) with a soft diagonal light-sweep layer, hero-scoped heading scale,
+  and extensive spacing tightened so the whole hero fits without scrolling.
+- `be61c0a` — a follow-up fix: the photo layer used to extend behind the fixed nav for an
+  edge-to-edge look, but that let the thrown caps near the top of the source photo end up hidden
+  under the nav pill depending on viewport size. Now the photo starts just below the nav's
+  measured bottom edge (93.5px, consistent at every width) instead — structural fix, not another
+  crop-percentage guess.
 
-1. **The whole session was reactive patches, never one coherent pass.** Every change was
-   "user points at one thing → fix that one thing → verify → move on." The hero alone went through
-   ~6 distinct treatments (globe → no globe → photo → wave mask → no mask → mask back → tightened
-   spacing). Each pivot was locally reasonable given what was asked in the moment, but the result
-   is a page assembled from fragments, not authored as one idea. **The fix is a single, decisive,
-   top-to-bottom pass — pick one direction, apply it everywhere in one continuous effort — not
-   another round of one-section-at-a-time requests.**
-2. **The blue palette is a live open question, not settled.** `tailwind.config.js`'s `navy`/`gold`
-   token *values* still render blue (`navy.DEFAULT: #3D5AFE`) instead of the original
-   recovered/verified navy (`#002856`)/gold (`#FDD63F`) identity — that swap was a deliberate
-   override from an earlier session. Looking at the whole page together this session, the
-   assessment was that this blue reads as generic-SaaS (the single most oversaturated color in
-   tech right now) and actively works against the site looking distinctive, and the **recommendation
-   was to revert toward the real navy/gold identity as the likely highest-leverage single change**.
-   The user had not yet said "yes, revert it" when the session ended — **confirm this explicitly
-   before touching the palette**, don't assume the recommendation was accepted.
-3. **Every section repeats the identical formula** — small-caps label → serif heading → paragraph
-   → link, section after section (ventures, timeline, insights), all at the same scale and rhythm.
-   Real content presented with no variation in pacing or visual weight reads as templated
-   regardless of how good any one section looks alone.
+**Dev server was stopped when this session ended** (killed mid-session, not by user request at
+the very end) — start fresh with `npm run dev`, don't assume a background task survived.
 
-**What NOT to do next session:** don't start with another single-element fix in response to a new
-screenshot. Start by asking whether to execute the redesign pass (color revert + one consistent
-pass across the whole homepage), and if yes, do it as one continuous effort with a clear direction
-stated up front, not a return to the screenshot-react-fix loop.
+### The methodology that actually worked, after a lot of failed guessing
+Early in this session, fixes were applied by eyeballing screenshots and guessing at CSS values
+(`object-position` percentages especially) — this produced repeated wrong fixes and visible user
+frustration ("are you kidding me?", "can you even replicate a small thing"). **What actually
+worked, and should be the default approach going forward for any pixel-level visual claim:**
+- **Measure, don't estimate.** Use Playwright (`node` script + `page.evaluate()`) to get real
+  `getBoundingClientRect()` / `naturalWidth`/`naturalHeight` values instead of guessing container
+  or image dimensions from a screenshot. Several rounds of wrong `object-position` tuning were
+  traced to wrong mental math about container aspect ratios — actual measurement resolved it in
+  one pass every time it was used.
+- **Test at the user's actual reported viewport, not a round number.** The user's real browser
+  content area (after tabs/address bar/bookmarks) is **≈1280×722** on their main machine — a
+  screenshot they share of "the full window" (address bar visible) is the way to get this
+  precisely; do the arithmetic from the image's pixel dimensions ÷ likely DPR (2x on their
+  machine) rather than assuming 1440×900 or similar is representative.
+- **Verify claims with a real screenshot before stating them as fact.** Several early "this is
+  fixed" claims turned out wrong because they were asserted without a fresh screenshot at the
+  specific viewport in question. Screenshot → crop the specific claimed region → look, every time,
+  before telling the user something is resolved.
+- **Real wheel-scroll, not `window.scrollTo()`**, for anything Lenis/GSAP-driven — still true, see
+  below.
+- **When two constraints fight** (this session: "caps must have visible margin below the nav" vs.
+  "the whole hero must fit with zero scroll" at a 722px-tall viewport), don't keep silently
+  re-tuning spacing forever — find the actual structural fix (here: stop the photo from extending
+  behind the nav at all) rather than a percentage that only works at one specific size.
 
-### Impeccable — a design-quality tool got installed this session, now active
-`https://impeccable.style` — a Claude Code plugin/skill that flags AI-generated design "slop"
-patterns — was installed project-scoped via `npx impeccable install` (lives in
-`.claude/skills/impeccable/`, plus `.github/agents/`, `.github/hooks/`, `.github/skills/`, all
-currently **untracked**, not yet committed). Its `/impeccable` skill is available via the Skill
-tool. **A PostToolUse hook now auto-scans CSS/UI file edits** and reports findings inline (seen
-throughout the second half of this session as `[impeccable@1] Design hook scanned...` messages).
-
-Two real findings it caught and fixed this session, both still in effect:
-- **No eyebrow/kicker above the hero H1** — "a kicker above a heading... no brief earns it back,
-  delete the label." Removed from the hero specifically; other sections' eyebrows were untouched
-  (out of scope of that finding, not yet audited elsewhere).
-- The wave `clip-path` mask on the hero photo was flagged as a banned "geometric mask standing in
-  for an organic contour," was removed once, but **the user explicitly asked for it back**
-  ("i dont want curve to be removeddddd") — it's a confirmed, deliberate override of that specific
-  Impeccable finding, not an oversight. Don't remove it again without asking.
-
-Impeccable's own craft-floor doc also explicitly bans "same-size cards of icon+heading+text" as
-page structure — the user asked for exactly that pattern on the ventures section anyway
-("make them as the card"), it was built, then walked back to a card-less "connected sequence"
-based on real web research (see below), landing on the current state. Cards are not currently
-in use anywhere on the homepage.
-
-### What's actually in the working tree right now (uncommitted)
-Last commit is `9643599` ("redesign: floating pill nav, photo hero with wave mask, real ICEF
-trust badge") on branch `redesign/hero-globe-light-bg` — **still local, nothing pushed to origin
-this entire session.** Since that commit, uncommitted changes:
-- `src/pages/index.njk`, `src/_includes/partials/ventures-register.njk`: the ventures section
-  rebuilt from an indexed-row list → cards → **a card-less "connected sequence"** (current state):
-  no borders/boxes, bigger venture-name type (`text-h2`, up from `text-h3`), a gold connecting
-  line that's scroll-scrubbed (not a one-shot reveal), and the row currently centered in viewport
-  holds full opacity while the other two dim to 40% — real scroll feedback about progress through
-  Prepare → Study → Work, not decoration. Used on both `/` and `/ventures/` (shared partial).
-- `src/assets/js/main.js`: **a real, previously-unnoticed bug was found and fixed** — Lenis
-  (smooth-scroll) was running on its own independent `requestAnimationFrame` loop, never telling
-  GSAP's ScrollTrigger that a scroll happened. This affected every scroll-scrubbed effect on the
-  site (header progress bar, facet-field parallax), not just the new ventures work — it just
-  wasn't visible until a precise scroll-linked effect was added. Fixed by driving Lenis from
-  `gsap.ticker` and wiring `lenis.on('scroll', ScrollTrigger.update)`. **Verify this is still
-  correct with real wheel-scroll simulation (not `page.evaluate(() => window.scrollTo(...))`,
-  which bypasses Lenis and can hide a desync) if you touch any scroll-driven code.**
-- `src/assets/css/main.css`: `.index-num`/old `.grow-line`/`.register-row`-in-ventures rules
-  removed as dead code across the cards→sequence churn; `.sequence-row`/`.sequence-num` added.
-  `.register-row` itself is still used elsewhere (insights lists) — don't remove it globally.
-- Untracked, not yet committed: the Impeccable install (above), `temp_ss/` (scratch — includes an
-  **unrelated** IELTS-workshop marketing email HTML file that has nothing to do with this site,
-  don't confuse the two if it's still sitting there).
-
-**Dev server was not running when this session ended** — start it fresh (`npm run dev`), don't
-assume a background task survived.
-
-### Hero photo — still the placeholder, still has a known defect
-`src/assets/images/insights/global-opportunities.jpg` (graduation cap-toss photo) is reused as the
-hero image — real, Admizz-branded, but not purpose-shot for this placement, and it has an
-**"admizz" watermark baked into the pixels, top-left corner**. It's currently cropped out of view
-via `object-position: center 35%`, but that's fragile — if the crop/object-position or the photo
-container's aspect ratio changes again, the watermark can reappear in frame. A prior attempt this
-session to fix this properly (crop the source file with `sharp`, save as a dedicated hero asset)
-was built, verified working, then **fully reverted** at the user's request along with an unrelated
-two-column layout change it was bundled with — so the watermark crop fix does not exist on disk
-right now. Worth redoing in isolation if the hero photo comes up again.
-
-### Deliberate overrides still standing from earlier sessions — confirm before reverting
-- **Blue palette** — see "core diagnosis" above; open question, not yet resolved either way.
-- **Floating pill nav** (`rounded-full`, centered links) — against `CLAUDE.md` §5's radius scale
-  rule, explicitly approved earlier this session, not revisited since.
-- **No 3D globe** — Three.js globe, its texture asset, and the `three` dependency were fully
-  removed this session per explicit instruction ("no earth"). Don't reintroduce without asking.
-- **Wave `clip-path` hero mask** — see Impeccable section above; explicitly restored after removal.
-
-### Content/infra facts carried forward, unchanged this session
-- `/verify-admizz-content` skill still exists (`.claude/skills/verify-admizz-content/SKILL.md`),
-  read-only, re-checks `src/_data/*.json` against live admizz.com.
+### Open items carried forward, unresolved
+- **Blue palette is still not reverted to navy/gold.** This was flagged as an open question at the
+  end of the *previous* session and never got a yes/no this session either — the whole hero rebuild
+  this session was done in the current blue (`navy.DEFAULT: #3D5AFE`), matching what the user's
+  reference screenshots themselves showed in blue. Don't assume this settles the navy/gold
+  question — it was simply never revisited. Confirm explicitly before changing the palette either
+  direction.
+- **The "repeated formula" critique from the previous session's diagnosis still applies to
+  everything below the hero** — ventures/timeline/insights sections were not touched this session,
+  only the hero was. If asked to continue the "one coherent pass," that work is still pending.
+- **Mobile was explicitly deferred by the user** ("not that imp right now... figure that later")
+  — the hero rebuild this session targeted desktop only; mobile hasn't been re-verified against
+  any of this session's changes and may need a separate pass.
+- Inner pages (`/about/`, `/insights/`, `/contact/`) still haven't had the line-by-line content
+  grounding the homepage got.
 - Two open content-provenance questions from before, still unresolved: `site.json.legalName`
   ("Admizz Group" vs. live `og:site_name` "Admizz Consulting Group"), and `site.json.description`'s
   wording/source tag.
-- Inner pages (`/about/`, `/insights/`, `/contact/`) still haven't had the line-by-line content
-  grounding the homepage got.
-- CI/CD (`stage` → `dev-web.admizz.com` auto-deploy), the public-repo decision, and the
-  `ssh vps` (`manjila`) vs. pipeline `VPS_USER` (`zunkireelabs`) distinction are all unchanged from
-  before this session and still accurate.
 - The lookalike-silhouette test (non-negotiable #4) has still never been run on any page.
+
+### Impeccable — installed, still untracked
+`https://impeccable.style` was installed project-scoped last session (`.claude/skills/impeccable/`,
+`.github/agents/`, `.github/hooks/`, `.github/skills/` — still **untracked**, deliberately not
+committed alongside content changes). Its PostToolUse hook auto-scans CSS/UI edits. Not actively
+referenced during this session's hero work, but still active/installed.
+
+### Deliberate overrides still standing — confirm before reverting
+- **Blue palette** — see "Open items" above; still an open question, not resolved either way.
+- **Floating pill nav** (`rounded-full`, centered links) — against `CLAUDE.md` §5's radius scale
+  rule, approved in an earlier session, widened slightly this session (`max-w-5xl` → `max-w-6xl`),
+  not otherwise revisited.
+- **No 3D globe** — removed in an earlier session per explicit instruction ("no earth"); this
+  session's "globe" is a flat dot-grid pattern, not a reintroduction of the 3D one. Don't confuse
+  the two.
+- **Hero no longer uses the wave `clip-path` photo mask** from two sessions ago — that technique
+  was fully superseded this session by the new full-bleed-photo-plus-curved-value-band design. The
+  curve now caps the hero→navy transition below the content, not the photo itself.
+
+### Hero photo — still the same placeholder, watermark handling changed
+`src/assets/images/insights/global-opportunities.jpg` is still the hero image — real,
+Admizz-branded, not purpose-shot for this placement, with an **"admizz" watermark baked into the
+pixels, top-left corner**. This session's crop (`object-position: 60% 0%` plus a `scale-110` on
+the image) keeps it out of frame at every viewport width tested (1280/1440/1996) — verified more
+rigorously than previous sessions' attempts, including specifically re-checking wide viewports
+after a horizontal-crop change let it creep back into frame once already. Still fragile in
+principle if the container's aspect ratio changes again; the permanent fix (crop the source file
+itself with `sharp`, save as a dedicated hero asset with the watermark physically removed) still
+doesn't exist on disk.
+
+### Content/infra facts carried forward, unchanged
+- `/verify-admizz-content` skill still exists (`.claude/skills/verify-admizz-content/SKILL.md`),
+  read-only, re-checks `src/_data/*.json` against live admizz.com.
+- CI/CD (`stage` → `dev-web.admizz.com` auto-deploy), the public-repo decision, and the
+  `ssh vps` (`manjila`) vs. pipeline `VPS_USER` (`zunkireelabs`) distinction are all unchanged.
 
 ## If you only remember five things
 
-1. **Start with the redesign-pass question, not a new patch.** The user asked for one coherent
-   pass next session, not a return to reactive single-section fixes. Confirm direction (color
-   revert + consistent pass) before writing code.
-2. **Never invent business facts.** Still true, still held all session — no fabricated stats, no
-   fake social-proof widgets, even when reference screenshots showed them; real facts (ICEF cert,
-   real ventures) were substituted instead every time.
-3. **Verify scroll/motion work with real interaction, not just a screenshot.** The Lenis/ScrollTrigger
-   desync bug this session was invisible to `window.scrollTo()`-based checks and only showed up
-   under real wheel-scroll simulation. Assume other scroll-driven code deserves the same scrutiny.
-4. **Impeccable is now active and will comment on CSS/UI edits automatically** — take its findings
-   seriously, but the user can and does override specific bans on purpose (the wave mask, cards).
-   Don't silently "fix" a deliberate override because a detector flagged it.
-5. **Nothing has been pushed to origin this entire session.** Everything is local — one commit
-   ahead of `stage` plus the uncommitted ventures/Lenis work above. Don't assume anything is live
-   on `dev-web.admizz.com` beyond what was true before this session started.
+1. **Measure, don't guess, for any pixel-level claim.** Playwright + `getBoundingClientRect()` /
+   `page.evaluate()` beats eyeballing a screenshot every time — this session wasted many rounds on
+   `object-position` guesses that real measurement would have resolved in one pass.
+2. **Test at the user's actual reported viewport (≈1280×722 content area), not a round number
+   like 1440×900.** Several "this is fixed" claims failed because they were verified at a
+   comfortably large synthetic size instead of the user's real, tighter window.
+3. **When two layout constraints genuinely conflict at a given viewport, find the structural
+   fix, not another spacing tweak.** The nav/caps-overlap bug was only actually fixed by stopping
+   the photo from extending behind the nav — not by yet another crop percentage.
+4. **Never invent business facts** — still true, unchanged. No fabricated stats or social proof;
+   the new value-band taglines (Global Reach / Student First / Future Ready) are generic,
+   user-supplied copy, not invented claims.
+5. **Nothing has been pushed to origin.** Two new commits (`8b4dec2`, `be61c0a`) sit locally ahead
+   of whatever `stage` currently has. Don't assume anything from this session is live on
+   `dev-web.admizz.com`.
