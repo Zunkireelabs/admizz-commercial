@@ -24,16 +24,18 @@ permalink: /
    choreographs entrance once it has actually loaded (see main.js comment). #}
 <section class="relative bg-paper overflow-hidden">
   {# Photo layer — absolute, right-biased, no rounding, no contained box.
-     Starts BELOW the fixed nav (top-[100px] — the nav pill's own measured
-     bottom edge is 93.5px at every viewport width, so this is a tight,
-     deliberate margin, not a guess) rather than spanning the section's full
-     height behind it. Earlier versions let the photo extend behind the nav
-     for a more edge-to-edge look, but that meant anything near the top of
-     the source photo — specifically the thrown caps — could end up partly
-     hidden under the nav pill depending on viewport size, and no amount of
-     crop tuning fixed it reliably at every size. Starting below the nav
-     guarantees zero overlap regardless of viewport, full stop. #}
-  <div class="absolute right-0 top-[100px] bottom-0 w-full lg:w-[58%] overflow-hidden">
+     Starts BELOW the fixed nav (top-20/80px — the nav bar's resting-state
+     bottom edge measures 69.5px now that the header defaults to a flush
+     full-width bar rather than a floating pill, so this is a tight,
+     deliberate ~10px margin below that, not a guess) rather than spanning
+     the section's full height behind it. Earlier versions let the photo
+     extend behind the nav for a more edge-to-edge look, but that meant
+     anything near the top of the source photo — specifically the thrown
+     caps — could end up partly hidden under the nav depending on viewport
+     size, and no amount of crop tuning fixed it reliably at every size.
+     Starting below the nav guarantees zero overlap regardless of viewport,
+     full stop. #}
+  <div class="absolute right-0 top-20 bottom-0 w-full lg:w-[58%] overflow-hidden">
     {# The parallax target is this inner, overscanned (-6% top/bottom)
        wrapper — GSAP moves it within the statically sized, overflow-hidden
        layer so scrolling never exposes a gap (same technique as .facet-field).
@@ -62,6 +64,15 @@ permalink: /
        only enough coverage to keep the text column clean, not a wash across
        the whole frame. #}
     <div class="absolute inset-0 bg-gradient-to-r from-paper from-0% via-paper/65 via-22% to-transparent to-58% lg:to-50%"></div>
+    {# Top-edge blend — the photo's left edge already fades into the paper
+       column (above); the top edge didn't, so where the nav's protective
+       gap (see the top-20 comment above) sits over paper it was invisible,
+       but the exact same gap sitting over the photo read as a hard, visible
+       seam — one gap, two different results depending on contrast. This
+       fades the photo's own top ~64px from paper down to fully transparent,
+       so it emerges out of the ground the same way the left edge already
+       does, rather than starting with a flat line. #}
+    <div class="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-paper to-transparent"></div>
   </div>
 
   <div class="shell relative pt-28 pb-3 md:pt-28 md:pb-4">

@@ -4,14 +4,26 @@
      open on the paper ground (about, insights index, contact) must NEVER get that light
      state — light text on paper is close to illegible. #}
   x-data="{ open: false, scrolled: false, navyHeader: {{ 'true' if navyHeader else 'false' }} }"
-  x-init="scrolled = window.scrollY > 40; window.addEventListener('scroll', () => scrolled = window.scrollY > 40, { passive: true })"
+  x-init="scrolled = window.scrollY > 90; window.addEventListener('scroll', () => scrolled = window.scrollY > 90, { passive: true })"
   x-effect="document.body.classList.toggle('overflow-hidden', open)"
-  class="fixed inset-x-0 top-4 md:top-6 z-50 px-gutter"
+  class="fixed inset-x-0 top-0 z-50"
 >
-  <div class="mx-auto max-w-6xl">
+  {# header-frame/header-bar: a simple full-width bar by default (the correct
+     no-JS/reduced-motion state too — see main.js), morphing into a floating
+     pill once scroll starts. header-frame's shrink comes from GSAP tweening
+     its margin-left/right, not width — a block element with explicit margins
+     and no fixed width auto-shrinks to fill what's left, so the browser does
+     the centering, not JS. header-bar's border-radius/box-shadow scrub the
+     same way; background/text color is untouched, still the existing
+     navyHeader Alpine swap below.
+     No px-gutter on <header> itself, deliberately — that used to leave a
+     permanent 48px margin on both sides even in the "full-width bar" resting
+     state, which isn't full-width at all. GSAP's margin tween now starts
+     from a true 0, not from that gutter. #}
+  <div class="header-frame">
     <div
-      class="relative flex items-center justify-between gap-4 rounded-full pl-6 pr-3 py-3 overflow-hidden transition-colors duration-slow ease-signature"
-      :class="(navyHeader && !scrolled && !open) ? 'bg-white/10 border border-white/25 backdrop-blur-md' : 'bg-white/95 border border-rule backdrop-blur-md shadow-lg shadow-navy-deep/10'"
+      class="header-bar relative flex items-center justify-between gap-4 rounded-none pl-6 pr-3 py-3 overflow-hidden transition-colors duration-slow ease-signature"
+      :class="(navyHeader && !scrolled && !open) ? 'bg-white/10 border border-white/25 backdrop-blur-md' : 'bg-white/95 border border-rule backdrop-blur-md'"
     >
       <a href="/" class="flex items-center gap-2 shrink-0" aria-label="{{ site.name }} — home">
         <img
@@ -19,7 +31,7 @@
           alt="{{ site.name }}"
           width="140"
           height="42"
-          class="h-7 w-auto transition-opacity duration-press"
+          class="h-8 w-auto transition-opacity duration-press"
           :class="(navyHeader && !scrolled && !open) ? 'brightness-0 invert' : ''"
         >
       </a>
@@ -69,7 +81,7 @@
     x-show="open"
     x-cloak
     x-collapse
-    class="md:hidden mt-3 rounded-3xl bg-paper border border-rule shadow-lg shadow-navy-deep/10 max-h-[calc(100dvh-6rem)] overflow-y-auto"
+    class="md:hidden mx-gutter mt-3 rounded-3xl bg-paper border border-rule shadow-lg shadow-navy-deep/10 max-h-[calc(100dvh-6rem)] overflow-y-auto"
     aria-label="Mobile"
   >
     <div class="px-6 py-6 flex flex-col gap-1">

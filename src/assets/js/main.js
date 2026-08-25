@@ -66,6 +66,35 @@ if (!prefersReducedMotion) {
         .to(heroEls, { opacity: 1, y: 0, stagger: 0.12 });
     }
 
+    // Header shape morph — simple full-width bar at the top, floating pill
+    // once scroll starts (see header.njk comment for the margin-not-width
+    // mechanism). Values are read from the live DOM at setup time — the
+    // real computed gutter and the real available width — rather than
+    // re-deriving the CSS clamp() formula here. Scrub, not a timed tween:
+    // same "ease: none" pattern as every other scroll-tied effect below,
+    // since the animation position IS the scroll position, not a curve
+    // played back over time.
+    const headerFrame = document.querySelector('.header-frame');
+    const headerBar = document.querySelector('.header-bar');
+    if (headerFrame && headerBar) {
+      const topPad = window.innerWidth >= 768 ? 24 : 16;
+      // Measured before the tween runs, so it's the frame's natural width at
+      // zero margin (i.e. already inside the header's own gutter padding) —
+      // reading this directly sidesteps clientWidth vs. content-box confusion.
+      const availableWidth = headerFrame.getBoundingClientRect().width;
+      const pillInset = Math.max(0, (availableWidth - 1152) / 2);
+
+      gsap.timeline({ scrollTrigger: { start: 0, end: 140, scrub: 0.3 } })
+        .fromTo(headerFrame,
+          { marginLeft: 0, marginRight: 0, marginTop: 0 },
+          { marginLeft: pillInset, marginRight: pillInset, marginTop: topPad, ease: 'none' },
+          0)
+        .fromTo(headerBar,
+          { borderRadius: 0, boxShadow: '0 2px 4px rgba(16,25,43,0), 0 18px 40px -20px rgba(16,25,43,0)' },
+          { borderRadius: 999, boxShadow: '0 2px 4px rgba(16,25,43,.05), 0 18px 40px -20px rgba(16,25,43,.24)', ease: 'none' },
+          0);
+    }
+
     // Header scroll-progress line — real scroll fraction, not a decorative
     // loop. No `trigger` means it tracks the whole document (start 0, end max).
     const scrollProgress = document.querySelector('.scroll-progress');
