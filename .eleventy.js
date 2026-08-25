@@ -95,6 +95,14 @@ export default function (eleventyConfig) {
     return str.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   });
 
+  // Reading time, computed from real word count (~200wpm) — never a guessed
+  // number, so it stays honest as insights.json copy is edited.
+  eleventyConfig.addFilter("readingTime", function (text) {
+    if (!text) return 1;
+    const words = text.trim().split(/\s+/).length;
+    return Math.max(1, Math.round(words / 200));
+  });
+
   // Responsive image shortcode — AVIF/WebP/JPEG with srcset, async-generated at build time.
   // Usage: {% image "src/assets/images/people/founder.png", "Manish K Sah, Founder & CEO", "50vw" %}
   //

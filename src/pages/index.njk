@@ -228,10 +228,29 @@ permalink: /
 
 {% include "partials/story-journey.njk" %}
 
-{# ============================================================ INSIGHTS #}
-<section class="bg-paper py-section">
+{# ============================================================ INSIGHTS
+   Photo-anchored editorial index. An earlier pass this session went
+   text-only here, reasoning the 3 real Admizz-branded photos would read
+   as stock at this size — reversed after actually looking at them again;
+   they hold up fine, and every other homepage section is photo-anchored,
+   so a text-only Insights block was the odd one out. Reuses the same
+   rounded-lg/bg-navy-deep thumbnail pattern already proven on /insights/,
+   not a new one. Reading time computed from real word count (readingTime
+   filter, .eleventy.js). 3 real posts, presented as 3 — no invented 4th.
+
+   Post 1's photo (study-abroad.jpg) is licensed Pexels stock, not an
+   Admizz original — see insights.json's imageSource field for the exact
+   license/reasoning. The original global-opportunities.jpg (still the
+   homepage hero photo, untouched, see the hero section above) was ALSO
+   this post's thumbnail, so it appeared twice on the same page scroll.
+   Swapped this one usage rather than the hero, since the hero has much
+   heavier bespoke art direction (parallax target, tuned crop, brand-shape
+   overlay) built around that specific file. Same content-authenticity
+   exception pattern as education.jpg/workforce.jpg in ecosystem-journey.njk
+   — a deliberate, flagged substitution, not a new default. #}
+<section class="bg-paper py-section-sm md:py-section">
   <div class="shell">
-    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12 fade-up">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 fade-up">
       <div>
         <span class="eyebrow">Insights</span>
         <h2 class="mt-3 font-display font-light text-h2 text-ink">Ideas for what's next.</h2>
@@ -239,38 +258,34 @@ permalink: /
       <a href="/insights/" class="text-small font-medium text-ink link-underline shrink-0">View all insights</a>
     </div>
 
-    {% for lead in insights %}{% if lead.featured %}
-    <article class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center pb-10 border-b border-rule fade-up">
-      <a href="/insights/{{ lead.slug }}/" class="block rounded-lg overflow-hidden bg-navy-deep">
-        {% image "src/assets/images/insights/" + lead.image, lead.imageAlt, "(min-width: 768px) 50vw, 100vw" %}
-      </a>
-      <div>
-        <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ lead.venture }}</span>
-        <h3 class="mt-3 font-display font-book text-h3 text-ink">
-          <a href="/insights/{{ lead.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ lead.title }}</a>
-        </h3>
-        <p class="mt-4 text-body text-ink-muted max-w-measure">{{ lead.deck }}</p>
-        <a href="/insights/{{ lead.slug }}/" class="mt-5 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">Read the piece</a>
-      </div>
-    </article>
-    {% endif %}{% endfor %}
-
-    <div class="mt-2">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12 md:gap-y-0">
       {% for post in insights %}
-      {% if not post.featured %}
-      <article class="register-row fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
-        <a href="/insights/{{ post.slug }}/" class="block rounded-lg overflow-hidden bg-navy-deep aspect-[4/3] md:aspect-square">
-          {% image "src/assets/images/insights/" + post.image, post.imageAlt, "9rem" %}
+      <article class="group md:border-l md:first:border-l-0 border-rule md:pl-8 md:first:pl-0 fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
+        <a href="/insights/{{ post.slug }}/" class="block relative rounded-lg overflow-hidden bg-navy-deep aspect-[4/3]" tabindex="-1" aria-hidden="true">
+          {# object-position biased right: all 3 source images carry a small
+             Admizz logo watermark baked into the top/bottom-LEFT corner
+             (verified via metadata — all exactly 1600x900, logo ~0-280px on
+             the x-axis). A 4:3 crop from a 16:9 source only trims width, not
+             height, so a centered crop sliced the watermark in half instead
+             of showing or hiding it cleanly. Shifting the crop window right
+             clears it with margin; nothing meaningful sits in the far-right
+             5-10% of any of these three photos. #}
+          <div class="absolute inset-0 transition-transform duration-slow ease-signature group-hover:scale-105 [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[80%_50%]">
+            {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 768px) 33vw, 100vw" %}
+          </div>
+          <span class="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-navy-deep/85 to-transparent" aria-hidden="true"></span>
+          <span class="absolute bottom-3 left-4 flex items-center gap-2 font-mono text-micro text-white">
+            <span class="w-4 h-px bg-gold" aria-hidden="true"></span>
+            0{{ loop.index }}
+          </span>
         </a>
-        <div>
-          <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
-          <h3 class="mt-2 text-h4 font-display font-book text-ink">
-            <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
-          </h3>
-          <p class="mt-2 text-small text-ink-muted max-w-measure">{{ post.deck }}</p>
-        </div>
+        <span class="mt-5 block font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }} &middot; {{ post.body | readingTime }} min read</span>
+        <h3 class="mt-2 font-display font-book text-h4 text-ink text-balance">
+          <a href="/insights/{{ post.slug }}/" class="group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+        </h3>
+        <p class="mt-3 text-small text-ink-muted">{{ post.deck }}</p>
+        <a href="/insights/{{ post.slug }}/" class="mt-4 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">Read the piece</a>
       </article>
-      {% endif %}
       {% endfor %}
     </div>
   </div>
@@ -278,7 +293,10 @@ permalink: /
 
 {# ============================================================ STATEMENT BAND
    Moved below Insights (was between the ecosystem section and "Our Story")
-   on request — same section, same markup, just repositioned in the page. #}
+   on request — same section, same markup, just repositioned in the page.
+   Hidden 2026-08-25 on request — wrapped in {% if false %} rather than
+   deleted so it's a one-line revert, not a rebuild, if it comes back. #}
+{% if false %}
 <section class="relative overflow-hidden bg-navy py-section-sm">
   {# Ambient glow — same blurred-gradient technique as the hero value band's
      light sweep, a fresh instance (not the reserved .facet-field texture,
@@ -311,6 +329,7 @@ permalink: /
     <span class="statement-line inline-block mt-8 md:block font-mono text-micro uppercase tracking-widest text-navy-on-muted">&mdash; Admizz Group</span>
   </div>
 </section>
+{% endif %}
 
 {# ============================================================ CLOSE #}
 <section class="relative overflow-hidden bg-navy-deep py-section">
