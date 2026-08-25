@@ -31,11 +31,15 @@ Then tell me, in a short summary:
 
 Do not write any site code or touch the VPS until I've confirmed direction.
 
-One more thing before you touch anything: I was frustrated by the end of the last session — a lot of
-back-and-forth that didn't land, and I told the assistant the site "still looks like trash." The
-"Quick state" section below has an honest diagnosis of why, agreed with me before the session ended.
-Read it, and do NOT jump into another isolated section-by-section patch. I asked for one coherent
-redesign pass, not more reactive tweaks — start there.
+One more thing before you touch anything: the last session rebuilt the hero section against a
+visual reference I gave (screenshots, "compare this to that"), and it landed — committed, verified
+at my actual browser size, not just a generic desktop width. Early in that session there was a lot
+of wrong guessing on pixel-level details (crop positions especially) before we found an approach
+that actually worked: measure real dimensions with Playwright instead of eyeballing screenshots,
+and test at my actual window size, not a round number. The "Quick state" section below has the
+specifics — read it before assuming anything about current spacing/positioning values, and use
+that same measure-don't-guess approach if you're making similar pixel-level visual claims this
+session.
 ```
 
 ---
