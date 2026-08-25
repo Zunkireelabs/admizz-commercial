@@ -1,0 +1,87 @@
+{# "Our Story" — homepage only. A drag-scrub horizontal journey through the
+   timeline, replacing the earlier static stacked-rows version, per explicit
+   direction: a frosted-glass panel over a blurred photo, plus a Three.js
+   ambient particle layer. Both are normally against this project's own
+   anti-"generic AI site" rules (no glassmorphism, no gratuitous 3D) —
+   deliberately overridden here on explicit instruction, not a default
+   future sessions should repeat without the same explicit ask.
+
+   No page-scroll pinning/hijacking: the page scrolls past this section
+   normally. The horizontal movement is self-contained — GSAP Draggable on
+   the card track (drag directly, or use the arrows/scrubber) — same
+   "don't trap the scroll" lesson as the ecosystem section.
+
+   Static/no-JS default: cards sit in a horizontally scrollable (native
+   overflow-x) track, so the content is still fully reachable without JS —
+   Draggable only progressively enhances the interaction once it loads. #}
+<section class="story-journey relative overflow-hidden py-section" aria-label="Company timeline">
+  {# A single flat bg-navy-deep/78 wash mixed with this photo's warm wood
+     tones into a muddy brown-grey rather than reading as an on-brand blue
+     backdrop — the dark navy wasn't opaque/vibrant enough to dominate the
+     photo's own warmth. A richer gradient (vibrant navy through navy-deep,
+     not one flat dark tone) at higher opacity, plus a soft gold glow tying
+     to the particle layer and the active-card gold, replaces it. Blur
+     pushed up too, for smoother abstraction under the stronger color. #}
+  <div class="absolute inset-0 -z-20 overflow-hidden [&_picture]:contents [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:blur-[70px] [&_img]:scale-125 [&_img]:opacity-60" aria-hidden="true">
+    {% image "src/assets/images/ecosystem/story-bg.jpg", "", "100vw", [960, 1600] %}
+    <div class="absolute inset-0 bg-gradient-to-br from-navy-deep/90 via-navy/75 to-navy-deep/95"></div>
+    <div class="absolute inset-0 bg-gradient-to-tr from-gold/20 via-transparent to-transparent"></div>
+  </div>
+  <canvas class="story-particles absolute inset-0 -z-10 pointer-events-none" aria-hidden="true"></canvas>
+
+  <div class="shell relative z-10">
+    <div class="flex items-center gap-6 mb-6 fade-up">
+      <span class="eyebrow-on-navy shrink-0">Our Story</span>
+      <span class="h-px flex-1 bg-navy-on-muted/25" aria-hidden="true"></span>
+    </div>
+    <h2 class="font-display font-light text-display-2 text-navy-on max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
+      Building <em class="italic text-navy-accent font-book">momentum.</em>
+    </h2>
+
+    <div class="story-glass mt-10 md:mt-14 rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl px-5 py-8 md:px-10 md:py-10 fade-up" style="animation-delay:160ms">
+      {# Connecting line + nodes — desktop only; mobile relies on the native
+         horizontal scroll itself for "where am I", same call as dropping
+         the sticky-media trick on mobile elsewhere on this page. #}
+      <div class="story-line relative hidden md:block h-px bg-white/20 mx-3 mb-10" aria-hidden="true">
+        {% for t in timeline %}
+        <span class="story-node absolute -top-[7px] -translate-x-1/2" data-node="{{ loop.index0 }}" style="left:{{ (loop.index0 / (timeline.length - 1)) * 100 }}%">
+          <span class="story-node-ring absolute -inset-2 rounded-full"></span>
+          <span class="story-node-dot block w-3.5 h-3.5 rounded-full bg-white/40 relative"></span>
+        </span>
+        {% endfor %}
+      </div>
+
+      <div class="story-track-viewport overflow-x-auto md:overflow-hidden -mx-2 px-2 pb-2 md:pb-0">
+        <div class="story-track flex gap-5 md:gap-6 w-max md:cursor-grab" role="list">
+          {% set toneClasses = ["bg-paper-raised text-ink", "bg-gold text-navy-deep", "bg-navy-deep text-navy-on", "bg-paper-raised text-ink"] %}
+          {% for t in timeline %}
+          <article class="story-card shrink-0 w-[240px] md:w-[280px] rounded-xl p-6 md:p-7 select-none {{ toneClasses[loop.index0 % 4] }}" data-card="{{ loop.index0 }}" role="listitem">
+            <span class="block font-mono text-micro uppercase tracking-widest opacity-60">0{{ loop.index }}</span>
+            <span class="block mt-2 font-display font-light text-h2">{{ t.year }}</span>
+            <h3 class="mt-3 text-body-lg font-medium">{{ t.label }}</h3>
+            <p class="mt-2 text-small opacity-80 leading-relaxed">{{ t.text }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="story-scrubber mt-8 hidden md:flex items-center gap-4">
+        <button type="button" class="story-arrow story-prev shrink-0 w-9 h-9 rounded-full border border-white/25 flex items-center justify-center text-navy-on hover:bg-white/10 transition-colors duration-press ease-signature" aria-label="Previous milestone">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 7H2M6 3L2 7l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="story-scrubber-track relative flex-1 h-8 rounded-full overflow-hidden bg-white/5">
+          <div class="story-scrubber-ruler absolute inset-0" aria-hidden="true"></div>
+          <div class="story-scrubber-fill absolute inset-y-0 left-0 w-0 rounded-full bg-gold/70" aria-hidden="true"></div>
+        </div>
+        <button type="button" class="story-arrow story-next shrink-0 w-9 h-9 rounded-full border border-white/25 flex items-center justify-center text-navy-on hover:bg-white/10 transition-colors duration-press ease-signature" aria-label="Next milestone">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <a href="/about/" class="mt-8 inline-flex items-center gap-2 text-small font-medium text-navy-on link-underline">
+      Read our full story
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>

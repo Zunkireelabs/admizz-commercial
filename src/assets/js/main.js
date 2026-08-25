@@ -39,8 +39,10 @@ if (!prefersReducedMotion) {
     import('gsap'),
     import('gsap/ScrollTrigger'),
     import('gsap/CustomEase'),
-  ]).then(([{ default: Lenis }, { gsap }, { ScrollTrigger }, { CustomEase }]) => {
-    gsap.registerPlugin(ScrollTrigger, CustomEase);
+    import('gsap/Draggable'),
+    import('gsap/InertiaPlugin'),
+  ]).then(([{ default: Lenis }, { gsap }, { ScrollTrigger }, { CustomEase }, { Draggable }, { InertiaPlugin }]) => {
+    gsap.registerPlugin(ScrollTrigger, CustomEase, Draggable, InertiaPlugin);
     // The exact same curve as the CSS `ease-signature` utility (tailwind.config.js) —
     // one signature easing curve, shared between CSS transitions and JS timelines.
     CustomEase.create('signature', '.23,1,.32,1');
@@ -64,6 +66,21 @@ if (!prefersReducedMotion) {
       gsap.set(heroEls, { opacity: 0, y: 14 });
       gsap.timeline({ defaults: { ease: 'signature', duration: 0.7 } })
         .to(heroEls, { opacity: 1, y: 0, stagger: 0.12 });
+    }
+
+    // Statement band — same hide-then-reveal idiom as the hero entrance
+    // above (direct gsap.set, not the .fade-up/IntersectionObserver
+    // pattern), just ScrollTrigger-gated instead of firing on load, since
+    // this section isn't in the initial viewport. Phrase-by-phrase, not
+    // word-by-word — matches the hero's stagger feel exactly (same
+    // duration/ease/stagger values) rather than inventing a new rhythm.
+    const statementLines = gsap.utils.toArray('.statement-line');
+    if (statementLines.length) {
+      gsap.set(statementLines, { opacity: 0, y: 14 });
+      gsap.timeline({
+        defaults: { ease: 'signature', duration: 0.7 },
+        scrollTrigger: { trigger: statementLines[0].closest('section'), start: 'top 70%' },
+      }).to(statementLines, { opacity: 1, y: 0, stagger: 0.12 });
     }
 
     // Header shape morph — simple full-width bar at the top, floating pill
@@ -181,8 +198,12 @@ if (!prefersReducedMotion) {
           if (ghostNum) ghostNum.textContent = block.dataset.index;
           if (ghostStage) ghostStage.textContent = block.dataset.stage;
           if (!initial) {
+            // Slides in from the side (x), not up (y) — a deliberate ask,
+            // and it also reads better here: this column sits beside a
+            // full-height photo, so a horizontal arrival feels connected to
+            // it in a way a vertical one didn't.
             const fields = block.querySelectorAll('.eco-field');
-            gsap.fromTo(fields, { opacity: 0, y: 14 }, { opacity: 1, y: 0, stagger: 0.07, duration: 0.55, ease: 'signature' });
+            gsap.fromTo(fields, { opacity: 0, x: 32 }, { opacity: 1, x: 0, stagger: 0.07, duration: 0.6, ease: 'signature' });
           }
         }
       };
@@ -194,6 +215,143 @@ if (!prefersReducedMotion) {
           start: 'top center',
           end: 'bottom center',
           onToggle: (self) => { if (self.isActive) setEcoActive(i); },
+        });
+      });
+    }
+
+    // Story journey ("Our Story") — GSAP Draggable on the card track, not a
+    // page-scroll pin; the page scrolls past this section normally and the
+    // horizontal movement is entirely self-contained (drag the cards,
+    // click the arrows). Mobile gets native overflow-x scroll instead (no
+    // Draggable/InertiaPlugin there) — same "don't force the desktop
+    // interaction onto small screens" call as the rest of this page.
+    const storyGlass = document.querySelector('.story-glass');
+    if (storyGlass && window.innerWidth >= 768) {
+      const track = storyGlass.querySelector('.story-track');
+      const viewport = storyGlass.querySelector('.story-track-viewport');
+      const cards = gsap.utils.toArray('.story-card', storyGlass);
+      const nodes = gsap.utils.toArray('.story-node', storyGlass);
+      const fill = storyGlass.querySelector('.story-scrubber-fill');
+      const prevBtn = storyGlass.querySelector('.story-prev');
+      const nextBtn = storyGlass.querySelector('.story-next');
+      nodes.forEach((n) => n.classList.add('story-armed'));
+      cards.forEach((c) => c.classList.add('story-armed'));
+
+      const maxScroll = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+      const stepWidth = () => track.scrollWidth / cards.length;
+      let currentIndex = 0;
+
+      const updateProgress = (x) => {
+        const max = maxScroll();
+        const progress = max > 0 ? gsap.utils.clamp(0, 1, -x / max) : 0;
+        gsap.set(fill, { width: `${progress * 100}%` });
+        currentIndex = Math.min(cards.length - 1, Math.round(progress * (cards.length - 1)));
+        nodes.forEach((n, i) => n.classList.toggle('is-active', i === currentIndex));
+        cards.forEach((c, i) => c.classList.toggle('is-active', i === currentIndex));
+      };
+
+      const [drag] = Draggable.create(track, {
+        type: 'x',
+        bounds: { minX: () => -maxScroll(), maxX: 0 },
+        inertia: true,
+        cursor: 'grab',
+        activeCursor: 'grabbing',
+        onDrag: function () { updateProgress(this.x); },
+        onThrowUpdate: function () { updateProgress(this.x); },
+      });
+
+      const goTo = (index) => {
+        currentIndex = gsap.utils.clamp(0, cards.length - 1, index);
+        const targetX = gsap.utils.clamp(-maxScroll(), 0, -currentIndex * stepWidth());
+        gsap.to(track, {
+          x: targetX,
+          duration: 0.6,
+          ease: 'signature',
+          onUpdate: () => updateProgress(gsap.getProperty(track, 'x')),
+          onComplete: () => drag.update(),
+        });
+      };
+
+      prevBtn.addEventListener('click', () => goTo(currentIndex - 1));
+      nextBtn.addEventListener('click', () => goTo(currentIndex + 1));
+
+      // Wheel/trackpad support — the interaction most people actually reach
+      // for on a horizontal carousel, not just click-and-drag. Only hijacks
+      // the wheel event when it would actually move the track; once at
+      // either edge, the same gesture falls through to normal page scroll
+      // instead of trapping it (the same "don't trap the scroll" rule as
+      // everywhere else on this page, just applied per-axis here).
+      viewport.addEventListener('wheel', (e) => {
+        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+        const currentX = gsap.getProperty(track, 'x');
+        const nextX = gsap.utils.clamp(-maxScroll(), 0, currentX - delta);
+        if (nextX === currentX) return; // at an edge in this direction — let the page scroll
+        e.preventDefault();
+        gsap.set(track, { x: nextX });
+        updateProgress(nextX);
+        drag.update();
+      }, { passive: false });
+
+      updateProgress(0);
+    }
+
+    // Story journey particle layer — a subtle, slow-drifting depth field of
+    // gold points behind the glass panel, with gentle mouse parallax. A
+    // deliberate, explicit override of this project's own no-gratuitous-3D
+    // rule (see story-journey.njk header comment); kept intentionally
+    // restrained (low point count, low opacity, slow motion) rather than
+    // leaning on the override as license for a showy effect.
+    const particleCanvas = document.querySelector('.story-particles');
+    if (particleCanvas) {
+      import('three').then(({ Scene, PerspectiveCamera, WebGLRenderer, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points }) => {
+        const section = particleCanvas.closest('section');
+        const scene = new Scene();
+        const camera = new PerspectiveCamera(50, particleCanvas.clientWidth / Math.max(1, particleCanvas.clientHeight), 0.1, 100);
+        camera.position.z = 12;
+        const renderer = new WebGLRenderer({ canvas: particleCanvas, alpha: true, antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const count = 200;
+        const positions = new Float32Array(count * 3);
+        for (let i = 0; i < count * 3; i += 3) {
+          positions[i] = (Math.random() - 0.5) * 30;
+          positions[i + 1] = (Math.random() - 0.5) * 16;
+          positions[i + 2] = (Math.random() - 0.5) * 14;
+        }
+        const geometry = new BufferGeometry();
+        geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+        const material = new PointsMaterial({ color: 0xfdd63f, size: 0.045, transparent: true, opacity: 0.45 });
+        const points = new Points(geometry, material);
+        scene.add(points);
+
+        let mouseX = 0;
+        let mouseY = 0;
+        section.addEventListener('mousemove', (e) => {
+          const rect = section.getBoundingClientRect();
+          mouseX = (e.clientX - rect.left) / rect.width - 0.5;
+          mouseY = (e.clientY - rect.top) / rect.height - 0.5;
+        });
+
+        function resize() {
+          const w = particleCanvas.clientWidth;
+          const h = particleCanvas.clientHeight;
+          renderer.setSize(w, h, false);
+          camera.aspect = w / Math.max(1, h);
+          camera.updateProjectionMatrix();
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        let visible = true;
+        new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }, { threshold: 0 }).observe(section);
+
+        gsap.ticker.add(() => {
+          if (!visible) return;
+          points.rotation.y += 0.0006;
+          camera.position.x += (mouseX * 1.2 - camera.position.x) * 0.03;
+          camera.position.y += (-mouseY * 0.8 - camera.position.y) * 0.03;
+          camera.lookAt(scene.position);
+          renderer.render(scene, camera);
         });
       });
     }

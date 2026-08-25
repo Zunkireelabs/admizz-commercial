@@ -244,17 +244,16 @@
   transform: scale(1);
 }
 
-.ecosystem-block-label,
-.ecosystem-block-title {
+/* .ecosystem-block-title no longer has its own active/inactive color swap
+   — its two-tone color (ink + gold-text) is now fixed in the markup, not
+   state-dependent, so a rule here would just be overridden by its child
+   spans and do nothing. Only the label still dims/brightens with .is-active. */
+.ecosystem-block-label {
   transition: color theme("transitionDuration.slow") theme("transitionTimingFunction.signature");
 }
 .ecosystem-story-block[data-block="0"]:not(.ecosystem-armed) .ecosystem-block-label,
 .ecosystem-story-block.ecosystem-armed.is-active .ecosystem-block-label {
   @apply text-navy-soft;
-}
-.ecosystem-story-block[data-block="0"]:not(.ecosystem-armed) .ecosystem-block-title,
-.ecosystem-story-block.ecosystem-armed.is-active .ecosystem-block-title {
-  @apply text-ink;
 }
 
 /* Progress ticks — minimal stand-in for the timeline nodes the card
@@ -275,6 +274,70 @@
 .ecosystem-progress-tick.ecosystem-armed.is-active {
   transform: scaleX(1);
   @apply bg-gold;
+}
+
+/* Story journey ("Our Story", story-journey.njk) — glass-panel-over-photo
+   and the Three.js particle layer are deliberate overrides of this
+   project's own no-glassmorphism/no-gratuitous-3D rules, on explicit
+   instruction (see the partial's header comment). Same "armed" guard
+   pattern as elsewhere: node 0 is the no-JS default. */
+.story-node-dot {
+  transition: background-color theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+}
+.story-node-ring {
+  transition: box-shadow theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+}
+.story-node[data-node="0"]:not(.story-armed) .story-node-dot,
+.story-node.story-armed.is-active .story-node-dot {
+  @apply bg-gold;
+}
+.story-node[data-node="0"]:not(.story-armed) .story-node-ring,
+.story-node.story-armed.is-active .story-node-ring {
+  box-shadow: 0 0 0 4px theme("colors.gold.DEFAULT / 20%");
+}
+
+/* Ruler ticks — plain CSS pattern, not individual DOM elements. */
+.story-scrubber-ruler {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.3) 0,
+    rgba(255, 255, 255, 0.3) 1px,
+    transparent 1px,
+    transparent 7px
+  );
+  background-position: center;
+}
+
+/* A CSS transition on .story-track's own transform would fight GSAP's
+   per-frame positioning during an actual drag — every drag-move frame
+   would ease over 200ms instead of applying instantly, reading as laggy/
+   rubbery instead of 1:1 responsive. GSAP already owns this element's
+   motion entirely (Draggable, the wheel handler, and goTo()'s tween all
+   set x directly); no CSS transition belongs here. */
+
+/* Soft fade at both viewport edges instead of a hard clip on whichever
+   card is mid-cut off-screen — the earlier hard cut read as a layout bug
+   ("Today" sliced clean in half) rather than an intentional "there's
+   more" hint. */
+.story-track-viewport {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 28px, black calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black 28px, black calc(100% - 28px), transparent 100%);
+}
+
+/* Card active/inactive — same armed-gate pattern as .story-node above;
+   the centered card gets full presence, the rest recede slightly, so
+   scrubbing has real per-card feedback instead of only the node dot
+   and scrubber fill changing. */
+.story-card {
+  opacity: 0.55;
+  transform: scale(0.96);
+  transition: opacity theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
+    transform theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+}
+.story-card[data-card="0"]:not(.story-armed),
+.story-card.story-armed.is-active {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .fade-up.js-armed {
