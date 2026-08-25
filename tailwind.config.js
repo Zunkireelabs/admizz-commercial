@@ -44,8 +44,13 @@ export default {
       },
 
       // Gold — demoted secondary accent, used sparingly and deliberately now.
+      // DEFAULT corrected 2026-08-25: sampled directly from the real logo
+      // file (mark-navy.png) rather than left at the rebrand's invented
+      // #F2B33D, which turned out not to match the actual brand asset —
+      // #FDD63F is what's really in the mark (and matches the original
+      // pre-rebrand palette CLAUDE.md documents, confirming it's correct).
       gold: {
-        DEFAULT: '#F2B33D',
+        DEFAULT: '#FDD63F',
         text: '#8A5E10', // 5.23:1 on paper — AA on light, matches the old ratio's spirit
         sunk: '#FFF3DC',
       },

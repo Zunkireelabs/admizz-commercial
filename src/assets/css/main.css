@@ -93,8 +93,11 @@
     @apply inline-flex items-center gap-2 rounded-md px-5 py-3 text-small font-medium;
     @apply transition-colors duration-press ease-signature;
   }
+  /* Gold, not blue — every primary CTA sitewide, not just the nav (2026-08-25).
+     White text on this gold fails contrast (1.86:1); navy-deep on gold
+     measures 11.45:1, so text is pinned to that, not left at the old white. */
   .btn-primary {
-    @apply btn bg-navy text-white hover:bg-navy-soft;
+    @apply btn bg-gold text-navy-deep hover:brightness-95;
   }
   .btn-ghost-on-navy {
     @apply btn border border-navy-on-muted/40 text-navy-on hover:border-white hover:text-white;
