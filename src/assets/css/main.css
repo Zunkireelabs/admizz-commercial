@@ -219,6 +219,64 @@
   opacity: 1;
 }
 
+/* Ecosystem story (homepage "One Ecosystem" section, ecosystem-journey.njk,
+   rebuilt 2026-08-25 — the card-grid version was rejected as templated).
+   Sticky photo (CSS position:sticky, not a GSAP pin) crossfades between
+   three stacked images as the matching text block scrolls to center;
+   scrolling itself is never hijacked. Same "armed" principle as
+   .sequence-row above: [data-photo="0"]/[data-block="0"] are the no-JS
+   default (venture 1 showing), and :not(.ecosystem-armed) stops that rule
+   from matching once JS takes over — the exact guard the card version
+   needed after shipping without it once (see the old comment history). */
+/* Scale rides along with the opacity crossfade — a flat opacity swap read
+   as a plain slide-toggle; easing the incoming photo in from a slight
+   zoom (and letting the outgoing one hold rather than snap) gives the
+   transition actual motion instead of a hard swap. */
+.ecosystem-story-photo {
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 1100ms theme("transitionTimingFunction.signature"),
+    transform 1100ms theme("transitionTimingFunction.signature");
+}
+.ecosystem-story-photo[data-photo="0"]:not(.ecosystem-armed),
+.ecosystem-story-photo.ecosystem-armed.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.ecosystem-block-label,
+.ecosystem-block-title {
+  transition: color theme("transitionDuration.slow") theme("transitionTimingFunction.signature");
+}
+.ecosystem-story-block[data-block="0"]:not(.ecosystem-armed) .ecosystem-block-label,
+.ecosystem-story-block.ecosystem-armed.is-active .ecosystem-block-label {
+  @apply text-navy-soft;
+}
+.ecosystem-story-block[data-block="0"]:not(.ecosystem-armed) .ecosystem-block-title,
+.ecosystem-story-block.ecosystem-armed.is-active .ecosystem-block-title {
+  @apply text-ink;
+}
+
+/* Progress ticks — minimal stand-in for the timeline nodes the card
+   version had; a short line per venture, the active one longer and gold.
+   Not reintroducing card-style dots/circles, just enough to answer "where
+   am I in the three stages" without new chrome. Fixed width (w-8 in the
+   markup) + transform: scaleX rather than an animated width — animating
+   width/height/padding/margin forces layout on every frame, where
+   transform is compositor-only; scaleX from the right edge (origin-right
+   in the markup) gives the identical "short tick → long tick" visual
+   without the layout cost. */
+.ecosystem-progress-tick {
+  transform: scaleX(0.625);
+  transition: transform theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
+    background-color theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+}
+.ecosystem-progress-tick[data-tick="0"]:not(.ecosystem-armed),
+.ecosystem-progress-tick.ecosystem-armed.is-active {
+  transform: scaleX(1);
+  @apply bg-gold;
+}
+
 .fade-up.js-armed {
   opacity: 0;
   transform: translateY(12px);

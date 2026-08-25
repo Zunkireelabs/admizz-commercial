@@ -150,6 +150,54 @@ if (!prefersReducedMotion) {
       });
     });
 
+    // Ecosystem story (homepage "One Ecosystem" section) — sticky photo
+    // (plain CSS position:sticky, set in the markup, not GSAP pin) crossfades
+    // as each text block scrolls to center. No pinning, no scroll-hijacking —
+    // same trigger logic on every breakpoint, since sticky itself already
+    // degrades to normal flow on mobile (.ecosystem-story-media is
+    // hidden md:block there), so there's nothing extra to gate.
+    const ecoGrid = document.querySelector('.ecosystem-story-grid');
+    if (ecoGrid) {
+      const ecoPhotos = gsap.utils.toArray('.ecosystem-story-photo', ecoGrid);
+      const ecoBlocks = gsap.utils.toArray('.ecosystem-story-block', ecoGrid);
+      const ecoTicks = gsap.utils.toArray('.ecosystem-progress-tick', ecoGrid);
+      const ghostNum = ecoGrid.querySelector('.ecosystem-ghost-num');
+      const ghostStage = ecoGrid.querySelector('.ecosystem-ghost-stage');
+      ecoPhotos.forEach((p) => p.classList.add('ecosystem-armed'));
+      ecoBlocks.forEach((b) => b.classList.add('ecosystem-armed'));
+      ecoTicks.forEach((t) => t.classList.add('ecosystem-armed'));
+
+      // `initial` skips the stagger reveal on setup (setEcoActive(0) below)
+      // so block 1's content doesn't visibly flash in on page load — the
+      // same reason the hero entrance only animates [data-hero-in] once
+      // GSAP has actually loaded, never before. Real transitions (scrolling
+      // to a new block, forward or back) always get the staggered reveal.
+      const setEcoActive = (index, initial) => {
+        ecoPhotos.forEach((p, i) => p.classList.toggle('is-active', i === index));
+        ecoBlocks.forEach((b, i) => b.classList.toggle('is-active', i === index));
+        ecoTicks.forEach((t, i) => t.classList.toggle('is-active', i === index));
+        const block = ecoBlocks[index];
+        if (block) {
+          if (ghostNum) ghostNum.textContent = block.dataset.index;
+          if (ghostStage) ghostStage.textContent = block.dataset.stage;
+          if (!initial) {
+            const fields = block.querySelectorAll('.eco-field');
+            gsap.fromTo(fields, { opacity: 0, y: 14 }, { opacity: 1, y: 0, stagger: 0.07, duration: 0.55, ease: 'signature' });
+          }
+        }
+      };
+      setEcoActive(0, true); // matches the no-JS default (venture 1 showing) — no flash on arm
+
+      ecoBlocks.forEach((block, i) => {
+        ScrollTrigger.create({
+          trigger: block,
+          start: 'top center',
+          end: 'bottom center',
+          onToggle: (self) => { if (self.isActive) setEcoActive(i); },
+        });
+      });
+    }
+
     gsap.utils.toArray('.sequence-row').forEach((row) => {
       row.classList.add('js-scroll-armed');
       ScrollTrigger.create({

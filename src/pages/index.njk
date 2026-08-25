@@ -202,25 +202,28 @@ permalink: /
    restatement of the hero subhead above, with the "three pillars" line it added
    already covered more concretely by the venture-name ticker (real names, not
    category words) and by this register, which explains all three ventures in full. #}
+{# No overflow-hidden here, deliberately — it silently breaks position:sticky
+   on any descendant (an ancestor's overflow other than visible forces sticky
+   to compute against that ancestor instead of the viewport), which is
+   exactly what happened the first time this was written: the sticky photo
+   below just scrolled away instead of staying put. #}
 <section id="ventures" class="bg-paper py-section">
   <div class="shell">
-    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4 fade-up">
-      <div>
-        <span class="eyebrow">One Ecosystem</span>
-        <h2 class="mt-3 font-display font-light text-h2 text-ink">Many ways forward.</h2>
-      </div>
-      <p class="text-body text-ink-muted max-w-measure-tight md:text-right">
+    {# Subtitle stacked directly under the heading, not split off to the far
+       right of the shell — that put real distance between a line and the
+       heading it supports, reading as orphaned rather than connected. #}
+    <div class="max-w-[42rem] fade-up">
+      <span class="eyebrow">One Ecosystem</span>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink">Many ways forward.</h2>
+      <p class="mt-4 text-body-lg text-ink-muted max-w-measure-tight">
         Three ventures, three stages of the same journey — from readiness, to admission, to career.
       </p>
     </div>
-
-    {% include "partials/ventures-register.njk" %}
-
-    <a href="/ventures/" class="mt-10 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
-      View all ventures in detail
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
   </div>
+
+  {# Deliberately outside .shell — the sticky-photo/text grid inside this
+     partial breaks full-bleed to the viewport edge on its photo side. #}
+  {% include "partials/ecosystem-journey.njk" %}
 </section>
 
 {# ============================================================ STATEMENT BAND #}
