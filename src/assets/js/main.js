@@ -39,10 +39,8 @@ if (!prefersReducedMotion) {
     import('gsap'),
     import('gsap/ScrollTrigger'),
     import('gsap/CustomEase'),
-    import('gsap/Draggable'),
-    import('gsap/InertiaPlugin'),
-  ]).then(([{ default: Lenis }, { gsap }, { ScrollTrigger }, { CustomEase }, { Draggable }, { InertiaPlugin }]) => {
-    gsap.registerPlugin(ScrollTrigger, CustomEase, Draggable, InertiaPlugin);
+  ]).then(([{ default: Lenis }, { gsap }, { ScrollTrigger }, { CustomEase }]) => {
+    gsap.registerPlugin(ScrollTrigger, CustomEase);
     // The exact same curve as the CSS `ease-signature` utility (tailwind.config.js) —
     // one signature easing curve, shared between CSS transitions and JS timelines.
     CustomEase.create('signature', '.23,1,.32,1');
@@ -219,12 +217,16 @@ if (!prefersReducedMotion) {
       });
     }
 
-    // Story journey ("Our Story") — GSAP Draggable on the card track, not a
-    // page-scroll pin; the page scrolls past this section normally and the
-    // horizontal movement is entirely self-contained (drag the cards,
-    // click the arrows). Mobile gets native overflow-x scroll instead (no
-    // Draggable/InertiaPlugin there) — same "don't force the desktop
-    // interaction onto small screens" call as the rest of this page.
+    // Story journey ("Our Story") — the card track advances as the visitor
+    // scrolls the page itself: ScrollTrigger pins the panel for a bounded
+    // extra stretch of scroll and scrubs the track horizontally across it,
+    // then releases back to normal page scroll. Deliberately the one
+    // scroll-linked pin on this page — a company timeline is exactly the
+    // "keep scrolling to see what happened next" case that justifies it,
+    // versus the ecosystem section's plain sticky-photo (no pin) elsewhere.
+    // Mobile gets native overflow-x scroll instead (no pin/Draggable there)
+    // — same "don't force the desktop interaction onto small screens" call
+    // as the rest of this page.
     const storyGlass = document.querySelector('.story-glass');
     if (storyGlass && window.innerWidth >= 768) {
       const track = storyGlass.querySelector('.story-track');
@@ -238,59 +240,41 @@ if (!prefersReducedMotion) {
       cards.forEach((c) => c.classList.add('story-armed'));
 
       const maxScroll = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
-      const stepWidth = () => track.scrollWidth / cards.length;
       let currentIndex = 0;
 
-      const updateProgress = (x) => {
-        const max = maxScroll();
-        const progress = max > 0 ? gsap.utils.clamp(0, 1, -x / max) : 0;
+      const updateProgress = (progress) => {
+        const x = -maxScroll() * progress;
+        gsap.set(track, { x });
         gsap.set(fill, { width: `${progress * 100}%` });
         currentIndex = Math.min(cards.length - 1, Math.round(progress * (cards.length - 1)));
         nodes.forEach((n, i) => n.classList.toggle('is-active', i === currentIndex));
         cards.forEach((c, i) => c.classList.toggle('is-active', i === currentIndex));
       };
 
-      const [drag] = Draggable.create(track, {
-        type: 'x',
-        bounds: { minX: () => -maxScroll(), maxX: 0 },
-        inertia: true,
-        cursor: 'grab',
-        activeCursor: 'grabbing',
-        onDrag: function () { updateProgress(this.x); },
-        onThrowUpdate: function () { updateProgress(this.x); },
+      // Offset clears the fixed header (it overlays the page at all scroll
+      // positions, pill or full-width) so the pinned panel doesn't tuck
+      // underneath it.
+      const headerClearance = () => (document.querySelector('.header-bar')?.offsetHeight || 72) + 24;
+
+      const st = ScrollTrigger.create({
+        trigger: storyGlass,
+        start: () => `top top+=${headerClearance()}`,
+        end: () => '+=' + Math.max(window.innerHeight * (cards.length - 1) * 0.7, 480),
+        pin: true,
+        anticipatePin: 1,
+        scrub: 0.6,
+        onUpdate: (self) => updateProgress(self.progress),
       });
 
-      const goTo = (index) => {
-        currentIndex = gsap.utils.clamp(0, cards.length - 1, index);
-        const targetX = gsap.utils.clamp(-maxScroll(), 0, -currentIndex * stepWidth());
-        gsap.to(track, {
-          x: targetX,
-          duration: 0.6,
-          ease: 'signature',
-          onUpdate: () => updateProgress(gsap.getProperty(track, 'x')),
-          onComplete: () => drag.update(),
-        });
+      const scrollToIndex = (index) => {
+        const clamped = gsap.utils.clamp(0, cards.length - 1, index);
+        const progress = cards.length > 1 ? clamped / (cards.length - 1) : 0;
+        const target = st.start + progress * (st.end - st.start);
+        window.scrollTo({ top: target, behavior: 'smooth' });
       };
 
-      prevBtn.addEventListener('click', () => goTo(currentIndex - 1));
-      nextBtn.addEventListener('click', () => goTo(currentIndex + 1));
-
-      // Wheel/trackpad support — the interaction most people actually reach
-      // for on a horizontal carousel, not just click-and-drag. Only hijacks
-      // the wheel event when it would actually move the track; once at
-      // either edge, the same gesture falls through to normal page scroll
-      // instead of trapping it (the same "don't trap the scroll" rule as
-      // everywhere else on this page, just applied per-axis here).
-      viewport.addEventListener('wheel', (e) => {
-        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-        const currentX = gsap.getProperty(track, 'x');
-        const nextX = gsap.utils.clamp(-maxScroll(), 0, currentX - delta);
-        if (nextX === currentX) return; // at an edge in this direction — let the page scroll
-        e.preventDefault();
-        gsap.set(track, { x: nextX });
-        updateProgress(nextX);
-        drag.update();
-      }, { passive: false });
+      prevBtn.addEventListener('click', () => scrollToIndex(currentIndex - 1));
+      nextBtn.addEventListener('click', () => scrollToIndex(currentIndex + 1));
 
       updateProgress(0);
     }
