@@ -31,136 +31,176 @@ Then tell me, in a short summary:
 
 Do not write any site code or touch the VPS until I've confirmed direction.
 
-One more thing before you touch anything: the last session rebuilt the hero section against a
-visual reference I gave (screenshots, "compare this to that"), and it landed — committed, verified
-at my actual browser size, not just a generic desktop width. Early in that session there was a lot
-of wrong guessing on pixel-level details (crop positions especially) before we found an approach
-that actually worked: measure real dimensions with Playwright instead of eyeballing screenshots,
-and test at my actual window size, not a round number. The "Quick state" section below has the
-specifics — read it before assuming anything about current spacing/positioning values, and use
-that same measure-don't-guess approach if you're making similar pixel-level visual claims this
-session.
+One more thing before you touch anything: across the last several sessions, one methodology has
+proven itself over and over on this project and should be your default for any pixel-level or
+interaction-level claim, not just something the previous session happened to do:
+  - Measure, don't guess. Use Playwright (page.evaluate + getBoundingClientRect(), or reading
+    computed styles) instead of eyeballing a screenshot or assuming CSS math. This session alone
+    caught a silently-failing Tailwind utility class this way (see Quick state) — grep the actual
+    compiled CSS output, don't assume a class you wrote compiled just because the build succeeded.
+  - Test with real interaction, not synthetic shortcuts. Real wheel-scroll (page.mouse.wheel in a
+    loop with waits), not window.scrollTo(), for anything Lenis/GSAP-driven. Real mouse down/move/
+    up sequences for drag interactions — and measure the VISIBLE/clipped element's bounding box,
+    not a full-width element that may extend off-screen (this session's first drag test silently
+    "failed" for exactly that reason; it was a test bug, not a site bug).
+  - Distrust full-page/composite screenshots for anything sticky or fixed. `fullPage: true`
+    screenshots render position:sticky and position:fixed elements unreliably (a sticky element may
+    render frozen at one position for the whole composite; a fixed header may appear to "duplicate").
+    This session hit exactly that and almost misdiagnosed a real, working feature as broken — the
+    fix was re-testing with real, bounded-viewport scroll checkpoints instead.
+  - Verify claims with a real screenshot before stating them as fact, every time, at the viewport
+    size actually in question.
+  - When two constraints fight, find the structural fix, not another spacing tweak.
 ```
 
 ---
 
-## Quick state (keep this current — last updated 2026-08-25)
+## Quick state (keep this current — last updated 2026-08-25, end of session)
 
-**Phase:** The hero section was rebuilt from scratch this session against an explicit visual
-reference the user supplied (screenshots, not a written spec) and iterated through many rounds of
-direct pixel-level comparison — "compare this to that" — rather than abstract feedback. It's now
-committed in two commits on `redesign/hero-globe-light-bg`, both still **local, nothing pushed to
-origin**:
+**Phase:** Still Phase 4 (homepage), now considerably further along. This session covered four
+substantial pieces of work, all committed locally to `redesign/hero-globe-light-bg` — **nothing
+pushed to origin.** Four new commits since the last resume-prompt update:
 
-- `8b4dec2` — the main rebuild: full-bleed split hero (photo as an absolute layer, not a boxed
-  panel), eyebrow pill re-added, dot-grid globe motif, a large translucent Admizz-chevron
-  watermark over the photo, a curved SVG transition into a new navy value band (Global Reach /
-  Student First / Future Ready) with a soft diagonal light-sweep layer, hero-scoped heading scale,
-  and extensive spacing tightened so the whole hero fits without scrolling.
-- `be61c0a` — a follow-up fix: the photo layer used to extend behind the fixed nav for an
-  edge-to-edge look, but that let the thrown caps near the top of the source photo end up hidden
-  under the nav pill depending on viewport size. Now the photo starts just below the nav's
-  measured bottom edge (93.5px, consistent at every width) instead — structural fix, not another
-  crop-percentage guess.
+- `e061a7d` — **Nav redesign.** Header now defaults to a simple, flush full-width bar (also the
+  correct no-JS/reduced-motion state) and morphs into a floating pill via a GSAP ScrollTrigger
+  scrub over the first 140px of scroll. Fixed two regressions that fell out of the shape change
+  (a fake "full-width" bar that still carried a permanent gutter margin; the hero photo's top
+  offset was tuned against the old floating-pill footprint and needed retuning against the new,
+  shorter resting height). Also blends the hero photo's top edge into the paper ground with a
+  gradient, and bumped the logo from 28px to 32px.
+- `18318c6` — **CTA gold correction.** `gold.DEFAULT` had drifted to an invented `#F2B33D` during
+  the earlier blue rebrand; sampled the actual logo file directly and found the real brand gold is
+  `#FDD63F` (which also matches the original pre-rebrand palette CLAUDE.md documents). Corrected
+  the token and moved `.btn-primary` from navy/white to gold/navy-deep — every CTA site-wide now
+  picks this up from the one shared component.
+- `716c6f6` — **"One Ecosystem" rebuilt, twice.** First pass was an editorial card-grid with a
+  pinned scroll sequence — user rejected it outright ("looks so crap... i dont like this approach").
+  Rebuilt from scratch as a sticky-photo-plus-scrolling-text layout instead: no cards, no borders,
+  no page pin. A sticky photo column crossfades between the three ventures as the matching text
+  block scrolls to center; scroll is never hijacked. Bolder ghost numbers, staggered content
+  reveal, a real scale+crossfade image transition, minimal progress ticks. Photography for all
+  three ventures is now purpose-cropped with `sharp` — see the content-authenticity flag below.
+- `e9271ee` — **"Our Story" rebuilt as a drag-scrub journey; statement band resized, enhanced, and
+  moved.** See both sub-sections immediately below — this is the most consequential commit to
+  understand before continuing.
 
-**Dev server was stopped when this session ended** (killed mid-session, not by user request at
-the very end) — start fresh with `npm run dev`, don't assume a background task survived.
+### "Our Story" — deliberate, explicit overrides of this project's own rules
 
-### The methodology that actually worked, after a lot of failed guessing
-Early in this session, fixes were applied by eyeballing screenshots and guessing at CSS values
-(`object-position` percentages especially) — this produced repeated wrong fixes and visible user
-frustration ("are you kidding me?", "can you even replicate a small thing"). **What actually
-worked, and should be the default approach going forward for any pixel-level visual claim:**
-- **Measure, don't estimate.** Use Playwright (`node` script + `page.evaluate()`) to get real
-  `getBoundingClientRect()` / `naturalWidth`/`naturalHeight` values instead of guessing container
-  or image dimensions from a screenshot. Several rounds of wrong `object-position` tuning were
-  traced to wrong mental math about container aspect ratios — actual measurement resolved it in
-  one pass every time it was used.
-- **Test at the user's actual reported viewport, not a round number.** The user's real browser
-  content area (after tabs/address bar/bookmarks) is **≈1280×722** on their main machine — a
-  screenshot they share of "the full window" (address bar visible) is the way to get this
-  precisely; do the arithmetic from the image's pixel dimensions ÷ likely DPR (2x on their
-  machine) rather than assuming 1440×900 or similar is representative.
-- **Verify claims with a real screenshot before stating them as fact.** Several early "this is
-  fixed" claims turned out wrong because they were asserted without a fresh screenshot at the
-  specific viewport in question. Screenshot → crop the specific claimed region → look, every time,
-  before telling the user something is resolved.
-- **Real wheel-scroll, not `window.scrollTo()`**, for anything Lenis/GSAP-driven — still true, see
-  below.
-- **When two constraints fight** (this session: "caps must have visible margin below the nav" vs.
-  "the whole hero must fit with zero scroll" at a 722px-tall viewport), don't keep silently
-  re-tuning spacing forever — find the actual structural fix (here: stop the photo from extending
-  behind the nav at all) rather than a percentage that only works at one specific size.
+The user explicitly asked to lift two of this project's own core anti-"generic AI site" rules for
+this one section, after being asked to confirm exactly that via a structured multiple-choice
+question (not assumed): **glassmorphism** (CLAUDE.md/00-BRIEF.md §13 explicitly ban this) and
+**gratuitous 3D** ("DO NOT ADD 3D JUST BECAUSE IT LOOKS COOL"). Both are now live in
+`story-journey.njk`:
 
-### Open items carried forward, unresolved
-- **Blue palette is still not reverted to navy/gold.** This was flagged as an open question at the
-  end of the *previous* session and never got a yes/no this session either — the whole hero rebuild
-  this session was done in the current blue (`navy.DEFAULT: #3D5AFE`), matching what the user's
-  reference screenshots themselves showed in blue. Don't assume this settles the navy/gold
-  question — it was simply never revisited. Confirm explicitly before changing the palette either
-  direction.
-- **The "repeated formula" critique from the previous session's diagnosis still applies to
-  everything below the hero** — ventures/timeline/insights sections were not touched this session,
-  only the hero was. If asked to continue the "one coherent pass," that work is still pending.
-- **Mobile was explicitly deferred by the user** ("not that imp right now... figure that later")
-  — the hero rebuild this session targeted desktop only; mobile hasn't been re-verified against
-  any of this session's changes and may need a separate pass.
+- A frosted glass panel (`backdrop-blur-xl`, translucent white) floats over a blurred real photo
+  (the same lecture-hall photo used for the Institute ecosystem card), tinted with a vibrant
+  navy/gold gradient wash — NOT the flat dark overlay it started with, which was muddying into the
+  photo's warm tones almost to the point of looking brown, not on-brand blue. If you see `/92` as
+  an opacity value anywhere and something looks unexpectedly washed out, see the Tailwind bug note
+  below — that's almost certainly why.
+- A restrained Three.js particle layer (~200 slow-drifting gold points, gentle mouse parallax)
+  sits behind the panel. **First and only 3D in the project.** `three` is now a real dependency
+  (package.json), lazy-imported only when `.story-particles` exists in the DOM and
+  `prefers-reduced-motion` is off.
+- GSAP Draggable + InertiaPlugin (both free, bundled in the installed `gsap` package already — no
+  separate install needed) drive a horizontal drag-scrub card track, PLUS wheel/trackpad support
+  (the interaction most people actually reach for — click-drag alone wasn't enough, confirmed by
+  the user's real-world testing). Not a page-scroll pin — the page scrolls past normally; the
+  horizontal movement is entirely self-contained (drag directly, wheel-scroll while hovering, or
+  use the arrow buttons / ruler-style scrubber). A soft edge fade-mask replaces what was originally
+  a hard clip that sliced the last card in half at rest. Cards have real active/inactive states
+  (scale + opacity) so scrubbing gives per-card feedback, not just the connecting-line node dot.
+- **This override is scoped to this one section, not a new project-wide default.** Every relevant
+  file has a comment saying exactly that. Don't casually reuse glassmorphism or 3D elsewhere
+  without the same explicit confirmation this section got.
+- Mobile gets native `overflow-x` scroll instead of Draggable/Three.js — no desktop interaction
+  forced onto small screens, same pattern as everywhere else on this page.
+
+### A genuine, silent Tailwind JIT bug found this session — worth knowing before touching colors
+
+`bg-navy-deep/92` (and only that specific value, in that specific spot) **silently failed to
+generate any CSS at all**, while `/75`, `/78`, `/85`, `/90`, `/95`, and `/20` all compiled fine on
+the same file, same session. Confirmed by grepping the actual compiled `dist/assets/main-*.css` —
+the class was present in the HTML output but had zero corresponding rule in the CSS. No root cause
+found (not worth the time sink); the fix was just switching to `/90`. **If a color/opacity change
+doesn't visually show up despite a clean build, don't assume you mis-eyeballed it — grep the
+compiled CSS for the literal class before spending time on anything else.**
+
+### Statement band ("From vision to reality...")
+
+Was `max-w-[18ch]` at up to 64px text — an 18-character column forced the ~115-character quote
+across 5-6 towering lines, ballooning the section to ~2 viewport-heights of solid navy with empty
+space beside it. Widened to 42ch + stepped down to `text-h1`. Also given a phrase-by-phrase
+staggered reveal (same duration/ease as the hero entrance, just ScrollTrigger-gated) and an ambient
+glow layer — **deliberately not** the `.facet-field` texture, which a code comment explicitly
+restricts to the hero+close "bookend" sections only. **Moved in page order**: was between the
+ecosystem section and "Our Story"; now sits directly below Insights, immediately above the closing
+CTA band, per explicit instruction.
+
+### Content-authenticity flags carried forward — read before adding more photography
+
+Three ecosystem-section photos (`src/assets/images/ecosystem/`) are user-supplied, not the
+original admizz.com-sourced insights photos:
+- `institute.jpg` — a real conference/lecture-hall photo, used full per explicit instruction
+  despite unrelated third-party (ABB Robotics) branding visible on the projector screen in frame.
+- `education.jpg` and `workforce.jpg` — read as stock/AI-generated (over-uniform lighting,
+  slightly-too-symmetric faces) and are lower resolution than the rest of the site's imagery
+  (1024×768 / 1200×800 source vs. 1600×900 elsewhere). Used per explicit instruction.
+- All three are flagged in code comments as **explicit exceptions the user confirmed, not a
+  default any future session should repeat without the same explicit ask** — this project's
+  content-authenticity rule (CLAUDE.md non-negotiable #1) is otherwise unchanged and still governs
+  everything else.
+
+### Open items carried forward, still unresolved
+
+- **Blue palette vs. navy/gold is still not resolved** — flagged as open across at least three
+  sessions now including this one. Nobody has said yes/no explicitly; don't assume silence means
+  "settled on blue" just because that's what's shipped. Confirm explicitly before changing it
+  either direction.
+- **The lookalike-silhouette test (non-negotiable #4) has still never been run on any page.**
 - Inner pages (`/about/`, `/insights/`, `/contact/`) still haven't had the line-by-line content
-  grounding the homepage got.
+  grounding the homepage sections have now had multiple passes of.
+- `/ventures/` page still uses the older `ventures-register.njk` partial (plain indexed list, no
+  cards, no sticky photo) — deliberately untouched both times the homepage's ecosystem section was
+  rebuilt, since a full-viewport-height interactive treatment doesn't suit a page that's mostly
+  just this content. Worth a deliberate decision at some point, not an oversight.
 - Two open content-provenance questions from before, still unresolved: `site.json.legalName`
   ("Admizz Group" vs. live `og:site_name` "Admizz Consulting Group"), and `site.json.description`'s
   wording/source tag.
-- The lookalike-silhouette test (non-negotiable #4) has still never been run on any page.
+- `robots.txt` still `Disallow: /` — correct for now, flip only at actual launch.
 
 ### Impeccable — installed, still untracked
-`https://impeccable.style` was installed project-scoped last session (`.claude/skills/impeccable/`,
+
+`https://impeccable.style` is installed project-scoped (`.claude/skills/impeccable/`,
 `.github/agents/`, `.github/hooks/`, `.github/skills/` — still **untracked**, deliberately not
-committed alongside content changes). Its PostToolUse hook auto-scans CSS/UI edits. Not actively
-referenced during this session's hero work, but still active/installed.
-
-### Deliberate overrides still standing — confirm before reverting
-- **Blue palette** — see "Open items" above; still an open question, not resolved either way.
-- **Floating pill nav** (`rounded-full`, centered links) — against `CLAUDE.md` §5's radius scale
-  rule, approved in an earlier session, widened slightly this session (`max-w-5xl` → `max-w-6xl`),
-  not otherwise revisited.
-- **No 3D globe** — removed in an earlier session per explicit instruction ("no earth"); this
-  session's "globe" is a flat dot-grid pattern, not a reintroduction of the 3D one. Don't confuse
-  the two.
-- **Hero no longer uses the wave `clip-path` photo mask** from two sessions ago — that technique
-  was fully superseded this session by the new full-bleed-photo-plus-curved-value-band design. The
-  curve now caps the hero→navy transition below the content, not the photo itself.
-
-### Hero photo — still the same placeholder, watermark handling changed
-`src/assets/images/insights/global-opportunities.jpg` is still the hero image — real,
-Admizz-branded, not purpose-shot for this placement, with an **"admizz" watermark baked into the
-pixels, top-left corner**. This session's crop (`object-position: 60% 0%` plus a `scale-110` on
-the image) keeps it out of frame at every viewport width tested (1280/1440/1996) — verified more
-rigorously than previous sessions' attempts, including specifically re-checking wide viewports
-after a horizontal-crop change let it creep back into frame once already. Still fragile in
-principle if the container's aspect ratio changes again; the permanent fix (crop the source file
-itself with `sharp`, save as a dedicated hero asset with the watermark physically removed) still
-doesn't exist on disk.
+committed alongside content changes, unchanged this session). Its PostToolUse hook flagged one real
+issue this session (a CSS `width` animation causing layout thrash on the ecosystem progress ticks)
+— fixed with `transform: scaleX()` instead. Worth actually reading its findings when they appear,
+not reflexively suppressing them.
 
 ### Content/infra facts carried forward, unchanged
+
 - `/verify-admizz-content` skill still exists (`.claude/skills/verify-admizz-content/SKILL.md`),
   read-only, re-checks `src/_data/*.json` against live admizz.com.
 - CI/CD (`stage` → `dev-web.admizz.com` auto-deploy), the public-repo decision, and the
   `ssh vps` (`manjila`) vs. pipeline `VPS_USER` (`zunkireelabs`) distinction are all unchanged.
+- `temp_ss/` is still untracked scratch (screenshots used as visual references this session — the
+  ones actually cropped into real assets were saved to `src/assets/images/ecosystem/` and ARE
+  committed; the raw screenshots themselves are not, by existing convention).
 
 ## If you only remember five things
 
-1. **Measure, don't guess, for any pixel-level claim.** Playwright + `getBoundingClientRect()` /
-   `page.evaluate()` beats eyeballing a screenshot every time — this session wasted many rounds on
-   `object-position` guesses that real measurement would have resolved in one pass.
-2. **Test at the user's actual reported viewport (≈1280×722 content area), not a round number
-   like 1440×900.** Several "this is fixed" claims failed because they were verified at a
-   comfortably large synthetic size instead of the user's real, tighter window.
-3. **When two layout constraints genuinely conflict at a given viewport, find the structural
-   fix, not another spacing tweak.** The nav/caps-overlap bug was only actually fixed by stopping
-   the photo from extending behind the nav — not by yet another crop percentage.
-4. **Never invent business facts** — still true, unchanged. No fabricated stats or social proof;
-   the new value-band taglines (Global Reach / Student First / Future Ready) are generic,
-   user-supplied copy, not invented claims.
-5. **Nothing has been pushed to origin.** Two new commits (`8b4dec2`, `be61c0a`) sit locally ahead
-   of whatever `stage` currently has. Don't assume anything from this session is live on
-   `dev-web.admizz.com`.
+1. **`redesign/hero-globe-light-bg` has 4 new commits this session, all local, nothing pushed.**
+   Working tree is clean. Don't assume anything from this session is live anywhere.
+2. **The glassmorphism + Three.js in "Our Story" is a confirmed, scoped exception, not a new
+   house style.** Don't reuse either elsewhere without the same explicit confirmation this section
+   got — every relevant file says so in its own comments.
+3. **Tailwind can silently drop a class with no error.** `bg-navy-deep/92` did exactly that this
+   session. If a style change doesn't show up despite a clean build, grep the compiled CSS for the
+   literal class before assuming you mis-eyeballed something.
+4. **The blue-vs-navy/gold palette question is still open after three-plus sessions.** Stop
+   treating "that's what's currently shipped" as an answer — it isn't one until the user says so.
+5. **Measure, don't guess — and don't trust full-page composite screenshots for sticky/fixed
+   elements.** Both cost real time this session in the opposite direction each time: a synthetic
+   drag test that "failed" only because it measured the wrong element's bounding box, and a
+   full-page screenshot that made a correctly-working sticky photo and fixed nav look broken.
