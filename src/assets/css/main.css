@@ -368,14 +368,20 @@
   max-width: theme("maxWidth.shell");
   margin-inline: auto;
   padding-inline: theme("spacing.gutter");
-  padding-block: clamp(3rem, 6vw, 5.5rem);
+  /* Asymmetric on purpose. The header is FIXED and ~70px tall at rest
+     (66px on mobile), and this page opens on a navy band beneath it, so
+     padding-top has to clear the header before the eyebrow starts — a
+     symmetric value tuned for the bottom put the eyebrow and the index
+     rail underneath it at every width. Bottom is free to be much tighter. */
+  padding-top: clamp(5.5rem, 7vw, 6.5rem);
+  padding-bottom: clamp(2rem, 3.5vw, 3.25rem);
 }
 @media (min-width: 1100px) {
   .masthead-grid {
     /* Measured, not guessed: at 1440px an 11.5rem/1fr/25rem split left the
        body column with only 445px of content, which forced the h1 to three
        lines. Trimming the rail and figure buys the statement ~230px. */
-    grid-template-columns: 9.5rem minmax(0, 1fr) minmax(0, 22rem);
+    grid-template-columns: 9.5rem minmax(0, 1fr) minmax(0, 24rem);
     gap: 0;
     align-items: start;
   }
@@ -388,16 +394,109 @@
   }
 }
 
+/* Index rail — real in-page navigation to each record, which is the one
+   thing a reference document always has and this page didn't. Hidden below
+   1100px: on a narrow screen it is a redundant duplicate of the records
+   directly beneath it, and a nav that only repeats what follows is noise. */
+.masthead-index {
+  display: none;
+}
+@media (min-width: 1100px) {
+  .masthead-index {
+    display: block;
+    padding-top: 0.25rem;
+  }
+}
+.masthead-index-list {
+  margin-top: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+}
+/* The connecting rule the dots sit on. */
+.masthead-index-list::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 1px;
+  background-color: theme("colors.navy.on-muted / 25%");
+}
+.masthead-index-link {
+  display: grid;
+  grid-template-columns: 7px auto;
+  column-gap: 1rem;
+  row-gap: 0.15rem;
+  align-items: center;
+}
+.masthead-index-dot {
+  grid-row: span 2;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background-color: theme("colors.navy.on-muted / 45%");
+  transition: background-color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+}
+/* This colour is load-bearing: without it the names inherit ink (#151833)
+   and go invisible on the navy ground. */
+.masthead-index-name {
+  grid-column: 2;
+  color: theme("colors.navy.on-muted");
+  transition: color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+}
+.masthead-index-link:hover .masthead-index-dot,
+.masthead-index-link:focus-visible .masthead-index-dot {
+  background-color: theme("colors.gold.DEFAULT");
+}
+.masthead-index-link:hover .masthead-index-name,
+.masthead-index-link:focus-visible .masthead-index-name {
+  color: theme("colors.navy.on");
+}
+
+/* Full-width band across the foot of the masthead — spans every grid column
+   rather than sitting inside the narrow body column, which at 1440px is only
+   445px of content and could never fit four items. */
+.record-strip {
+  grid-column: 1 / -1;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 1px solid theme("colors.navy.on-muted / 22%");
+}
+.record-strip-item {
+  padding: 0.875rem 0;
+  border-bottom: 1px solid theme("colors.navy.on-muted / 22%");
+}
+@media (min-width: 700px) {
+  .record-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-bottom: 1px solid theme("colors.navy.on-muted / 22%");
+  }
+  .record-strip-item {
+    padding: 1.125rem 1.75rem 1.125rem 0;
+    border-bottom: 0;
+  }
+  /* Divider on every item except the first in the row. With a fixed 4-column
+     track this is exact — an `+ sibling` rule would have put a divider on the
+     first item of a wrapped second row. */
+  .record-strip-item:not(:nth-child(4n + 1)) {
+    border-left: 1px solid theme("colors.navy.on-muted / 22%");
+    padding-left: 1.75rem;
+  }
+}
+
 /* ---------- Field diagram ---------- */
 .masthead-figure {
   position: relative;
   width: 100%;
-  max-width: 22rem;
+  max-width: 24rem;
   margin-inline: auto;
-  /* Matches the SVG viewBox exactly (480x470) so every percentage position
-     below maps 1:1 onto the circle geometry — the label and icon placements
-     are derived from the circle maths, not nudged by eye. */
-  aspect-ratio: 480 / 470;
+  /* Matches the SVG viewBox exactly (480x428) so every percentage below maps
+     1:1 onto the circle geometry — placements are derived from the circle
+     maths, not nudged by eye. */
+  aspect-ratio: 480 / 428;
   color: theme("colors.navy.on-muted / 62%");
 }
 .field-diagram {
@@ -408,70 +507,49 @@
   overflow: visible;
 }
 
-/* Icons sit INSIDE each circle's own region (inside itself, outside the
-   other two). That region measures ~91px wide at this size — fine for an
-   18px icon, and the reason the text had to move out. Positions are each
-   region's computed centroid. */
-.field-icon {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  display: inline-flex;
-  color: theme("colors.gold.DEFAULT");
-}
-.field-icon svg {
-  width: 1.125rem;
-  height: 1.125rem;
-}
-.field-icon-1 { left: 50%;   top: 28.7%; }   /* C1 own region centroid (240,135) */
-.field-icon-2 { left: 28.1%; top: 63.8%; }   /* C2 own region centroid (135,300) */
-.field-icon-3 { left: 71.9%; top: 63.8%; }   /* C3 own region centroid (345,300) */
+/* Labels sit INSIDE each circle's own region (inside itself, outside the
+   other two). That only works because the vertical wraps onto two lines:
+   "WORKFORCE SOLUTIONS" is 119px on one line against ~100px of space, but
+   "WORKFORCE" alone is 66px. Circle centres are 144 apart at r=108, which
+   keeps both a usable own region (~115px at its widest) and a real
+   three-way intersection (~39x51px) for the mark.
 
-/* Labels sit OUTSIDE the circles, each on the end of its leader tick.
-   Width stops being a constraint out here, so both lines survive intact. */
+   Positions are each own region's computed centroid — note the top circle's
+   region collapses fast below y=168 as the lower two arcs cut into it, so
+   its block sits high at y=110, not at the circle's centre. */
 .field-node {
   position: absolute;
   text-align: center;
-  white-space: nowrap;
+  transform: translate(-50%, -50%);
 }
-/* Above the top circle, anchored by its BOTTOM edge to the leader tick at
-   y=52 (52 from the top of a 470 viewBox = 88.9% up from the bottom).
+.field-node-1 { left: 50%;   top: 25.7%; }   /* (240,110) */
+.field-node-2 { left: 27.5%; top: 67.8%; }   /* (132,290) */
+.field-node-3 { left: 72.5%; top: 67.8%; }   /* (348,290) */
 
-   Anchored with `bottom`, deliberately, not `top` + translateY(-100%): GSAP
-   animates these labels with `y`, which rewrites the element's whole
-   transform and silently drops a percentage translateY — it resolved
-   translateX(-50%) to px and kept it, but replaced the -100% Y with its own
-   tween value, dropping the label 30px onto the circle's arc. Any CSS
-   transform GSAP also animates on the same axis is not safe to rely on. */
-.field-node-1 {
-  left: 50%;
-  bottom: 88.9%;
-  transform: translateX(-50%);
+.field-node-icon {
+  display: inline-flex;
+  color: theme("colors.gold.DEFAULT");
 }
-/* Below the two lower circles, anchored by their top edge to y=406. */
-.field-node-2,
-.field-node-3 {
-  top: 86.4%;
-  transform: translateX(-50%);
+.field-node-icon svg {
+  width: 1.125rem;
+  height: 1.125rem;
 }
-.field-node-2 { left: 28.1%; }
-.field-node-3 { left: 71.9%; }
-
-.field-leader {
-  color: theme("colors.navy.on-muted / 45%");
+/* Forces the two-word vertical onto two lines. Every one of them is two
+   words, and every single word measures under this width. */
+.field-node-vertical {
+  max-width: 5.5rem;
+  margin-inline: auto;
 }
 
 /* The brand asset is the full lockup (chevron + wordmark, 1024x308). At the
    diagram's centre the wordmark is illegible and reads as clutter, so the box
    is cut to the chevron's own aspect and `object-fit: cover` + left origin
    crops to exactly the leftmost 210px — the symbol alone. No new asset.
-
-   Size is bounded by the real three-way overlap, which measures 52x65
-   viewBox units (~38x48px rendered). At 2.5rem the mark was 40x59px and
-   straddled the arcs; 1.5rem sits inside it. */
+   Size is bounded by the real three-way overlap (~39x51px rendered). */
 .field-mark {
   position: absolute;
   left: 50%;
-  top: 52%;
+  top: 53.5%;
   transform: translate(-50%, -50%);
   width: 1.5rem;
   aspect-ratio: 210 / 308;

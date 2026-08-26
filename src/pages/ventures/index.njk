@@ -94,48 +94,36 @@ permalink: /ventures/
          claim docs/01-AUDIT.md says isn't supportable. Labels are the real
          `stage` and `vertical` values from ventures.json.
 
-         GEOMETRY, measured rather than eyeballed. Labels sat INSIDE the
-         circles first and overflowed on both sides. Each circle's own
-         region — inside itself, outside the other two — is only ~91px wide
-         at label height, while "WORKFORCE SOLUTIONS" is 119px and
-         "HIGHER EDUCATION" is 100px. No amount of repositioning fits a
-         119px word into 91px, so the text moved OUT, joined to its circle
-         by a leader tick. Only the icons stay inside: at 18px they clear
-         the 91px region comfortably.
+         GEOMETRY, measured rather than eyeballed. Labels live INSIDE their
+         circles, which only works because the vertical wraps onto two lines:
+         each circle's own region — inside itself, outside the other two —
+         is ~100-115px at its widest, and "WORKFORCE SOLUTIONS" is 119px on
+         one line but "WORKFORCE" alone is 66px. An earlier single-line
+         version overflowed both side circles.
 
-         Circle centres are ~136 apart at r=105, which keeps a real
-         three-way intersection (measured 52 x 65 viewBox units) for the
-         mark to sit in. ---- #}
+         Circle centres are 144 apart at r=108, which keeps both a usable own
+         region and a real three-way intersection (~39x51px) for the mark to
+         sit in. ---- #}
     <div class="masthead-figure" aria-hidden="true" data-field-diagram>
-      <svg class="field-diagram" viewBox="0 0 480 470" fill="none" focusable="false">
-        <circle class="field-circle" cx="240" cy="172" r="105" stroke="currentColor" stroke-width="1"/>
-        <circle class="field-circle" cx="172" cy="292" r="105" stroke="currentColor" stroke-width="1"/>
-        <circle class="field-circle" cx="308" cy="292" r="105" stroke="currentColor" stroke-width="1"/>
-        {# Leader ticks — each joins a label to the circle it names, so the
-           text reading outside the diagram is never ambiguous. #}
-        <line class="field-leader" x1="240" y1="67" x2="240" y2="52" stroke="currentColor" stroke-width="1"/>
-        <line class="field-leader" x1="135" y1="390" x2="135" y2="406" stroke="currentColor" stroke-width="1"/>
-        <line class="field-leader" x1="345" y1="390" x2="345" y2="406" stroke="currentColor" stroke-width="1"/>
+      <svg class="field-diagram" viewBox="0 0 480 428" fill="none" focusable="false">
+        <circle class="field-circle" cx="240" cy="153" r="108" stroke="currentColor" stroke-width="1"/>
+        <circle class="field-circle" cx="168" cy="278" r="108" stroke="currentColor" stroke-width="1"/>
+        <circle class="field-circle" cx="312" cy="278" r="108" stroke="currentColor" stroke-width="1"/>
       </svg>
 
-      {# Icons sit inside each circle's own region, at its measured centroid. #}
-      {% for v in ventures %}
-      <span class="field-icon field-icon-{{ loop.index }}">
-        {% if v.id == "institute" %}
-        <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-        {% elif v.id == "education" %}
-        <svg viewBox="0 0 20 20" fill="none" focusable="false"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 10h15M10 2.5c4 4.5 4 10.5 0 15-4-4.5-4-10.5 0-15z" stroke="currentColor" stroke-width="1.3"/></svg>
-        {% else %}
-        <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 16V9M8 16V4M13 16v-5M18 16V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        {% endif %}
-      </span>
-      {% endfor %}
-
-      {# Labels outside, each above/below its leader tick. #}
       {% for v in ventures %}
       <div class="field-node field-node-{{ loop.index }}">
-        <span class="block font-mono text-micro uppercase tracking-widest text-navy-on">{{ v.stage }}</span>
-        <span class="mt-1 block font-mono text-micro uppercase tracking-wide text-navy-on-muted">{{ v.vertical }}</span>
+        <span class="field-node-icon">
+          {% if v.id == "institute" %}
+          <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          {% elif v.id == "education" %}
+          <svg viewBox="0 0 20 20" fill="none" focusable="false"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 10h15M10 2.5c4 4.5 4 10.5 0 15-4-4.5-4-10.5 0-15z" stroke="currentColor" stroke-width="1.3"/></svg>
+          {% else %}
+          <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 16V9M8 16V4M13 16v-5M18 16V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          {% endif %}
+        </span>
+        <span class="mt-2 block font-mono text-micro uppercase tracking-widest text-navy-on">{{ v.stage }}</span>
+        <span class="field-node-vertical mt-1 block font-mono text-micro uppercase tracking-wide text-navy-on-muted leading-relaxed">{{ v.vertical }}</span>
       </div>
       {% endfor %}
 

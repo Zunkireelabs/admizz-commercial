@@ -41,3 +41,8 @@ scripts/output/
 .venn3.mjs
 .dbg.mjs
 .narrow.mjs
+.cssaudit.mjs
+.check.mjs
+.crop.mjs
+.hdr.mjs
+.strip.mjs
