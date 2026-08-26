@@ -354,16 +354,23 @@ if (!prefersReducedMotion) {
         // initial viewport, so this runs on load rather than on scroll.
         if (fieldDiagram) {
           const circles = gsap.utils.toArray('.field-circle', fieldDiagram);
+          const leaders = gsap.utils.toArray('.field-leader', fieldDiagram);
+          const icons = gsap.utils.toArray('.field-icon', fieldDiagram);
           const nodes = gsap.utils.toArray('.field-node', fieldDiagram);
           const mark = fieldDiagram.querySelector('.field-mark');
-          gsap.set(circles, { drawSVG: '0%' });
-          gsap.set(nodes, { opacity: 0, y: 8 });
+          gsap.set([...circles, ...leaders], { drawSVG: '0%' });
+          gsap.set([...icons, ...nodes], { opacity: 0, y: 8 });
           if (mark) gsap.set(mark, { opacity: 0, scale: 0.9 });
 
+          // Circles describe themselves, the icons mark each field, then the
+          // leaders reach out to their labels, and the mark settles into the
+          // shared centre last — the diagram assembling in the order it reads.
           gsap.timeline({ defaults: { ease: 'signature' }, delay: 0.25 })
             .to(circles, { drawSVG: '100%', duration: 1.1, stagger: 0.14 }, 0)
-            .to(nodes, { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 }, 0.55)
-            .to(mark, { opacity: 1, scale: 1, duration: 0.6 }, 0.9);
+            .to(icons, { opacity: 1, y: 0, duration: 0.5, stagger: 0.09 }, 0.5)
+            .to(leaders, { drawSVG: '100%', duration: 0.35, stagger: 0.09 }, 0.7)
+            .to(nodes, { opacity: 1, y: 0, duration: 0.6, stagger: 0.09 }, 0.8)
+            .to(mark, { opacity: 1, scale: 1, duration: 0.6 }, 1.05);
         }
 
         ventureRecords.forEach((record) => {

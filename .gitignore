@@ -35,3 +35,9 @@ scripts/output/
 .claude/scheduled_tasks.lock
 .shot.mjs
 .verify.mjs
+.measure.mjs
+.venn.mjs
+.venn2.mjs
+.venn3.mjs
+.dbg.mjs
+.narrow.mjs
