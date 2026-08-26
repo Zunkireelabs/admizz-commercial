@@ -2,36 +2,219 @@
 layout: base.njk
 navyHeader: true
 title: Our Ventures — Admizz Group
-description: Three ventures, one purpose — Admizz Institute, Admizz Education and Admizz Workforce Solutions, connected across preparation, study and career.
+description: Admizz Institute, Admizz Education and Admizz Workforce Solutions — three businesses operating across test preparation, higher education and workforce development.
 permalink: /ventures/
 ---
 
-{# ============================================================ PAGE HEADER #}
+{# ============================================================================
+   /ventures/ — THE RECORD
+   ----------------------------------------------------------------------------
+   This page deliberately does a DIFFERENT job from the homepage's "One
+   Ecosystem" section. The homepage pitches the three ventures to a visitor
+   with photography and scroll choreography. This page is the reference
+   record for the audience this site actually serves — partners,
+   institutions and press. Same three subjects, opposite register: a
+   document, not a story.
+
+   Structural devices are therefore documentary, not editorial: a masthead
+   record strip of hard facts, then one specification band per venture with
+   a mono label/value ledger. No photography (the homepage owns that), no
+   sticky column, no drag-scrub, no cards, no ghost numerals — the homepage
+   already uses 01/02/03 ghost numbers in two separate sections, and
+   repeating them here is exactly how five pages collapse into one template.
+
+   FRAMING CORRECTION (2026-08-26): this page previously opened with
+   "three distinct stages of the same journey". docs/01-AUDIT.md establishes
+   that Admizz Workforce Solutions is US vocational rehabilitation —
+   supported employment and job coaching for individuals with disabilities,
+   working with the state department. It is not the careers arm of a
+   study-abroad company, and the sequential "one journey" claim is factually
+   strained. Reframed as three businesses under one group. NOTE: the
+   homepage's ecosystem section still carries the original framing; it is
+   frozen in this branch and is queued for a separate, reviewable change.
+   ============================================================================ #}
+
+{# ============================================================ MASTHEAD
+   A document header, not a marketing hero: title, then a record strip of
+   hard facts read straight from site.json. Every value here is real —
+   nothing about scale, reach or outcomes, because none of that is verified
+   anywhere in this repo. #}
 <section class="bg-navy-deep py-section">
   <div class="shell">
-    <span class="eyebrow-on-navy fade-up">Our Ventures</span>
-    <h1 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
-      One ecosystem. <em class="italic text-navy-accent font-book">Many ways forward.</em>
+    <span class="eyebrow-on-navy fade-up">The Record</span>
+    <h1 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[15ch] text-balance fade-up" style="animation-delay:80ms">
+      Three businesses, <em class="italic text-navy-accent font-book">one group.</em>
     </h1>
-    <p class="mt-6 text-body-lg text-navy-on-muted max-w-measure fade-up" style="animation-delay:140ms">
-      Admizz supports three distinct stages of the same journey — building readiness, opening doors to higher education, and connecting people with meaningful work.
+    <p class="mt-6 text-body-lg text-navy-on-muted max-w-measure leading-relaxed fade-up" style="animation-delay:140ms">
+      Admizz Institute, Admizz Education and Admizz Workforce Solutions each serve a different audience and answer to a different market. What they share is a conviction that access to opportunity shouldn&rsquo;t depend on where someone starts.
     </p>
+
+    {# Record strip — hard facts only, mono, hairline-separated. The device
+       that tells a visitor within one second that this page is a reference
+       document rather than another pitch. #}
+    <dl class="record-strip mt-12 fade-up" style="animation-delay:200ms">
+      <div class="record-strip-item">
+        <dt class="data-label-on-navy">Group</dt>
+        <dd class="mt-1.5 text-small text-navy-on font-medium">{{ site.legalName }}</dd>
+      </div>
+      <div class="record-strip-item">
+        <dt class="data-label-on-navy">Established</dt>
+        <dd class="mt-1.5 text-small text-navy-on font-medium tabular-nums">{{ site.founded }}</dd>
+      </div>
+      <div class="record-strip-item">
+        <dt class="data-label-on-navy">Headquarters</dt>
+        <dd class="mt-1.5 text-small text-navy-on font-medium">{{ site.address }}</dd>
+      </div>
+      <div class="record-strip-item">
+        <dt class="data-label-on-navy">Businesses</dt>
+        <dd class="mt-1.5 text-small text-navy-on font-medium">Three</dd>
+      </div>
+    </dl>
   </div>
 </section>
 
-{# ============================================================ REGISTER #}
+{# ============================================================ THE THREE RECORDS
+   One specification band per venture. The bands share a structure on
+   purpose — a spec sheet with inconsistent fields is a worse spec sheet —
+   and the variation between them comes from the DATA being genuinely
+   different, not from arbitrary layout changes: Institute carries five
+   examinations and no public site, Education carries the group's only
+   accreditation, Workforce carries neither. #}
 <section class="bg-paper py-section">
   <div class="shell">
-    {% include "partials/ventures-register.njk" %}
+
+    {% for v in ventures %}
+    <article class="venture-record" data-venture-record>
+      {# Hairline ruled across by GSAP DrawSVG as the band enters (main.js).
+         Renders FULLY DRAWN with no JS — the base state is always the
+         finished one (see the scroll-reveal note in main.css). #}
+      <svg class="venture-rule text-rule-strong" height="1" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <line x1="0" y1="0.5" x2="100%" y2="0.5" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      </svg>
+
+      {# Document header: folio left, classification right, pushed to the
+         band's outer edges. Reads as a record header at a glance and puts
+         real tension on the band's top edge — where the left rail this
+         replaced just left ~600px of dead space on two bands out of three. #}
+      <div class="venture-head">
+        <span class="font-mono text-micro uppercase tracking-widest text-ink-faint tabular-nums">Record {{ v.index }} / 03</span>
+        <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ v.vertical }}</span>
+      </div>
+
+      <h2 class="mt-6 font-display font-light text-h1 text-ink text-balance" data-venture-name>{{ v.name }}</h2>
+
+      <p class="mt-5 text-body-lg text-ink leading-snug max-w-measure font-book">{{ v.verticalLine }}</p>
+      <p class="mt-5 text-body text-ink-muted leading-relaxed max-w-measure">{{ v.description }}</p>
+
+      {# ---- The ledger: this page's core device ---- #}
+      <dl class="venture-ledger mt-12">
+
+        {% if v.exams.length %}
+        <div class="venture-ledger-row">
+          <dt class="data-label">Examinations</dt>
+          <dd class="venture-ledger-value font-mono text-small text-ink tracking-wide">
+            {% for e in v.exams %}{{ e }}{% if not loop.last %} <span class="text-ink-faint" aria-hidden="true">/</span> {% endif %}{% endfor %}
+          </dd>
+        </div>
+        {% endif %}
+
+        <div class="venture-ledger-row">
+          <dt class="data-label">Accreditation</dt>
+          <dd class="venture-ledger-value">
+            {% if v.id == "education" %}
+            <span class="text-small text-ink">ICEF Accredited Agency &middot; <span class="tabular-nums">IAS 6499</span></span>
+            {% else %}
+            {# Deliberately not "None". Absence of a listed accreditation is not
+               evidence of absence — this states only what the repo can verify. #}
+            <span class="text-small text-ink-faint">No accreditation on record</span>
+            {% endif %}
+          </dd>
+        </div>
+
+        <div class="venture-ledger-row">
+          <dt class="data-label">Web</dt>
+          <dd class="venture-ledger-value">
+            {% if v.href == "#" %}
+            {# Bug fix: this was an <a href="#"> dressed as a working link.
+               hrefLabel exists in ventures.json to solve exactly this and was
+               read by no template until now. Rendered as a status, not a link,
+               so it is not focusable as though it were one. #}
+            <span class="text-small text-ink-faint">{{ v.hrefLabel }}</span>
+            {% else %}
+            <a href="{{ v.href }}" class="text-small text-ink link-underline" target="_blank" rel="noopener noreferrer">{{ v.hrefLabel }}</a>
+            {% endif %}
+          </dd>
+        </div>
+
+        {# Related reading — derived from the venture↔article relationship
+           already in insights.json, never a hardcoded slug. #}
+        {% for post in insights %}{% if post.venture == v.name %}
+        <div class="venture-ledger-row">
+          <dt class="data-label">Related reading</dt>
+          <dd class="venture-ledger-value">
+            <a href="/insights/{{ post.slug }}/" class="text-small text-ink link-underline">{{ post.title }}</a>
+            <span class="ml-2 font-mono text-micro uppercase tracking-widest text-ink-faint whitespace-nowrap">{{ post.body | readingTime }} min read</span>
+          </dd>
+        </div>
+        {% endif %}{% endfor %}
+
+      </dl>
+
+      {% if v.id == "education" %}
+      {# ICEF — the only accreditation that exists anywhere in this project.
+         AIRC, British Council, NAFSA, PIER and ISO were searched for and NOT
+         found (docs/01-AUDIT.md). It is held by Admizz Education alone, and the
+         scope note says so outright rather than letting a seal on the group's
+         page imply group-wide accreditation. Stating precisely what a
+         credential does NOT cover reads as more credible than a badge.
+
+         This block is also what breaks the three bands out of lockstep — the
+         asymmetry is driven by the data being genuinely different, not by
+         varying the layout for its own sake. Flagged with a gold rule rather
+         than boxed: gold is a surface/rule/seal here, never text on light. #}
+      <div class="icef-seal mt-12" data-icef-seal>
+        <svg class="icef-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true" focusable="false">
+          <circle class="icef-ring" cx="32" cy="32" r="29" stroke="currentColor" stroke-width="1"/>
+          <circle class="icef-ring-inner" cx="32" cy="32" r="23.5" stroke="currentColor" stroke-width="0.75" opacity="0.5"/>
+          <path class="icef-check" d="M22 32.5l7 7 14-15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="icef-body">
+          <p class="font-mono text-micro uppercase tracking-widest text-gold-text">ICEF Accredited Agency</p>
+          <p class="mt-2.5 text-body text-ink font-medium tabular-nums">IAS 6499</p>
+          <p class="mt-0.5 text-small text-ink-muted tabular-nums">Valid 15 April 2026 &ndash; 15 April 2027</p>
+          <p class="mt-3 text-small text-ink-muted leading-relaxed max-w-[46ch]">
+            Held by Admizz Education. This accreditation does not extend to Admizz Institute or Admizz Workforce Solutions.
+          </p>
+          <a href="https://accreditations.icef.com/certificate?id=c8a7212a-a25c-469f-8a7b-2b2f047e8c0c"
+             class="mt-4 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline"
+             target="_blank" rel="noopener noreferrer">
+            Verify with ICEF
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5M10 4v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+      {% endif %}
+
+    </article>
+    {% endfor %}
+
   </div>
 </section>
 
-{# ============================================================ CLOSE #}
-<section class="relative overflow-hidden bg-navy py-section-sm">
-  <div class="shell relative flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-    <p class="font-display font-light text-h2 text-navy-on max-w-[20ch] text-balance fade-up">
-      Not sure which venture fits? <em class="italic text-navy-accent font-book">We'll point you the right way.</em>
-    </p>
+{# ============================================================ CLOSE
+   Deliberately not /about/'s centered navy close — a left-weighted band on
+   the sunk paper ground, so two inner pages don't end on the same note. #}
+<section class="bg-paper-sunk border-t border-rule py-section-sm">
+  <div class="shell grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-end gap-8">
+    <div class="fade-up">
+      <span class="eyebrow">Enquiries</span>
+      <p class="mt-4 font-display font-light text-h2 text-ink max-w-[24ch] text-balance">
+        Partnership, press or admissions &mdash; <em class="italic text-navy font-book">start here.</em>
+      </p>
+      <p class="mt-4 text-body text-ink-muted max-w-measure-tight leading-relaxed">
+        Tell us which of the three you need and we&rsquo;ll route it to the right team.
+      </p>
+    </div>
     <a href="/contact/" class="btn-primary shrink-0 fade-up" style="animation-delay:80ms">Get in touch</a>
   </div>
 </section>

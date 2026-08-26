@@ -154,17 +154,6 @@ if (!prefersReducedMotion) {
       });
     });
 
-    gsap.utils.toArray('.grow-line').forEach((line) => {
-      const sequence = line.closest('.relative');
-      if (!sequence) return;
-      gsap.set(line, { scaleY: 0, transformOrigin: 'top' });
-      gsap.to(line, {
-        scaleY: 1,
-        ease: 'none',
-        scrollTrigger: { trigger: sequence, start: 'top 75%', end: 'bottom 65%', scrub: 0.4 },
-      });
-    });
-
     // Ecosystem story (homepage "One Ecosystem" section) — sticky photo
     // (plain CSS position:sticky, set in the markup, not GSAP pin) crossfades
     // as each text block scrolls to center. No pinning, no scroll-hijacking —
@@ -340,15 +329,78 @@ if (!prefersReducedMotion) {
       });
     }
 
-    gsap.utils.toArray('.sequence-row').forEach((row) => {
-      row.classList.add('js-scroll-armed');
-      ScrollTrigger.create({
-        trigger: row,
-        start: 'top center',
-        end: 'bottom center',
-        toggleClass: { targets: row, className: 'is-active' },
+
+    // -----------------------------------------------------------------
+    // /ventures/ — "The Record"
+    //
+    // Page-scoped: the whole block is behind a DOM check, so no other page
+    // pays for it and DrawSVGPlugin is only fetched where it's used (same
+    // lazy pattern as the Three.js layer above).
+    //
+    // Everything here animates elements that are ALREADY FULLY RENDERED in
+    // the base HTML/CSS. GSAP sets the hidden/undrawn state itself, and
+    // only after the plugin has actually resolved — so a no-JS visitor, a
+    // crawler or a screenshotter sees the finished page, never a blank one.
+    // -----------------------------------------------------------------
+    const ventureRecords = gsap.utils.toArray('[data-venture-record]');
+    if (ventureRecords.length) {
+      import('gsap/DrawSVGPlugin').then(({ DrawSVGPlugin }) => {
+        gsap.registerPlugin(DrawSVGPlugin);
+
+        ventureRecords.forEach((record) => {
+          const rule = record.querySelector('.venture-rule line');
+          const name = record.querySelector('[data-venture-name]');
+          const ledgerRows = gsap.utils.toArray('.venture-ledger-row', record);
+
+          const tl = gsap.timeline({
+            defaults: { ease: 'signature' },
+            scrollTrigger: { trigger: record, start: 'top 78%' },
+          });
+
+          // The band's top hairline rules itself across, left to right —
+          // the page's one signature move. A record being entered, not a
+          // decorative wipe: it precedes the content it introduces.
+          if (rule) {
+            gsap.set(rule, { drawSVG: '0%' });
+            tl.to(rule, { drawSVG: '100%', duration: 0.9 }, 0);
+          }
+
+          if (name) {
+            gsap.set(name, { opacity: 0, y: 14 });
+            tl.to(name, { opacity: 1, y: 0, duration: 0.7 }, 0.15);
+          }
+
+          // Ledger rows arrive in sequence, the way a list is read rather
+          // than the way a block appears.
+          if (ledgerRows.length) {
+            gsap.set(ledgerRows, { opacity: 0, y: 10 });
+            tl.to(ledgerRows, { opacity: 1, y: 0, duration: 0.55, stagger: 0.07 }, 0.3);
+          }
+        });
+
+        // ICEF seal — ring, inner ring, then the check, in that order.
+        // Sequenced rather than simultaneous so it reads as a mark being
+        // struck onto the page: the credential is the most load-bearing
+        // fact on this site, and it earns its own beat.
+        const seal = document.querySelector('[data-icef-seal]');
+        if (seal) {
+          const ring = seal.querySelector('.icef-ring');
+          const ringInner = seal.querySelector('.icef-ring-inner');
+          const check = seal.querySelector('.icef-check');
+          const marks = [ring, ringInner, check].filter(Boolean);
+          if (marks.length) {
+            gsap.set(marks, { drawSVG: '0%' });
+            gsap.timeline({
+              defaults: { ease: 'signature' },
+              scrollTrigger: { trigger: seal, start: 'top 82%' },
+            })
+              .to(ring, { drawSVG: '100%', duration: 0.8 }, 0)
+              .to(ringInner, { drawSVG: '100%', duration: 0.7 }, 0.12)
+              .to(check, { drawSVG: '100%', duration: 0.45 }, 0.5);
+          }
+        }
       });
-    });
+    }
   });
 }
 

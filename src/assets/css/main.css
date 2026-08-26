@@ -184,14 +184,13 @@
    right before observing them (main.js). Content visibility must never
    depend on JS running correctly.
 
-   .grow-line is the one exception: it's scroll-scrubbed by GSAP directly
-   (main.js, synced to Lenis via gsap.ticker), not the .js-armed pattern
-   above, so its only CSS is the fully-drawn no-JS default. */
-
-.grow-line {
-  transform: scaleY(1);
-  transform-origin: top;
-}
+   Scroll-SCRUBBED elements are an exception to the .js-armed mechanism but
+   never to the principle: .venture-rule and the .icef-* marks (/ventures/)
+   are driven by GSAP directly (synced to Lenis via gsap.ticker), so they
+   carry no hiding CSS at all — their base state IS the finished one, and
+   GSAP sets the hidden state itself only after it has actually loaded.
+   Either way the rule holds: content and structure must never depend on
+   JS having run. */
 
 /* Hero trust badge — a very slow ambient float. No new reduced-motion query
    needed: the existing [data-motion] rule above already kills any animation
@@ -204,27 +203,12 @@
   animation: badge-float 6s ease-in-out infinite;
 }
 
-/* Ventures sequence — the row currently being read gets full presence;
-   the others recede, so the journey-through-three-stages reads as real
-   scroll feedback (main.js ScrollTrigger), not a static list. No new
-   color introduced — opacity only, still navy/paper (CLAUDE.md §5). */
-.sequence-row {
-  opacity: 1;
-  transition: opacity theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
-}
-.sequence-row.js-scroll-armed {
-  opacity: 0.4;
-}
-.sequence-row.js-scroll-armed.is-active {
-  opacity: 1;
-}
-
 /* Ecosystem story (homepage "One Ecosystem" section, ecosystem-journey.njk,
    rebuilt 2026-08-25 — the card-grid version was rejected as templated).
    Sticky photo (CSS position:sticky, not a GSAP pin) crossfades between
    three stacked images as the matching text block scrolls to center;
-   scrolling itself is never hijacked. Same "armed" principle as
-   .sequence-row above: [data-photo="0"]/[data-block="0"] are the no-JS
+   scrolling itself is never hijacked. Same "armed" principle used
+   throughout: [data-photo="0"]/[data-block="0"] are the no-JS
    default (venture 1 showing), and :not(.ecosystem-armed) stops that rule
    from matching once JS takes over — the exact guard the card version
    needed after shipping without it once (see the old comment history). */
@@ -355,4 +339,139 @@
 }
 @keyframes fade-up-in {
   to { opacity: 1; transform: none; }
+}
+
+/* =====================================================
+   /ventures/ — "The Record"
+   -----------------------------------------------------
+   Page-scoped. Nothing here is rendered by the homepage or by any shared
+   partial (verified by grep before adding). The register/list treatment
+   this page used to carry (partials/ventures-register.njk) was removed
+   along with the partial, and its now-dead rules and main.js scroll
+   code went with it — verified unused by any other page first.
+
+   Register note: this page is a DOCUMENT, so its devices are documentary —
+   hairline-ruled label/value ledgers and a mono record strip. The
+   homepage's editorial devices (photography, sticky crossfade, drag-scrub,
+   ghost numerals) are deliberately absent so the two pages do not read as
+   two skins of one template.
+   ===================================================== */
+
+/* Masthead record strip — four hard facts, hairline-divided. Stacks to a
+   simple ruled list on mobile rather than squeezing four columns. */
+.record-strip {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 1px solid theme("colors.navy.on-muted / 22%");
+}
+.record-strip-item {
+  padding: 0.875rem 0;
+  border-bottom: 1px solid theme("colors.navy.on-muted / 22%");
+}
+@media (min-width: 768px) {
+  .record-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-bottom: 1px solid theme("colors.navy.on-muted / 22%");
+  }
+  .record-strip-item {
+    padding: 1.25rem 1.75rem 1.25rem 0;
+    border-bottom: 0;
+    border-left: 1px solid theme("colors.navy.on-muted / 22%");
+    padding-left: 1.75rem;
+  }
+  .record-strip-item:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+
+/* One specification band per venture. */
+.venture-record {
+  padding-top: clamp(2.5rem, 5vw, 4.5rem);
+  padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
+}
+.venture-record:first-child {
+  padding-top: 0;
+}
+
+/* The band's top hairline. Drawn left-to-right by GSAP DrawSVG on enter
+   (main.js). Renders FULLY DRAWN with no JS — the base state is always the
+   finished one, never the hidden one — content and structure must never
+   depend on JS having run. Only once DrawSVG has loaded does it set the
+   dash offset that hides the line before animating it back in. */
+.venture-rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  overflow: visible;
+  margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
+}
+
+/* Document header row — folio left, classification right, at the band's
+   outer edges. Replaced an earlier left-rail grid: with only a folio and a
+   classification to hold, the rail left roughly 600px of dead column beside
+   two of the three bands, which reads as an accident, not a decision. */
+.venture-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+/* Label/value ledger — the page's core device. Mono label in a fixed
+   column, value flush beside it, hairline between rows. */
+.venture-ledger-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.375rem;
+  padding: 0.875rem 0;
+  border-top: 1px solid theme("colors.rule.DEFAULT");
+}
+.venture-ledger-row:last-child {
+  border-bottom: 1px solid theme("colors.rule.DEFAULT");
+}
+@media (min-width: 640px) {
+  .venture-ledger-row {
+    grid-template-columns: 10.5rem minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: baseline;
+  }
+}
+.venture-ledger-value {
+  line-height: 1.55;
+}
+
+/* ICEF seal. The single strongest trust signal available anywhere in this
+   project, and the only accreditation that exists — so it gets real weight
+   here rather than the small chip treatment it has on the homepage.
+   The mark's strokes draw themselves on enter (main.js, DrawSVG); same
+   visible-by-default contract as .venture-rule above. */
+.icef-seal {
+  color: theme("colors.gold.text");
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  /* Flagged with a gold rule rather than boxed — gold is a surface, a rule or
+     a seal in this system, never text on a light ground (CLAUDE.md §5). The
+     inset is what marks this out from the ledger above it without adding
+     card chrome to a page that deliberately has none. */
+  border-left: 2px solid theme("colors.gold.DEFAULT");
+  padding-left: clamp(1.25rem, 3vw, 2rem);
+}
+@media (min-width: 640px) {
+  .icef-seal {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.75rem;
+  }
+}
+.icef-mark {
+  width: 3.25rem;
+  height: 3.25rem;
+  flex: none;
+  display: block;
+  overflow: visible;
+}
+.icef-body {
+  min-width: 0;
 }
