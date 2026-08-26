@@ -344,22 +344,114 @@
 /* =====================================================
    /ventures/ — "The Record"
    -----------------------------------------------------
-   Page-scoped. Nothing here is rendered by the homepage or by any shared
-   partial (verified by grep before adding). The register/list treatment
-   this page used to carry (partials/ventures-register.njk) was removed
-   along with the partial, and its now-dead rules and main.js scroll
-   code went with it — verified unused by any other page first.
+   Page-scoped. Nothing below is rendered by the homepage or by any shared
+   partial (verified by grep before adding, and by a rule-level diff of the
+   compiled CSS after).
 
    Register note: this page is a DOCUMENT, so its devices are documentary —
-   hairline-ruled label/value ledgers and a mono record strip. The
-   homepage's editorial devices (photography, sticky crossfade, drag-scrub,
-   ghost numerals) are deliberately absent so the two pages do not read as
-   two skins of one template.
+   an index rail, a mono record strip, hairline-ruled label/value ledgers,
+   numbered plates. The homepage's editorial devices (sticky crossfade,
+   drag-scrub, full-bleed photography) are deliberately absent so the two
+   pages don't read as two skins of one template.
+
+   The register/list treatment this page used to carry
+   (partials/ventures-register.njk) was removed along with the partial, and
+   its now-dead rules and main.js scroll code went with it — verified unused
+   by any other page first.
    ===================================================== */
 
-/* Masthead record strip — four hard facts, hairline-divided. Stacks to a
-   simple ruled list on mobile rather than squeezing four columns. */
+/* ---------- Masthead ---------- */
+.masthead-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  max-width: theme("maxWidth.shell");
+  margin-inline: auto;
+  padding-inline: theme("spacing.gutter");
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+}
+@media (min-width: 1100px) {
+  .masthead-grid {
+    /* Measured, not guessed: at 1440px an 11.5rem/1fr/25rem split left the
+       body column with only 445px of content, which forced the h1 to three
+       lines. Trimming the rail and figure buys the statement ~230px. */
+    grid-template-columns: 9.5rem minmax(0, 1fr) minmax(0, 20rem);
+    gap: 0;
+    align-items: start;
+  }
+  .masthead-body {
+    padding-inline: clamp(2rem, 3.5vw, 3.25rem);
+    border-left: 1px solid theme("colors.navy.on-muted / 20%");
+  }
+  .masthead-figure {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Index rail — real in-page navigation to each record, which is the one
+   thing a reference document always has and this page didn't. Hidden below
+   1100px: on a narrow screen it is a redundant duplicate of the records
+   directly beneath it, and a nav that only repeats what follows is noise. */
+.masthead-index {
+  display: none;
+}
+@media (min-width: 1100px) {
+  .masthead-index {
+    display: block;
+    padding-top: 0.25rem;
+  }
+}
+.masthead-index-list {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  position: relative;
+}
+/* The connecting rule the dots sit on. */
+.masthead-index-list::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 1px;
+  background-color: theme("colors.navy.on-muted / 25%");
+}
+.masthead-index-link {
+  display: grid;
+  grid-template-columns: 7px auto;
+  column-gap: 1rem;
+  row-gap: 0.15rem;
+  align-items: center;
+}
+.masthead-index-dot {
+  grid-row: span 2;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background-color: theme("colors.navy.on-muted / 45%");
+  transition: background-color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+}
+.masthead-index-name {
+  grid-column: 2;
+  color: theme("colors.navy.on-muted");
+  transition: color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+}
+.masthead-index-link:hover .masthead-index-dot,
+.masthead-index-link:focus-visible .masthead-index-dot {
+  background-color: theme("colors.gold.DEFAULT");
+}
+.masthead-index-link:hover .masthead-index-name,
+.masthead-index-link:focus-visible .masthead-index-name {
+  color: theme("colors.navy.on");
+}
+
+/* Full-width band across the foot of the masthead — spans every grid
+   column rather than sitting inside the narrow body column. */
 .record-strip {
+  grid-column: 1 / -1;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
   display: grid;
   grid-template-columns: 1fr;
   border-top: 1px solid theme("colors.navy.on-muted / 22%");
@@ -368,69 +460,209 @@
   padding: 0.875rem 0;
   border-bottom: 1px solid theme("colors.navy.on-muted / 22%");
 }
-@media (min-width: 768px) {
+@media (min-width: 700px) {
   .record-strip {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     border-bottom: 1px solid theme("colors.navy.on-muted / 22%");
   }
   .record-strip-item {
-    padding: 1.25rem 1.75rem 1.25rem 0;
+    padding: 1.125rem 1.75rem 1.125rem 0;
     border-bottom: 0;
+  }
+  /* Divider on every item except the first in the row. With a fixed 4-column
+     track this is exact — an `+ sibling` rule would have put a divider on the
+     first item of a wrapped second row. */
+  .record-strip-item:not(:nth-child(4n + 1)) {
     border-left: 1px solid theme("colors.navy.on-muted / 22%");
     padding-left: 1.75rem;
   }
-  .record-strip-item:first-child {
-    border-left: 0;
-    padding-left: 0;
+}
+
+/* ---------- Field diagram ----------
+   Three overlapping fields with the mark at the shared centre. The page's
+   one bespoke graphic, and it carries the actual argument: three separate
+   circles that genuinely overlap — NOT an arrow sequence, because a
+   sequence is exactly the claim docs/01-AUDIT.md says isn't supportable. */
+.masthead-figure {
+  position: relative;
+  width: 100%;
+  max-width: 25rem;
+  margin-inline: auto;
+  aspect-ratio: 480 / 400;
+  /* Was /40%, which rendered the circles almost invisible against navy-deep
+     — the diagram carries the page's argument, so it has to actually read. */
+  color: theme("colors.navy.on-muted / 62%");
+}
+.field-diagram {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.field-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 8.5rem;
+}
+/* Positions sit in each circle's own (non-overlapping) region, derived from
+   the circle geometry in the markup rather than nudged by eye. */
+.field-node-1 { left: 50%;   top: 24%; }
+.field-node-2 { left: 26.5%; top: 73%; }
+.field-node-3 { left: 73.5%; top: 73%; }
+
+.field-node-icon {
+  display: inline-flex;
+  color: theme("colors.gold.DEFAULT");
+}
+.field-node-icon svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+/* The brand asset is the full lockup (chevron + wordmark, 1024x308). At the
+   diagram's centre the wordmark is illegible and reads as clutter, so the box
+   is cut to the chevron's own aspect and `object-fit: cover` + left origin
+   crops to exactly the leftmost 210px — the symbol alone. No new asset. */
+.field-mark {
+  position: absolute;
+  left: 50%;
+  top: 53.5%;
+  transform: translate(-50%, -50%);
+  width: 2.5rem;
+  aspect-ratio: 210 / 308;
+  overflow: hidden;
+}
+.field-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+  display: block;
+}
+
+/* ---------- The three positions ---------- */
+.position-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 700px) {
+  .position-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 3rem);
   }
 }
-
-/* One specification band per venture. */
-.venture-record {
-  padding-top: clamp(2.5rem, 5vw, 4.5rem);
-  padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
+.position-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
-.venture-record:first-child {
-  padding-top: 0;
-}
-
-/* The band's top hairline. Drawn left-to-right by GSAP DrawSVG on enter
-   (main.js). Renders FULLY DRAWN with no JS — the base state is always the
-   finished one, never the hidden one — content and structure must never
-   depend on JS having run. Only once DrawSVG has loaded does it set the
-   dash offset that hides the line before animating it back in. */
-.venture-rule {
-  display: block;
-  width: 100%;
+/* The connector between positions. Reads as "these sit alongside each
+   other", not "this leads to that" — no arrowheads, deliberately. */
+.position-tick {
+  flex: 1;
   height: 1px;
-  overflow: visible;
-  margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
+  background-color: theme("colors.rule.strong");
+}
+.position-item:last-child .position-tick {
+  background: linear-gradient(to right, theme("colors.rule.strong"), transparent);
 }
 
-/* Document header row — folio left, classification right, at the band's
-   outer edges. Replaced an earlier left-rail grid: with only a folio and a
-   classification to hold, the rail left roughly 600px of dead column beside
-   two of the three bands, which reads as an accident, not a decision. */
+/* ---------- The records ---------- */
+.venture-record {
+  padding-block: clamp(3rem, 6vw, 5rem);
+  border-bottom: 1px solid theme("colors.rule.DEFAULT");
+  scroll-margin-top: 7rem;
+}
+.venture-record:last-child {
+  border-bottom: 0;
+}
 .venture-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 1.5rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
 }
 
-/* Label/value ledger — the page's core device. Mono label in a fixed
-   column, value flush beside it, hairline between rows. */
+.venture-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 700px) {
+  .venture-grid {
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: clamp(1.75rem, 3vw, 2.75rem);
+  }
+  .venture-ledger {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 1100px) {
+  .venture-grid {
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr) minmax(0, 19rem);
+  }
+  .venture-ledger {
+    grid-column: auto;
+  }
+}
+
+/* Plate — a fixed portrait crop carrying the record numeral. The same three
+   files the homepage's ecosystem section uses, but a different treatment
+   and a different job (a numbered plate in a record, not a full-bleed
+   sticky crossfade). See the content-authenticity note in
+   ecosystem-journey.njk: all three are user-supplied under an explicit
+   exception, not this project's default for photography. */
+.venture-plate {
+  position: relative;
+  overflow: hidden;
+  border-radius: theme("borderRadius.lg");
+  background-color: theme("colors.navy.deep");
+  aspect-ratio: 4 / 5;
+}
+.venture-plate-img {
+  position: absolute;
+  inset: 0;
+}
+.venture-plate-img :is(picture, img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Scrim so the numeral holds contrast over any crop, without darkening the
+   whole photo the way a flat overlay would. */
+.venture-plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, theme("colors.navy.deep / 62%") 0%, theme("colors.navy.deep / 12%") 38%, transparent 62%);
+  pointer-events: none;
+}
+.venture-plate-numeral {
+  position: absolute;
+  left: 1.25rem;
+  bottom: 0.75rem;
+  z-index: 1;
+  font-size: clamp(3rem, 6vw, 4.25rem);
+  line-height: 1;
+  color: theme("colors.white / 92%");
+  letter-spacing: -0.02em;
+}
+
 .venture-ledger-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.375rem;
-  padding: 0.875rem 0;
+  gap: 0.3rem;
+  padding: 0.8rem 0;
   border-top: 1px solid theme("colors.rule.DEFAULT");
 }
 .venture-ledger-row:last-child {
   border-bottom: 1px solid theme("colors.rule.DEFAULT");
 }
-@media (min-width: 640px) {
+@media (min-width: 700px) and (max-width: 1099.98px) {
   .venture-ledger-row {
     grid-template-columns: 10.5rem minmax(0, 1fr);
     gap: 1.5rem;
@@ -441,37 +673,27 @@
   line-height: 1.55;
 }
 
-/* ICEF seal. The single strongest trust signal available anywhere in this
-   project, and the only accreditation that exists — so it gets real weight
-   here rather than the small chip treatment it has on the homepage.
-   The mark's strokes draw themselves on enter (main.js, DrawSVG); same
-   visible-by-default contract as .venture-rule above. */
+/* ICEF seal. The only accreditation that exists anywhere in this project and
+   the strongest trust signal on the site, so it gets a real certificate
+   affordance rather than the small chip it has on the homepage. Gold as a
+   rule and a border here — never as text on a light ground (CLAUDE.md §5);
+   the wordmark uses the gold-text token, which is AA on paper. */
 .icef-seal {
+  margin: 1rem 0 0.25rem;
+  padding: 1rem 1.125rem 1.125rem;
+  border: 1px solid theme("colors.gold.DEFAULT");
+  border-radius: theme("borderRadius.lg");
+  background-color: theme("colors.gold.sunk / 45%");
   color: theme("colors.gold.text");
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  /* Flagged with a gold rule rather than boxed — gold is a surface, a rule or
-     a seal in this system, never text on a light ground (CLAUDE.md §5). The
-     inset is what marks this out from the ledger above it without adding
-     card chrome to a page that deliberately has none. */
-  border-left: 2px solid theme("colors.gold.DEFAULT");
-  padding-left: clamp(1.25rem, 3vw, 2rem);
 }
-@media (min-width: 640px) {
-  .icef-seal {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 1.75rem;
-  }
+.icef-seal-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 .icef-mark {
-  width: 3.25rem;
-  height: 3.25rem;
+  width: 1.75rem;
+  height: 1.75rem;
   flex: none;
-  display: block;
   overflow: visible;
-}
-.icef-body {
-  min-width: 0;
 }

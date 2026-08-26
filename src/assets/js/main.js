@@ -333,70 +333,88 @@ if (!prefersReducedMotion) {
     // -----------------------------------------------------------------
     // /ventures/ — "The Record"
     //
-    // Page-scoped: the whole block is behind a DOM check, so no other page
+    // Page-scoped: the whole block is behind DOM checks, so no other page
     // pays for it and DrawSVGPlugin is only fetched where it's used (same
     // lazy pattern as the Three.js layer above).
     //
     // Everything here animates elements that are ALREADY FULLY RENDERED in
-    // the base HTML/CSS. GSAP sets the hidden/undrawn state itself, and
-    // only after the plugin has actually resolved — so a no-JS visitor, a
-    // crawler or a screenshotter sees the finished page, never a blank one.
+    // the base HTML/CSS. GSAP sets the hidden/undrawn state itself, and only
+    // after the plugin has actually resolved — so a no-JS visitor, a crawler
+    // or a screenshotter sees the finished page, never a blank one.
     // -----------------------------------------------------------------
     const ventureRecords = gsap.utils.toArray('[data-venture-record]');
-    if (ventureRecords.length) {
+    const fieldDiagram = document.querySelector('[data-field-diagram]');
+
+    if (ventureRecords.length || fieldDiagram) {
       import('gsap/DrawSVGPlugin').then(({ DrawSVGPlugin }) => {
         gsap.registerPlugin(DrawSVGPlugin);
 
+        // Field diagram — the three circles describe themselves in sequence,
+        // then the mark and labels settle into the shared centre. It's in the
+        // initial viewport, so this runs on load rather than on scroll.
+        if (fieldDiagram) {
+          const circles = gsap.utils.toArray('.field-circle', fieldDiagram);
+          const nodes = gsap.utils.toArray('.field-node', fieldDiagram);
+          const mark = fieldDiagram.querySelector('.field-mark');
+          gsap.set(circles, { drawSVG: '0%' });
+          gsap.set(nodes, { opacity: 0, y: 8 });
+          if (mark) gsap.set(mark, { opacity: 0, scale: 0.9 });
+
+          gsap.timeline({ defaults: { ease: 'signature' }, delay: 0.25 })
+            .to(circles, { drawSVG: '100%', duration: 1.1, stagger: 0.14 }, 0)
+            .to(nodes, { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 }, 0.55)
+            .to(mark, { opacity: 1, scale: 1, duration: 0.6 }, 0.9);
+        }
+
         ventureRecords.forEach((record) => {
-          const rule = record.querySelector('.venture-rule line');
+          const head = record.querySelector('.venture-head');
+          const plate = record.querySelector('.venture-plate');
           const name = record.querySelector('[data-venture-name]');
-          const ledgerRows = gsap.utils.toArray('.venture-ledger-row', record);
+          const ledgerRows = gsap.utils.toArray('.venture-ledger-row, .icef-seal', record);
 
           const tl = gsap.timeline({
             defaults: { ease: 'signature' },
-            scrollTrigger: { trigger: record, start: 'top 78%' },
+            scrollTrigger: { trigger: record, start: 'top 76%' },
           });
 
-          // The band's top hairline rules itself across, left to right —
-          // the page's one signature move. A record being entered, not a
-          // decorative wipe: it precedes the content it introduces.
-          if (rule) {
-            gsap.set(rule, { drawSVG: '0%' });
-            tl.to(rule, { drawSVG: '100%', duration: 0.9 }, 0);
+          if (head) {
+            gsap.set(head, { opacity: 0 });
+            tl.to(head, { opacity: 1, duration: 0.5 }, 0);
           }
-
+          // The plate lifts and settles rather than fading — a physical
+          // object being laid onto the record, matching what it is.
+          if (plate) {
+            gsap.set(plate, { opacity: 0, y: 20 });
+            tl.to(plate, { opacity: 1, y: 0, duration: 0.8 }, 0.1);
+          }
           if (name) {
             gsap.set(name, { opacity: 0, y: 14 });
-            tl.to(name, { opacity: 1, y: 0, duration: 0.7 }, 0.15);
+            tl.to(name, { opacity: 1, y: 0, duration: 0.7 }, 0.2);
           }
-
           // Ledger rows arrive in sequence, the way a list is read rather
           // than the way a block appears.
           if (ledgerRows.length) {
             gsap.set(ledgerRows, { opacity: 0, y: 10 });
-            tl.to(ledgerRows, { opacity: 1, y: 0, duration: 0.55, stagger: 0.07 }, 0.3);
+            tl.to(ledgerRows, { opacity: 1, y: 0, duration: 0.5, stagger: 0.07 }, 0.3);
           }
         });
 
-        // ICEF seal — ring, inner ring, then the check, in that order.
-        // Sequenced rather than simultaneous so it reads as a mark being
-        // struck onto the page: the credential is the most load-bearing
-        // fact on this site, and it earns its own beat.
+        // ICEF seal — ring, then the check struck into it. Sequenced rather
+        // than simultaneous so it reads as a mark being made: the credential
+        // is the most load-bearing fact on this site and earns its own beat.
         const seal = document.querySelector('[data-icef-seal]');
         if (seal) {
           const ring = seal.querySelector('.icef-ring');
-          const ringInner = seal.querySelector('.icef-ring-inner');
           const check = seal.querySelector('.icef-check');
-          const marks = [ring, ringInner, check].filter(Boolean);
+          const marks = [ring, check].filter(Boolean);
           if (marks.length) {
             gsap.set(marks, { drawSVG: '0%' });
             gsap.timeline({
               defaults: { ease: 'signature' },
-              scrollTrigger: { trigger: seal, start: 'top 82%' },
+              scrollTrigger: { trigger: seal, start: 'top 85%' },
             })
               .to(ring, { drawSVG: '100%', duration: 0.8 }, 0)
-              .to(ringInner, { drawSVG: '100%', duration: 0.7 }, 0.12)
-              .to(check, { drawSVG: '100%', duration: 0.45 }, 0.5);
+              .to(check, { drawSVG: '100%', duration: 0.45 }, 0.4);
           }
         }
       });
