@@ -1330,65 +1330,112 @@
 }
 
 /* =====================================================
-   /insights/ — numbered editorial index (2026-08-27)
+   /insights/ — photo masthead + real venture filter (2026-08-27)
    -----------------------------------------------------
    Page-scoped. Nothing below is rendered by the homepage or any shared
-   partial. Large light-serif folio numbers, deliberately not the mono
-   record-strip numbering /ventures/ uses — same "index" idea, a visually
-   different device so the two pages don't read as reskins of one another.
+   partial. Filter pills are backed by the real `venture` field every post
+   has — every option returns a real result, never a dead filter.
    ===================================================== */
-.insights-index {
-  margin-top: 2.5rem;
-  border-top: 1px solid theme("colors.rule.DEFAULT");
-}
-.insights-row {
+
+/* ---------- Masthead ---------- */
+.insights-masthead { padding-top: clamp(7rem, 10vw, 9rem); }
+.insights-masthead-grid {
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr);
-  grid-template-areas: "num body" "photo photo";
-  gap: 0.5rem 1.25rem;
-  padding-block: 2rem;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+@media (min-width: 900px) {
+  .insights-masthead-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; }
+}
+.insights-masthead-photo { width: 100%; }
+.insights-masthead-photo :is(picture, img) {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: theme("borderRadius.lg");
+}
+
+/* ---------- Filters ---------- */
+/* Only 4 options ever: All + the 3 real ventures. No category that
+   returns zero posts. */
+.insights-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding-bottom: 1.75rem;
   border-bottom: 1px solid theme("colors.rule.DEFAULT");
 }
-@media (min-width: 700px) {
-  .insights-row {
-    grid-template-columns: 4rem minmax(0, 1fr) 13rem;
-    grid-template-areas: "num body photo";
-    align-items: center;
-    gap: 2rem;
-    padding-block: 2.75rem;
-  }
-}
-.insights-row-num {
-  grid-area: num;
-  font-family: theme("fontFamily.display");
-  font-variation-settings: "wght" 320;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  /* Large text (>24px): 3.03:1 clears the 3:1 AA threshold for this size,
-     even though ink-faint fails AA at small/body sizes elsewhere on the
-     site — this is the one place its use is deliberate, not an oversight. */
-  color: theme("colors.ink.faint");
-}
-.insights-row-body { grid-area: body; }
-.insights-row-meta { display: flex; align-items: center; gap: 0.6rem; }
-.insights-row-title {
-  margin-top: 0.6rem;
-  font-family: theme("fontFamily.display");
-  font-variation-settings: "wght" 320;
-  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
-  line-height: 1.22;
-  color: theme("colors.ink.DEFAULT");
-}
-.insights-row-deck {
-  margin-top: 0.65rem;
-  max-width: theme("maxWidth.measure-tight");
-  font-size: 0.9375rem;
-  line-height: 1.6;
+.insights-filter-pill {
+  padding: 0.5rem 1.1rem;
+  border-radius: theme("borderRadius.full");
+  border: 1px solid theme("colors.rule.strong");
+  font-family: theme("fontFamily.sans");
+  font-size: 0.8125rem;
+  font-weight: theme("fontWeight.medium");
   color: theme("colors.ink.muted");
+  transition: background-color theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
+    border-color theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
+    color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
 }
+.insights-filter-pill:hover { border-color: theme("colors.navy.DEFAULT"); color: theme("colors.navy.deep"); }
+.insights-filter-pill.is-active {
+  background-color: theme("colors.navy.DEFAULT / 10%");
+  border-color: transparent;
+  color: theme("colors.navy.deep");
+}
+
+/* ---------- Featured row ---------- */
+.insights-feature {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 900px) {
+  .insights-feature { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; gap: 3rem; }
+}
+.insights-feature-photo {
+  display: block;
+  aspect-ratio: 16 / 10;
+  border-radius: theme("borderRadius.lg");
+  overflow: hidden;
+  background-color: theme("colors.navy.deep");
+}
+.insights-feature-photo :is(picture, img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ---------- The rest, 2-up ---------- */
+.insights-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  padding-top: 2.75rem;
+  border-top: 1px solid theme("colors.rule.DEFAULT");
+}
+@media (min-width: 700px) {
+  .insights-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+}
+.insights-card-photo {
+  display: block;
+  aspect-ratio: 16 / 10;
+  border-radius: theme("borderRadius.lg");
+  overflow: hidden;
+  background-color: theme("colors.navy.deep");
+}
+.insights-card-photo :is(picture, img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+.insights-card-num {
+  display: block;
+  margin-top: 1rem;
+  font-family: theme("fontFamily.display");
+  font-style: italic;
+  font-variation-settings: "wght" 320;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: theme("colors.navy.DEFAULT");
+}
+
+/* ---------- Shared read-more/time row ---------- */
 .insights-row-foot {
-  margin-top: 1.15rem;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -1399,26 +1446,6 @@
   font-size: 0.625rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  /* ink-muted, not ink-faint — this token fails AA at mono/micro size
-     (see CLAUDE.md §5); .contact-label and .story-timeline-year already
-     route around it the same way. */
+  /* ink-muted, not ink-faint — fails AA at this size (CLAUDE.md §5). */
   color: theme("colors.ink.muted");
-}
-.insights-row-photo {
-  grid-area: photo;
-  display: block;
-  margin-top: 0.5rem;
-  aspect-ratio: 16 / 10;
-  border-radius: theme("borderRadius.lg");
-  overflow: hidden;
-  background-color: theme("colors.navy.deep");
-}
-@media (min-width: 700px) {
-  .insights-row-photo { margin-top: 0; aspect-ratio: 4 / 3; }
-}
-.insights-row-photo :is(picture, img) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
 }

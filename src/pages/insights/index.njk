@@ -6,62 +6,99 @@ permalink: /insights/
 ---
 
 {# ============================================================================
-   /insights/ — rebuilt 2026-08-27 as a numbered editorial index.
+   /insights/ — rebuilt 2026-08-27 to the client's reference layout: a photo
+   masthead, a venture filter, one featured row, a 2-up grid for the rest.
 
-   The old page split 3 posts into "1 big featured + 2 small" purely because
-   one entry happens to carry featured:true — an arbitrary hierarchy for a
-   set this small. Rebuilt as a single list of peers: a real reading time
-   (the `readingTime` filter already existed in .eleventy.js, unused on this
-   page until now) and the featured flag becomes a small honest tag instead
-   of a size tier. No fake pagination, no "load more" — three posts is three
-   posts.
+   Two things in the reference were NOT carried over, on purpose:
+
+   1. The reference's filter pills were 5 categories (All / Education /
+      Careers / Exams / Global Opportunities) that don't match anything in
+      the data — most would return zero or one result. Built instead as a
+      REAL filter over the venture field every post already has: All +
+      the 3 actual ventures, and every option returns a real result
+      (CLAUDE.md non-negotiable #3 — interactivity must navigate real
+      content, not decorate).
+   2. The reference showed "8 MIN READ" on all three posts. That's not
+      measured from anything — kept the real readingTime filter
+      (.eleventy.js) instead, which computes it from actual word count.
+      All three posts are short, so it genuinely reads "1 min read" — a
+      true number, not a rounder-looking invented one.
+
+   Masthead photo (masthead-desk.jpg) is new stock photography (Pexels
+   License, free commercial use, no attribution required) — atmospheric
+   only, not a real Admizz space, same basis as the /about/ and /ventures/
+   photography exceptions.
    ============================================================================ #}
 
-<section class="bg-paper py-section">
-  <div class="shell">
-    <div class="mb-14 fade-up">
+<section class="insights-masthead bg-paper">
+  <div class="shell insights-masthead-grid">
+    <div class="fade-up">
       <span class="eyebrow">Insights</span>
-      <h1 class="mt-4 font-display font-light text-display-2 text-ink max-w-[16ch] text-balance">Ideas for what&rsquo;s next.</h1>
+      <h1 class="mt-4 font-display font-light text-display-2 text-ink max-w-[14ch] text-balance">
+        Ideas for what&rsquo;s <em class="italic text-navy font-book">next.</em>
+      </h1>
       <p class="mt-5 text-body-lg text-ink-muted max-w-measure-tight leading-relaxed">
         Perspectives from across Admizz Education, Admizz Institute and Admizz Workforce Solutions.
       </p>
     </div>
-
-    <div class="insights-index">
-      {% for post in insights %}
-      <article class="insights-row fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
-        <span class="insights-row-num" aria-hidden="true">{{ "0" }}{{ loop.index }}</span>
-
-        <div class="insights-row-body">
-          <div class="insights-row-meta">
-            <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
-            {% if post.featured %}
-            <span class="insights-row-flag" aria-hidden="true">&middot;</span>
-            <span class="font-mono text-micro uppercase tracking-widest text-gold-text">Featured</span>
-            {% endif %}
-          </div>
-          <h2 class="insights-row-title">
-            <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
-          </h2>
-          <p class="insights-row-deck">{{ post.deck }}</p>
-          <div class="insights-row-foot">
-            <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-ink link-underline">Read the piece</a>
-            <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
-          </div>
-        </div>
-
-        <a href="/insights/{{ post.slug }}/" class="insights-row-photo" tabindex="-1" aria-hidden="true">
-          {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 700px) 13rem, 92vw" %}
-        </a>
-      </article>
-      {% endfor %}
+    <div class="insights-masthead-photo fade-up" style="animation-delay:80ms">
+      {% imageEager "src/assets/images/insights/masthead-desk.jpg", "A stack of books beside a plant, illustrative only", "(min-width: 900px) 42vw, 92vw" %}
     </div>
   </div>
 </section>
 
-{# A quiet close, not another CTA band — three of the site's other rebuilt
-   pages already end on an eyebrow/statement/button close; this one ends
-   like a magazine section does, then points onward. #}
+<section class="bg-paper pb-section" x-data="{ active: 'all' }">
+  <div class="shell">
+    {# Real filter — every option is a venture that actually has a post
+       behind it; "All" plus the 3 real values, nothing invented. #}
+    <div class="insights-filters fade-up" role="group" aria-label="Filter by venture">
+      <button type="button" class="insights-filter-pill" :class="active === 'all' ? 'is-active' : ''" @click="active = 'all'">All</button>
+      {% for v in ventures %}
+      <button type="button" class="insights-filter-pill" :class="active === '{{ v.name }}' ? 'is-active' : ''" @click="active = '{{ v.name }}'">{{ v.name | replace("Admizz ", "") }}</button>
+      {% endfor %}
+    </div>
+
+    {% for post in insights %}{% if post.featured %}
+    <article class="insights-feature mt-10 fade-up" x-show="active === 'all' || active === '{{ post.venture }}'">
+      <a href="/insights/{{ post.slug }}/" class="insights-feature-photo">
+        {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 900px) 50vw, 92vw" %}
+      </a>
+      <div class="insights-feature-body">
+        <span class="font-mono text-micro uppercase tracking-widest text-gold-text">Featured</span>
+        <h2 class="mt-3 font-display font-book text-h2 text-ink text-balance">
+          <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+        </h2>
+        <p class="mt-3 text-body text-ink-muted max-w-measure-tight leading-relaxed">{{ post.deck }}</p>
+        <div class="insights-row-foot mt-5">
+          <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy link-underline">Read the article &rarr;</a>
+          <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
+        </div>
+      </div>
+    </article>
+    {% endif %}{% endfor %}
+
+    <div class="insights-grid mt-4">
+      {% for post in insights %}{% if not post.featured %}
+      <article class="insights-card fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms" x-show="active === 'all' || active === '{{ post.venture }}'">
+        <a href="/insights/{{ post.slug }}/" class="insights-card-photo">
+          {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 700px) 34vw, 92vw" %}
+        </a>
+        <span class="insights-card-num" aria-hidden="true">{{ "0" }}{{ loop.index }}</span>
+        <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
+        <h2 class="mt-2 font-display font-book text-h4 text-ink">
+          <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+        </h2>
+        <p class="mt-2 text-small text-ink-muted">{{ post.deck }}</p>
+        <div class="insights-row-foot mt-4">
+          <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy link-underline">Read the article &rarr;</a>
+          <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
+        </div>
+      </article>
+      {% endif %}{% endfor %}
+    </div>
+  </div>
+</section>
+
 <section class="bg-paper-sunk border-t border-rule py-section-sm">
   <div class="shell text-center fade-up">
     <p class="font-display font-light italic text-h3 text-ink-muted">That&rsquo;s everything, for now.</p>
