@@ -721,334 +721,357 @@
 }
 
 /* =====================================================
-   /contact/ — THE ROUTING DESK
+   /contact/ — built to the supplied design mockup (2026-08-27)
    -----------------------------------------------------
    Page-scoped. Nothing below is rendered by the homepage or any shared
-   partial (verified by grep before adding). All type comes from utilities in
-   the template; this block only carries structure and interactive state.
-
-   The page's job is routing an enquiry to one of three businesses. The left
-   column picks a destination (a real radio group), the inline SVG diagram
-   echoes the choice, the right column carries the message. No cards, no
-   border box around the form — hierarchy is type, rule lines and whitespace.
+   partial. Deliberately its own visual language (bold sans headline, soft
+   icon chips, rounded info panels) to match the mockup the client approved
+   for this page; the rest of the site keeps the Newsreader/register system.
    ===================================================== */
 
 /* ---------- Masthead ---------- */
-/* Explicit top clearance: the header is FIXED, ~70px at rest (66px mobile).
-   Measured, not a symmetric guess — the min here (6.5rem/104px) clears it at
-   every width. Bottom is free to be tighter. */
-.contact-masthead {
-  padding-top: clamp(6.5rem, 8vw, 8rem);
-  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+.contact-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ECEEF9 0%, theme("colors.paper.DEFAULT") 70%);
+  padding-top: clamp(7rem, 10vw, 9rem);
+  padding-bottom: clamp(3rem, 6vw, 5rem);
 }
-
-/* ---------- The desk ---------- */
-.contact-desk {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(2.75rem, 5vw, 4rem);
+.contact-hero-inner {
+  position: relative;
+  z-index: 1;
+}
+.contact-hero-copy {
+  max-width: 40rem;
 }
 @media (min-width: 1000px) {
-  .contact-desk {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(3rem, 5vw, 5rem);
-    align-items: start;
-  }
+  .contact-hero-copy { max-width: 37rem; }
+}
+.contact-kicker {
+  display: block;
+  font-family: theme("fontFamily.sans");
+  font-size: 0.7rem;
+  font-variation-settings: "wght" 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: theme("colors.navy.DEFAULT");
+}
+.contact-hero-title {
+  margin-top: 1rem;
+  font-family: theme("fontFamily.sans");
+  font-variation-settings: "wght" 780;
+  font-size: clamp(2.5rem, 1.6rem + 3.6vw, 3.85rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: theme("colors.navy.deep");
+}
+.contact-hero-title-accent { color: theme("colors.navy.DEFAULT"); }
+.contact-hero-sub {
+  margin-top: 1.15rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: theme("colors.ink.muted");
 }
 
-.contact-step {
+.contact-badges {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem 1.5rem;
+}
+.contact-badge {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  margin-bottom: 1.5rem;
+  gap: 0.75rem;
 }
-.contact-step-line {
-  flex: 1;
-  height: 1px;
-  background-color: theme("colors.rule.strong");
-}
-
-/* Shared label for this page — the site's .data-label uses text-ink-faint,
-   which fails AA at the mono micro size (3.03:1 on paper). .data-label is
-   also shared with /ventures/ and frozen, so this page gets its own label at
-   ink-muted instead. */
-.contact-label {
-  font-family: theme("fontFamily.mono");
-  font-size: 0.625rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: theme("colors.ink.muted");
-}
-
-/* ---------- Routing diagram ---------- */
-.contact-diagram {
-  width: 100%;
-  max-width: 21rem;
-  margin-top: 0.5rem;
-}
-.contact-diagram svg {
-  width: 100%;
-  height: auto;
-  display: block;
-  overflow: visible;
-}
-.contact-stem-line {
-  stroke: theme("colors.rule.strong");
-  stroke-width: 1;
-  fill: none;
-}
-.contact-branch-line {
-  stroke: theme("colors.rule.strong");
-  stroke-width: 1;
-  fill: none;
-  transition: stroke theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
-    stroke-width theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
-}
-.contact-branch-node {
-  fill: theme("colors.paper.raised");
-  stroke: theme("colors.rule.strong");
-  stroke-width: 1;
-  transition: fill theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
-    stroke theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
-}
-.contact-source-node {
-  fill: theme("colors.navy.DEFAULT");
-  stroke: theme("colors.navy.DEFAULT");
-}
-/* Active branch — the base CSS marks `general` active via .is-active in the
-   markup, so a no-JS visitor sees a valid, finished diagram; Alpine only
-   moves the highlight when the selection changes. Gold is a fill here, never
-   text on a light ground. */
-.contact-branch.is-active .contact-branch-line {
-  stroke: theme("colors.navy.DEFAULT");
-  stroke-width: 1.75;
-}
-.contact-branch.is-active .contact-branch-node {
-  fill: theme("colors.gold.DEFAULT");
-  stroke: theme("colors.navy.DEFAULT");
-}
-@media (prefers-reduced-motion: reduce) {
-  .contact-branch-line,
-  .contact-branch-node {
-    transition: none;
-  }
-}
-
-/* ---------- Destination register ---------- */
-.contact-routes {
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-.contact-route-list {
-  margin-top: 1.75rem;
-  border-top: 1px solid theme("colors.rule.DEFAULT");
-}
-.contact-route-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.85rem;
-  align-items: start;
-  padding: 1rem 0.25rem;
-  border-bottom: 1px solid theme("colors.rule.DEFAULT");
-  cursor: pointer;
-}
-.contact-route-row:focus-within {
-  outline: 2px solid theme("colors.navy.DEFAULT");
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-.contact-route-input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  margin: 0;
-  pointer-events: none;
-}
-.contact-route-marker {
-  width: 16px;
-  height: 16px;
-  margin-top: 0.15rem;
-  border: 1px solid theme("colors.rule.strong");
-  border-radius: theme("borderRadius.full");
-  position: relative;
+.contact-chip {
   flex: none;
-  transition: border-color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.7rem;
+  background-color: rgba(61, 90, 254, 0.1);
+  color: theme("colors.navy.DEFAULT");
 }
-.contact-route-row:hover .contact-route-marker {
-  border-color: theme("colors.navy.soft");
+.contact-chip svg { width: 1.25rem; height: 1.25rem; }
+.contact-chip-lg {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1rem;
 }
-.contact-route-input:checked + .contact-route-marker {
-  border-color: theme("colors.navy.DEFAULT");
-}
-.contact-route-input:checked + .contact-route-marker::after {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  border-radius: theme("borderRadius.full");
-  background-color: theme("colors.navy.DEFAULT");
-}
-
-/* ---------- The form ---------- */
-.contact-field {
-  display: flex;
-  flex-direction: column;
-}
-.contact-field + .contact-field {
-  margin-top: 1.15rem;
-}
-.contact-hint {
-  margin-top: 0.3rem;
-  font-size: 0.8125rem;
-  line-height: 1.5;
+.contact-chip-lg svg { width: 1.75rem; height: 1.75rem; }
+.contact-badge-text {
+  max-width: 7.5rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
   color: theme("colors.ink.muted");
 }
+.contact-badge-text strong {
+  color: theme("colors.navy.deep");
+  font-variation-settings: "wght" 560;
+}
+
+.contact-hero-figure {
+  display: none;
+  color: theme("colors.navy.DEFAULT");
+}
+@media (min-width: 1000px) {
+  .contact-hero-figure {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: max(1.5rem, calc((100vw - theme("maxWidth.shell")) / 2));
+    transform: translateY(-50%);
+    width: min(38vw, 30rem);
+    z-index: 0;
+  }
+  .contact-hero-figure svg { width: 100%; height: auto; }
+}
+
+/* ---------- Body ---------- */
+.contact-body {
+  background-color: theme("colors.paper.raised");
+  padding-block: clamp(3rem, 7vw, 5.5rem);
+}
+.contact-body-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .contact-body-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+}
+
+.contact-h2 {
+  font-family: theme("fontFamily.sans");
+  font-variation-settings: "wght" 680;
+  font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: theme("colors.navy.deep");
+}
+.contact-lead {
+  margin-top: 0.6rem;
+  max-width: 36ch;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: theme("colors.ink.muted");
+}
+
+/* form */
+.contact-form { margin-top: 1.75rem; }
+.contact-field + .contact-field { margin-top: 1.1rem; }
+.contact-flabel {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+  font-variation-settings: "wght" 560;
+  color: theme("colors.navy.deep");
+}
+.contact-req { color: theme("colors.crit.DEFAULT"); margin-left: 1px; }
 .contact-input {
   width: 100%;
-  margin-top: 0.45rem;
-  padding: 0.7rem 0.85rem;
+  padding: 0.72rem 0.9rem;
   border: 1px solid theme("colors.rule.strong");
-  border-radius: theme("borderRadius.md");
+  border-radius: 0.6rem;
   background-color: theme("colors.paper.raised");
   color: theme("colors.ink.DEFAULT");
   font-family: theme("fontFamily.sans");
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  letter-spacing: 0.15px;
-  transition: border-color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+  font-size: 0.9rem;
+  line-height: 1.5;
+  transition: border-color theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
+    box-shadow theme("transitionDuration.press") theme("transitionTimingFunction.signature");
 }
-.contact-input::placeholder {
-  color: theme("colors.ink.faint");
-}
+.contact-input::placeholder { color: theme("colors.ink.faint"); }
 .contact-input:focus {
+  outline: none;
   border-color: theme("colors.navy.DEFAULT");
+  box-shadow: 0 0 0 3px rgba(61, 90, 254, 0.15);
 }
 .contact-input[aria-invalid="true"] {
   border-color: theme("colors.crit.DEFAULT");
 }
-/* A short single-line name/email is not the same object as a multi-line
-   message — cap the two short fields, let the message run full width. */
-.contact-input-line {
-  max-width: 24rem;
+.contact-textarea { min-height: 7rem; resize: vertical; }
+.contact-select-wrap { position: relative; }
+.contact-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.5rem;
+  cursor: pointer;
 }
-.contact-input-area {
-  min-height: 8.5rem;
-  resize: vertical;
+.contact-select-chev {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+  color: theme("colors.ink.faint");
 }
-.contact-hint + .contact-input {
-  margin-top: 0.55rem;
-}
-/* Error: colour is paired with a warning mark and text, never colour alone
-   (WCAG 1.4.1). */
 .contact-error {
   display: flex;
   align-items: flex-start;
   gap: 0.4rem;
   margin-top: 0.45rem;
-  font-size: 0.8125rem;
+  font-size: 0.8rem;
   line-height: 1.5;
   color: theme("colors.crit.DEFAULT");
 }
-.contact-error-mark {
-  width: 15px;
-  height: 15px;
-  flex: none;
-  margin-top: 0.1rem;
-}
-/* Width comes from the control's purpose, not from w-full inside the form
-   column (the form is a flex/vertical stack, which would otherwise stretch
-   the button edge to edge). */
-.contact-submit {
-  align-self: flex-start;
-  margin-top: 1.5rem;
-}
+.contact-error-mark { width: 14px; height: 14px; flex: none; margin-top: 0.08rem; }
 
-/* ---------- Direct-lines ledger ---------- */
-/* Label and value stay bound in one grid pair at every width — the old
-   .data-row (flex + justify-between) pushed them 300px+ apart. */
-.contact-ledger {
-  border-top: 1px solid theme("colors.rule.DEFAULT");
-}
-.contact-ledger-row {
-  display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr);
-  gap: 0.25rem 1.5rem;
-  align-items: baseline;
-  padding: 0.9rem 0;
-  border-bottom: 1px solid theme("colors.rule.DEFAULT");
-}
-@media (max-width: 460px) {
-  .contact-ledger-row {
-    grid-template-columns: 1fr;
-    gap: 0.2rem;
-  }
-}
-
-/* ---------- Confirmation dialog ---------- */
-.enquiry-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-}
-/* Solid tint, not a frosted-glass backdrop — glassmorphism is scoped to
-   story-journey only (CLAUDE.md). */
-.enquiry-scrim {
-  position: absolute;
-  inset: 0;
-  background-color: theme("colors.navy.deep / 78%");
-}
-.enquiry-panel {
-  position: relative;
+.contact-send {
   width: 100%;
-  max-width: 30rem;
-  max-height: calc(100dvh - 3rem);
-  overflow-y: auto;
-  padding: clamp(1.75rem, 4vw, 2.5rem);
-  background-color: theme("colors.paper.raised");
-  border: 1px solid theme("colors.rule.DEFAULT");
-  border-radius: theme("borderRadius.xl");
-  box-shadow: theme("boxShadow.lift");
-}
-@media (prefers-reduced-motion: no-preference) {
-  .enquiry-panel {
-    animation: enquiry-panel-in theme("transitionDuration.enter") theme("transitionTimingFunction.signature") both;
-  }
-}
-@keyframes enquiry-panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-.enquiry-close {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  width: 2.25rem;
-  height: 2.25rem;
+  margin-top: 1.6rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: theme("borderRadius.full");
-  color: theme("colors.ink.muted");
-  transition: color theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
-    background-color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+  gap: 0.5rem;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
+  background-color: theme("colors.navy.soft");
+  color: theme("colors.white");
+  font-family: theme("fontFamily.sans");
+  font-size: 0.9rem;
+  font-variation-settings: "wght" 560;
+  transition: background-color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
 }
-.enquiry-close:hover {
-  color: theme("colors.ink.DEFAULT");
+.contact-send svg { width: 1.15rem; height: 1.15rem; }
+.contact-send:hover { background-color: theme("colors.navy.deep"); }
+.contact-send:disabled { opacity: 0.6; }
+.contact-send-ghost {
+  width: auto;
+  background-color: transparent;
+  border-color: theme("colors.rule.strong");
+  color: theme("colors.navy.deep");
+}
+.contact-send-ghost:hover {
   background-color: theme("colors.paper.sunk");
+  border-color: theme("colors.navy.soft");
 }
-/* gold-text token (#8A5E10, AA on paper) — never the raw gold, and no
-   hardcoded hex (the old confirmation SVG hardcoded #8A5E10). */
-.enquiry-check {
-  color: theme("colors.gold.text");
+.contact-fineprint {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1rem;
+  font-size: 0.78rem;
+  color: theme("colors.ink.faint");
+}
+.contact-fineprint svg { width: 0.9rem; height: 0.9rem; flex: none; }
+
+.contact-confirm { padding: 1.5rem 0; }
+.contact-confirm .contact-h2 { margin-top: 1rem; }
+.contact-confirm .contact-h2:focus-visible { outline: 2px solid theme("colors.navy.DEFAULT"); outline-offset: 4px; }
+.contact-confirm-lines { margin-top: 1rem; line-height: 1.95; }
+.contact-inline-link {
+  color: theme("colors.navy.DEFAULT");
+  text-decoration: underline;
+  text-decoration-color: rgba(61, 90, 254, 0.35);
+  text-underline-offset: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.contact-inline-link:hover { text-decoration-color: theme("colors.navy.DEFAULT"); }
+.contact-ext { width: 0.75rem; height: 0.75rem; }
+
+/* info column */
+.contact-info-list {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.contact-info-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid theme("colors.rule.DEFAULT");
+  border-radius: 0.9rem;
+  background-color: theme("colors.paper.raised");
+  box-shadow: theme("boxShadow.raised");
+}
+.contact-info-title {
+  font-family: theme("fontFamily.sans");
+  font-variation-settings: "wght" 600;
+  font-size: 0.95rem;
+  color: theme("colors.navy.deep");
+}
+.contact-info-line {
+  margin-top: 0.2rem;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: theme("colors.ink.muted");
+}
+.contact-info-dim { color: theme("colors.ink.faint"); font-size: 0.8rem; }
+.contact-confirm-tag {
+  display: inline-block;
+  font-family: theme("fontFamily.mono");
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: theme("colors.crit.DEFAULT");
+  border: 1px solid rgba(168, 35, 27, 0.4);
+  border-radius: 3px;
+  padding: 0.05rem 0.3rem;
+  vertical-align: middle;
+}
+
+/* ---------- Lower band ---------- */
+.contact-reach {
+  background-color: theme("colors.paper.sunk");
+  border-top: 1px solid theme("colors.rule.DEFAULT");
+  border-bottom: 3px solid theme("colors.navy.DEFAULT");
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+.contact-reach-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .contact-reach-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); }
+}
+.contact-map {
+  border-radius: 1rem;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  background-color: theme("colors.paper.raised");
+  color: theme("colors.navy.DEFAULT");
+  border: 1px solid theme("colors.rule.DEFAULT");
+}
+.contact-map svg { width: 100%; height: 100%; display: block; }
+.contact-reach-list {
+  margin-top: 1.75rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 560px) {
+  .contact-reach-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.contact-reach-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.25rem 1rem;
+  border: 1px solid theme("colors.rule.DEFAULT");
+  border-radius: 0.9rem;
+  background-color: theme("colors.paper.raised");
+  box-shadow: theme("boxShadow.raised");
+}
+.contact-reach-item .contact-chip { margin-bottom: 0.65rem; }
+.contact-reach-tag {
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  font-variation-settings: "wght" 540;
+  color: theme("colors.navy.DEFAULT");
 }
