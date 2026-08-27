@@ -11,6 +11,19 @@ eleventyComputed:
   description: "{{ post.deck }}"
 ---
 
+{# ============================================================================
+   /insights/<slug>/ — rebuilt 2026-08-27. Previously rendered the entire
+   article body as ONE <p> with no reading time, despite the readingTime
+   filter already existing (used elsewhere, unused here) and the article
+   page being the obvious place for it.
+
+   post.bodyParagraphs (insights.json, new field, post.body left untouched)
+   splits each article into 2 real paragraphs. This is typesetting, not
+   invented content — same sentences, same order, just where the breaks
+   fall; the source copy (insights.json's `body`) never had paragraph
+   breaks of its own to preserve.
+   ============================================================================ #}
+
 <section class="bg-navy-deep py-section-sm">
   <div class="shell">
     <a href="/insights/" class="inline-flex items-center gap-2 text-small font-medium text-navy-on-muted hover:text-navy-soft transition-colors duration-press ease-signature fade-up">
@@ -20,6 +33,7 @@ eleventyComputed:
     <span class="eyebrow-on-navy mt-8 fade-up" style="animation-delay:60ms">{{ post.venture }}</span>
     <h1 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[20ch] text-balance fade-up" style="animation-delay:120ms">{{ post.title }}</h1>
     <p class="mt-6 text-body-lg text-navy-on-muted max-w-measure fade-up" style="animation-delay:180ms">{{ post.deck }}</p>
+    <span class="mt-6 block font-mono text-micro uppercase tracking-widest text-navy-on-muted fade-up" style="animation-delay:220ms">{{ post.body | readingTime }} min read</span>
   </div>
 </section>
 
@@ -29,11 +43,27 @@ eleventyComputed:
       <div class="rounded-lg overflow-hidden bg-navy-deep mb-10">
         {% imageEager "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 768px) 60vw, 100vw" %}
       </div>
-      <p class="prose-body text-body-lg leading-relaxed">{{ post.body }}</p>
-      <a href="{{ post.ventureHref }}" class="mt-8 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
+
+      <div class="insights-article-prose">
+        {% for para in post.bodyParagraphs %}
+        <p>{{ para }}</p>
+        {% endfor %}
+      </div>
+
+      {# hrefLabel-style fix, same pattern as /ventures/ and /contact/: where
+         there's no real URL (Institute — ventureHref is "#"), render a
+         status, not a link dressed as one; real links get target=_blank +
+         rel=noopener since they leave the site. #}
+      {% for v in ventures %}{% if v.name == post.venture %}
+      {% if v.href == "#" %}
+      <p class="mt-8 text-small text-ink-faint">{{ v.hrefLabel }}</p>
+      {% else %}
+      <a href="{{ v.href }}" class="mt-8 inline-flex items-center gap-2 text-small font-medium text-ink link-underline" target="_blank" rel="noopener noreferrer">
         Explore {{ post.venture }}
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
+      {% endif %}
+      {% endif %}{% endfor %}
     </div>
 
     <aside class="fade-up" style="animation-delay:80ms">
@@ -44,6 +74,7 @@ eleventyComputed:
         <a href="/insights/{{ other.slug }}/" class="py-4 border-t border-rule first:border-t-0 group">
           <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ other.venture }}</span>
           <h3 class="mt-1 text-h4 font-display font-book text-ink group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ other.title }}</h3>
+          <span class="mt-1 block font-mono text-micro uppercase tracking-widest text-ink-muted">{{ other.body | readingTime }} min read</span>
         </a>
         {% endif %}
         {% endfor %}

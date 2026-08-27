@@ -1491,3 +1491,26 @@
   /* ink-muted, not ink-faint — fails AA at this size (CLAUDE.md §5). */
   color: theme("colors.ink.muted");
 }
+
+/* =====================================================
+   /insights/<slug>/ — article typography (2026-08-27)
+   -----------------------------------------------------
+   Page-scoped. Real paragraphs (post.bodyParagraphs) instead of the whole
+   body as one <p>; the opening paragraph gets a touch more visual weight
+   (larger, darker) than the ones that follow it, the way a printed
+   article's lead graf reads before the piece settles into its body size.
+   ===================================================== */
+.insights-article-prose {
+  max-width: theme("maxWidth.measure");
+  color: theme("colors.ink.muted");
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.insights-article-prose p + p {
+  margin-top: 1.5rem;
+}
+.insights-article-prose p:first-child {
+  font-size: 1.1875rem;
+  line-height: 1.65;
+  color: theme("colors.ink.DEFAULT");
+}
