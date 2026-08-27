@@ -1124,48 +1124,21 @@
    partial (verified by grep before adding).
    ===================================================== */
 
-/* ---------- Hero — full-bleed ---------- */
-/* Photo runs edge-to-edge and behind the fixed header (no navyHeader flag:
-   the header's default white-pill state already reads correctly against
-   this light photo — its ghost/ghost-on-navy state is built for dark
-   grounds and would go nearly invisible here). */
-.story-hero-full {
-  position: relative;
-  overflow: hidden;
-  min-height: clamp(24rem, 46vw, 34rem);
-}
-.story-hero-photo-full { position: absolute; inset: 0; }
-.story-hero-photo-full :is(picture, img) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-/* Dark left, clearing toward the right — same reasoning as the ecosystem/
-   contact scrims: paired with the copy column's own max-width so every
-   line of text sits inside the well-covered zone, verified by screenshot
-   rather than assumed. */
-.story-hero-scrim-full {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(100deg,
-    rgba(22, 27, 77, 0.82) 0%,
-    rgba(22, 27, 77, 0.66) 42%,
-    rgba(22, 27, 77, 0.2) 68%,
-    transparent 84%);
-}
-.story-hero-copy-full {
-  position: relative;
-  z-index: 1;
+/* ---------- Hero — two columns, plain photo ---------- */
+.story-hero {
   padding-top: clamp(7rem, 10vw, 9rem);
-  padding-bottom: clamp(3rem, 6vw, 4.5rem);
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
 }
-/* min() of a fixed measure and a viewport share — on a narrow screen the
-   diagonal scrim's percentage stops cover proportionally less absolute
-   width, so the text column has to shrink with it or the tail of each
-   line runs past the dark zone into the photo's bright glass. Verified by
-   screenshot at 1440/768/390 after this was exactly the failure. */
-.story-hero-copy-full > * { max-width: min(25rem, 74vw); }
+.story-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+}
+@media (min-width: 1000px) {
+  .story-hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+.story-hero-copy { max-width: 34rem; }
 .story-hero-cta {
   margin-top: 2rem;
   display: inline-flex;
@@ -1173,18 +1146,28 @@
   gap: 0.5rem;
   font-size: 0.8125rem;
   font-weight: theme("fontWeight.medium");
-  color: theme("colors.navy.accent");
+  color: theme("colors.navy.deep");
   padding-bottom: 0.2rem;
-  border-bottom: 1px solid theme("colors.navy.on-muted / 45%");
+  border-bottom: 1px solid theme("colors.rule.strong");
   transition: border-color theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
     color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
 }
 .story-hero-cta:hover {
-  color: theme("colors.navy.on");
-  border-color: theme("colors.navy.on");
+  color: theme("colors.navy.DEFAULT");
+  border-color: theme("colors.navy.DEFAULT");
 }
 .story-hero-cta svg { transition: transform theme("transitionDuration.press") theme("transitionTimingFunction.signature"); }
 .story-hero-cta:hover svg { transform: translateY(2px); }
+
+/* Plain — no border, no radius, no shadow, no fill. Just the image. */
+.story-hero-photo {
+  width: 100%;
+}
+.story-hero-photo :is(picture, img) {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
 /* ---------- Timeline ---------- */
 .story-timeline-track {
