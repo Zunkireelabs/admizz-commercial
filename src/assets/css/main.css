@@ -1116,3 +1116,164 @@
   font-variation-settings: "wght" 540;
   color: theme("colors.navy.DEFAULT");
 }
+
+/* =====================================================
+   /about/ — "Our Story" (rebuilt 2026-08-27, GSAP-enhanced timeline)
+   -----------------------------------------------------
+   Page-scoped. Nothing below is rendered by the homepage or any shared
+   partial (verified by grep before adding).
+   ===================================================== */
+
+/* ---------- Hero ---------- */
+.story-hero {
+  padding-top: clamp(7rem, 10vw, 9rem);
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.story-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+}
+@media (min-width: 1000px) {
+  .story-hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+.story-hero-copy { max-width: 34rem; }
+.story-hero-cta {
+  margin-top: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: theme("fontWeight.medium");
+  color: theme("colors.navy.deep");
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid theme("colors.rule.strong");
+  transition: border-color theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
+    color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+}
+.story-hero-cta:hover {
+  color: theme("colors.navy.DEFAULT");
+  border-color: theme("colors.navy.DEFAULT");
+}
+.story-hero-cta svg { transition: transform theme("transitionDuration.press") theme("transitionTimingFunction.signature"); }
+.story-hero-cta:hover svg { transform: translateY(2px); }
+
+.story-hero-photo {
+  border-radius: theme("borderRadius.xl");
+  overflow: hidden;
+  aspect-ratio: 5 / 4;
+  background-color: theme("colors.navy.deep");
+  box-shadow: theme("boxShadow.lift");
+}
+.story-hero-photo :is(picture, img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------- Timeline ---------- */
+.story-timeline-track {
+  position: relative;
+  margin-top: 2.75rem;
+}
+/* Scroll-scrubbed by GSAP (main.js) — no hiding CSS, resting state IS
+   scaleY(1); JS sets it to 0 itself only once it has actually loaded. */
+.story-timeline-line {
+  position: absolute;
+  left: 0.28rem;
+  top: 0.55rem;
+  bottom: 0.55rem;
+  width: 2px;
+  background-color: theme("colors.navy.DEFAULT / 25%");
+  transform: scaleY(1);
+}
+.story-timeline-row {
+  position: relative;
+  padding-left: 2.25rem;
+  padding-block: 1.85rem;
+  border-top: 1px solid theme("colors.rule.DEFAULT");
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: center;
+}
+.story-timeline-row:first-child { border-top: 0; padding-top: 0.5rem; }
+@media (min-width: 700px) {
+  .story-timeline-row { grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; }
+}
+.story-timeline-dot {
+  position: absolute;
+  left: -1px;
+  top: 2.5rem;
+  width: 9px;
+  height: 9px;
+  border-radius: theme("borderRadius.full");
+  background-color: theme("colors.navy.DEFAULT");
+  box-shadow: 0 0 0 4px theme("colors.paper.sunk");
+}
+.story-timeline-row:first-child .story-timeline-dot { top: 1.1rem; }
+.story-timeline-photo {
+  width: 100%;
+  max-width: 11rem;
+  aspect-ratio: 4 / 3;
+  border-radius: theme("borderRadius.lg");
+  overflow: hidden;
+  background-color: theme("colors.navy.deep");
+  flex: none;
+}
+.story-timeline-photo :is(picture, img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------- Three businesses ---------- */
+.story-venture-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+@media (min-width: 700px) {
+  .story-venture-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+}
+.story-venture-card {
+  padding: 1.5rem;
+  border: 1px solid theme("colors.rule.DEFAULT");
+  border-radius: theme("borderRadius.lg");
+  background-color: theme("colors.paper.raised");
+  transition: border-color theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
+    box-shadow theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+}
+.story-venture-card:hover {
+  border-color: theme("colors.navy.on-muted");
+  box-shadow: theme("boxShadow.raised");
+}
+.story-venture-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: theme("borderRadius.md");
+}
+.story-venture-icon svg { width: 1.15rem; height: 1.15rem; }
+.story-venture-icon-institute { background-color: theme("colors.navy.DEFAULT / 10%"); color: theme("colors.navy.DEFAULT"); }
+.story-venture-icon-education { background-color: theme("colors.gold.sunk"); color: theme("colors.gold.text"); }
+.story-venture-icon-workforce { background-color: theme("colors.good.bg"); color: theme("colors.good.DEFAULT"); }
+.story-venture-link {
+  margin-top: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: theme("fontWeight.medium");
+  color: theme("colors.ink.DEFAULT");
+  border-bottom: 1px solid theme("colors.rule.strong");
+  padding-bottom: 0.15rem;
+  transition: border-color theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
+    color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+}
+.story-venture-link:hover { color: theme("colors.navy.DEFAULT"); border-color: theme("colors.navy.DEFAULT"); }

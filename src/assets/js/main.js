@@ -428,6 +428,62 @@ if (!prefersReducedMotion) {
         }
       });
     }
+
+    // -----------------------------------------------------------------
+    // /about/ — "Our Story" timeline
+    //
+    // Page-scoped: gated behind a DOM check so no other page pays for it.
+    // The connecting line is scroll-SCRUBBED, not a one-shot reveal — same
+    // exception the ventures/positions line uses (see the comment block
+    // above .fade-up in main.css): it carries no hiding CSS of its own,
+    // its resting state IS scaleY(1), and GSAP sets it to 0 itself only
+    // once this code has actually run, right before scrubbing it back as
+    // the visitor scrolls the section. No DrawSVGPlugin needed here, so
+    // this sits outside the conditional import above.
+    // -----------------------------------------------------------------
+    const storyTimeline = document.querySelector('[data-story-timeline]');
+    if (storyTimeline) {
+      const line = storyTimeline.querySelector('.story-timeline-line');
+      const rows = gsap.utils.toArray('.story-timeline-row', storyTimeline);
+
+      if (line) {
+        gsap.set(line, { scaleY: 0, transformOrigin: 'top' });
+        gsap.to(line, {
+          scaleY: 1,
+          ease: 'none',
+          scrollTrigger: { trigger: storyTimeline, start: 'top 65%', end: 'bottom 75%', scrub: 0.4 },
+        });
+      }
+
+      // Each row (dot, text, photo) arrives as its own beat rather than
+      // simultaneously — same idiom as the ventures records above.
+      rows.forEach((row) => {
+        const dot = row.querySelector('.story-timeline-dot');
+        const body = row.querySelector('.story-timeline-body');
+        const photo = row.querySelector('.story-timeline-photo');
+        const tl = gsap.timeline({
+          defaults: { ease: 'signature' },
+          scrollTrigger: { trigger: row, start: 'top 82%' },
+        });
+        if (dot) { gsap.set(dot, { scale: 0 }); tl.to(dot, { scale: 1, duration: 0.4 }, 0); }
+        if (body) { gsap.set(body, { opacity: 0, y: 14 }); tl.to(body, { opacity: 1, y: 0, duration: 0.6 }, 0.05); }
+        if (photo) { gsap.set(photo, { opacity: 0, y: 14 }); tl.to(photo, { opacity: 1, y: 0, duration: 0.6 }, 0.12); }
+      });
+    }
+
+    // -----------------------------------------------------------------
+    // /about/ — business cards + leadership stat entrance. Plain, discrete
+    // reveals (not scroll-scrubbed), same gsap.set-then-animate idiom as
+    // the hero above — gated so only /about/ pays for it.
+    // -----------------------------------------------------------------
+    const storyVentureCards = gsap.utils.toArray('[data-story-venture-card]');
+    if (storyVentureCards.length) {
+      gsap.set(storyVentureCards, { opacity: 0, y: 16 });
+      gsap.timeline({
+        defaults: { ease: 'signature', duration: 0.6 },
+        scrollTrigger: { trigger: storyVentureCards[0].closest('section'), start: 'top 75%' },
+      }).to(storyVentureCards, { opacity: 1, y: 0, stagger: 0.1 });
+    }
   });
 }
 
