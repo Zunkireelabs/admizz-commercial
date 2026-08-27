@@ -5,46 +5,69 @@ description: Ideas for what's next — perspectives from across Admizz Education
 permalink: /insights/
 ---
 
+{# ============================================================================
+   /insights/ — rebuilt 2026-08-27 as a numbered editorial index.
+
+   The old page split 3 posts into "1 big featured + 2 small" purely because
+   one entry happens to carry featured:true — an arbitrary hierarchy for a
+   set this small. Rebuilt as a single list of peers: a real reading time
+   (the `readingTime` filter already existed in .eleventy.js, unused on this
+   page until now) and the featured flag becomes a small honest tag instead
+   of a size tier. No fake pagination, no "load more" — three posts is three
+   posts.
+   ============================================================================ #}
+
 <section class="bg-paper py-section">
   <div class="shell">
     <div class="mb-14 fade-up">
       <span class="eyebrow">Insights</span>
-      <h1 class="mt-4 font-display font-light text-display-2 text-ink max-w-[16ch] text-balance">Ideas for what's next.</h1>
+      <h1 class="mt-4 font-display font-light text-display-2 text-ink max-w-[16ch] text-balance">Ideas for what&rsquo;s next.</h1>
+      <p class="mt-5 text-body-lg text-ink-muted max-w-measure-tight leading-relaxed">
+        Perspectives from across Admizz Education, Admizz Institute and Admizz Workforce Solutions.
+      </p>
     </div>
 
-    {% for lead in insights %}{% if lead.featured %}
-    <article class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center pb-10 border-b border-rule fade-up">
-      <a href="/insights/{{ lead.slug }}/" class="block rounded-lg overflow-hidden bg-navy-deep">
-        {% image "src/assets/images/insights/" + lead.image, lead.imageAlt, "(min-width: 768px) 50vw, 100vw" %}
-      </a>
-      <div>
-        <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ lead.venture }}</span>
-        <h2 class="mt-3 font-display font-book text-h3 text-ink">
-          <a href="/insights/{{ lead.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ lead.title }}</a>
-        </h2>
-        <p class="mt-4 text-body text-ink-muted max-w-measure">{{ lead.deck }}</p>
-        <a href="/insights/{{ lead.slug }}/" class="mt-5 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">Read the piece</a>
-      </div>
-    </article>
-    {% endif %}{% endfor %}
-
-    <div class="mt-2">
+    <div class="insights-index">
       {% for post in insights %}
-      {% if not post.featured %}
-      <article class="register-row fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
-        <a href="/insights/{{ post.slug }}/" class="block rounded-lg overflow-hidden bg-navy-deep aspect-[4/3] md:aspect-square">
-          {% image "src/assets/images/insights/" + post.image, post.imageAlt, "9rem" %}
-        </a>
-        <div>
-          <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
-          <h2 class="mt-2 text-h4 font-display font-book text-ink">
+      <article class="insights-row fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
+        <span class="insights-row-num" aria-hidden="true">{{ "0" }}{{ loop.index }}</span>
+
+        <div class="insights-row-body">
+          <div class="insights-row-meta">
+            <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
+            {% if post.featured %}
+            <span class="insights-row-flag" aria-hidden="true">&middot;</span>
+            <span class="font-mono text-micro uppercase tracking-widest text-gold-text">Featured</span>
+            {% endif %}
+          </div>
+          <h2 class="insights-row-title">
             <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
           </h2>
-          <p class="mt-2 text-small text-ink-muted max-w-measure">{{ post.deck }}</p>
+          <p class="insights-row-deck">{{ post.deck }}</p>
+          <div class="insights-row-foot">
+            <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-ink link-underline">Read the piece</a>
+            <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
+          </div>
         </div>
+
+        <a href="/insights/{{ post.slug }}/" class="insights-row-photo" tabindex="-1" aria-hidden="true">
+          {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 700px) 13rem, 92vw" %}
+        </a>
       </article>
-      {% endif %}
       {% endfor %}
     </div>
+  </div>
+</section>
+
+{# A quiet close, not another CTA band — three of the site's other rebuilt
+   pages already end on an eyebrow/statement/button close; this one ends
+   like a magazine section does, then points onward. #}
+<section class="bg-paper-sunk border-t border-rule py-section-sm">
+  <div class="shell text-center fade-up">
+    <p class="font-display font-light italic text-h3 text-ink-muted">That&rsquo;s everything, for now.</p>
+    <a href="/ventures/" class="mt-4 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
+      More from the group
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
   </div>
 </section>
