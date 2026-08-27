@@ -1191,32 +1191,46 @@
 }
 .story-timeline-row {
   position: relative;
-  padding-left: 2.25rem;
-  padding-block: 1.5rem;
+  padding: 1.5rem 1.25rem 1.5rem 2.25rem;
+  /* Bleed right only — the dot at left:-1px has to stay aligned with the
+     track's connecting line, which doesn't move, so the left edge of this
+     box must not shift. */
+  margin-right: -1.25rem;
   border-top: 1px solid theme("colors.rule.DEFAULT");
+  border-radius: theme("borderRadius.lg");
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
   align-items: center;
   /* Resting state IS full presence (see the .fade-up comment block above)
-     — .is-active only ever ADDS a lift/shadow as the row crosses the
-     viewport centre; a row that never gets that class (no-JS, reduced
-     motion, JS never loaded) simply stays at this same resting look. */
+     — .is-active only ever ADDS a lift/card treatment as the row crosses
+     the viewport centre; a row that never gets that class (no-JS, reduced
+     motion, JS never loaded) simply stays at this same resting look —
+     transparent background, no shadow, sitting flush in the list. */
+  background-color: transparent;
+  box-shadow: none;
   transform: translateY(0) scale(1);
   transition: transform theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
-    opacity theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+    background-color theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
+    box-shadow theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
+    border-color theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
 }
 .story-timeline-row:first-child { border-top: 0; padding-top: 0.5rem; }
 @media (min-width: 700px) {
   .story-timeline-row { grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; }
 }
 /* Scroll-driven "active card" — main.js toggles .is-active as each row
-   crosses the viewport centre. Purely additive (a lift + shadow); nothing
-   here ever drops a resting row below full opacity, so the base "no
-   hiding by default" rule still holds even with JS attached. */
+   crosses the viewport centre. The row visibly separates from the flat
+   list into its own card (background + shadow + lift); nothing here ever
+   drops a resting row below full opacity, so the base "no hiding by
+   default" rule still holds even with JS attached. */
 .story-timeline-row.is-active {
-  transform: translateY(-3px) scale(1.008);
+  background-color: theme("colors.paper.raised");
+  border-color: transparent;
+  box-shadow: theme("boxShadow.lift");
+  transform: translateY(-6px) scale(1.015);
 }
+.story-timeline-row.is-active + .story-timeline-row { border-top-color: transparent; }
 .story-timeline-row.is-active .story-timeline-photo {
   box-shadow: theme("boxShadow.lift");
 }
@@ -1232,7 +1246,7 @@
   transition: transform theme("transitionDuration.press") theme("transitionTimingFunction.signature");
 }
 .story-timeline-row:first-child .story-timeline-dot { top: 0.7rem; }
-.story-timeline-row.is-active .story-timeline-dot { transform: scale(1.5); }
+.story-timeline-row.is-active .story-timeline-dot { transform: scale(1.8); }
 .story-timeline-photo {
   width: 100%;
   max-width: 22rem;

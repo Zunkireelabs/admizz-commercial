@@ -510,12 +510,24 @@ if (!prefersReducedMotion) {
     // -----------------------------------------------------------------
     const stackOutgoing = document.querySelector('[data-stack-outgoing]');
     if (stackOutgoing) {
+      // The outgoing section itself shrinks and dims WHILE pinned — not
+      // just sitting static underneath — so the handoff reads as one card
+      // being tucked away behind the next, not a coincidental overlap.
+      gsap.set(stackOutgoing, { transformOrigin: 'top center' });
       ScrollTrigger.create({
         trigger: stackOutgoing,
         start: 'bottom bottom',
-        end: '+=220',
+        end: '+=400',
         pin: true,
         pinSpacing: false,
+        scrub: true,
+        onUpdate: (self) => {
+          gsap.set(stackOutgoing, {
+            scale: 1 - self.progress * 0.06,
+            opacity: 1 - self.progress * 0.4,
+          });
+        },
+        onLeaveBack: () => gsap.set(stackOutgoing, { scale: 1, opacity: 1 }),
       });
     }
   });
