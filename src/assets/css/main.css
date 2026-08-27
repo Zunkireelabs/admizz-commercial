@@ -1129,16 +1129,42 @@
   padding-top: clamp(7rem, 10vw, 9rem);
   padding-bottom: clamp(2.5rem, 5vw, 4rem);
 }
-.story-hero-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(2.5rem, 5vw, 4rem);
-  align-items: center;
+/* Contained panel, not full-bleed — the header stays on plain paper above
+   this section (no navyHeader flag needed, so no light-on-light risk).
+   The photo fills the panel; copy sits on top of it over a scrim. */
+.story-hero-panel {
+  position: relative;
+  border-radius: theme("borderRadius.xl");
+  overflow: hidden;
+  min-height: clamp(24rem, 44vw, 34rem);
+  background-color: theme("colors.navy.deep");
+  box-shadow: theme("boxShadow.lift");
 }
-@media (min-width: 1000px) {
-  .story-hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.story-hero-photo { position: absolute; inset: 0; }
+.story-hero-photo :is(picture, img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
-.story-hero-copy { max-width: 34rem; }
+/* Dark top-left, clearing toward the bottom-right — matches the
+   reference's own natural sky gradient, so the scrim reads as an
+   intentional treatment rather than a flat tint slapped over the photo. */
+.story-hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg,
+    rgba(22, 27, 77, 0.92) 0%,
+    rgba(22, 27, 77, 0.8) 42%,
+    rgba(22, 27, 77, 0.2) 68%,
+    transparent 84%);
+}
+.story-hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 26rem;
+  padding: clamp(2rem, 5vw, 3.5rem);
+}
 .story-hero-cta {
   margin-top: 2rem;
   display: inline-flex;
@@ -1146,32 +1172,18 @@
   gap: 0.5rem;
   font-size: 0.8125rem;
   font-weight: theme("fontWeight.medium");
-  color: theme("colors.navy.deep");
+  color: theme("colors.navy.accent");
   padding-bottom: 0.2rem;
-  border-bottom: 1px solid theme("colors.rule.strong");
+  border-bottom: 1px solid theme("colors.navy.on-muted / 45%");
   transition: border-color theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
     color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
 }
 .story-hero-cta:hover {
-  color: theme("colors.navy.DEFAULT");
-  border-color: theme("colors.navy.DEFAULT");
+  color: theme("colors.navy.on");
+  border-color: theme("colors.navy.on");
 }
 .story-hero-cta svg { transition: transform theme("transitionDuration.press") theme("transitionTimingFunction.signature"); }
 .story-hero-cta:hover svg { transform: translateY(2px); }
-
-.story-hero-photo {
-  border-radius: theme("borderRadius.xl");
-  overflow: hidden;
-  aspect-ratio: 5 / 4;
-  background-color: theme("colors.navy.deep");
-  box-shadow: theme("boxShadow.lift");
-}
-.story-hero-photo :is(picture, img) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
 
 /* ---------- Timeline ---------- */
 .story-timeline-track {
