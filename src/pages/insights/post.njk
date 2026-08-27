@@ -59,7 +59,16 @@ eleventyComputed:
 
 <section class="bg-paper py-section">
   <div class="shell grid grid-cols-1 md:grid-cols-[1fr_16rem] gap-10 md:gap-16">
-    <div class="fade-up">
+    {# data-hero-in, not .fade-up: this block sits right at the fold under
+       the navy masthead, so .fade-up's scroll-gated reveal left it at
+       opacity:0 (invisible, not just unrendered) on an ordinary viewport
+       height until the visitor scrolled — reading as a blank section
+       right after load. data-hero-in animates in on page load instead
+       (same generic, page-agnostic hook the homepage hero uses in
+       main.js), so it's already visible by the time anyone scrolls down
+       to it. Still fully visible by default with no CSS hiding of its
+       own — GSAP sets the hidden state itself only once it has loaded. #}
+    <div data-hero-in>
       <div class="rounded-lg overflow-hidden bg-navy-deep mb-10">
         {% imageEager "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 768px) 60vw, 100vw" %}
       </div>
@@ -86,7 +95,7 @@ eleventyComputed:
       {% endif %}{% endfor %}
     </div>
 
-    <aside class="fade-up" style="animation-delay:80ms">
+    <aside data-hero-in>
       <span class="eyebrow">More Insights</span>
       <div class="mt-4 flex flex-col">
         {% for other in insights %}
