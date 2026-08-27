@@ -96,15 +96,17 @@ permalink: /insights/
         <a href="/insights/{{ post.slug }}/" class="insights-card-photo">
           {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 700px) 34vw, 92vw" %}
         </a>
-        <span class="insights-card-num" aria-hidden="true">{{ "0" }}{{ loop.index }}</span>
-        <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
-        <h2 class="mt-2 font-display font-book text-h4 text-ink">
-          <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
-        </h2>
-        <p class="mt-2 text-small text-ink-muted">{{ post.deck }}</p>
-        <div class="insights-row-foot mt-4">
-          <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy link-underline">Read the article &rarr;</a>
-          <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
+        <div class="insights-card-body">
+          <span class="insights-card-num" aria-hidden="true">{{ "0" }}{{ loop.index }}</span>
+          <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
+          <h2 class="mt-2 font-display font-book text-h4 text-ink">
+            <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+          </h2>
+          <p class="mt-2 text-small text-ink-muted">{{ post.deck }}</p>
+          <div class="insights-row-foot mt-4">
+            <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy link-underline">Read the article &rarr;</a>
+            <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
+          </div>
         </div>
       </article>
       {% endif %}{% endfor %}

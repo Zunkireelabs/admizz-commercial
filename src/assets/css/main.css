@@ -1450,6 +1450,21 @@
   background-color: theme("colors.navy.deep");
 }
 .insights-card-photo :is(picture, img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Narrowed (a filter left this the only visible card, so it fills the
+   row): switch to the SAME photo-left/content-right composition
+   .insights-feature uses, instead of scaling the narrow card's stacked
+   layout up to full width — a giant photo over small text, reported
+   (correctly) as looking broken next to the Featured row right above it. */
+@media (min-width: 900px) {
+  .insights-grid.is-narrowed .insights-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 3rem;
+  }
+  .insights-grid.is-narrowed .insights-card-photo { aspect-ratio: 16 / 10; }
+  .insights-grid.is-narrowed .insights-card-num { margin-top: 0; }
+}
 .insights-card-num {
   display: block;
   margin-top: 1rem;
