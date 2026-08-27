@@ -1514,3 +1514,20 @@
   line-height: 1.65;
   color: theme("colors.ink.DEFAULT");
 }
+
+/* ---------- /insights/<slug>/ masthead icon ---------- */
+.insights-hero { position: relative; overflow: hidden; }
+.insights-hero-icon {
+  position: absolute;
+  top: 50%;
+  right: clamp(-2rem, 4vw, 4rem);
+  transform: translateY(-50%);
+  width: clamp(14rem, 22vw, 20rem);
+  height: clamp(14rem, 22vw, 20rem);
+  color: theme("colors.navy.on-muted / 14%");
+  pointer-events: none;
+}
+.insights-hero-icon svg { width: 100%; height: 100%; }
+@media (max-width: 900px) {
+  .insights-hero-icon { display: none; }
+}
