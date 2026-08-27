@@ -36,7 +36,21 @@ sitemap template exists — none does yet) at launch. `base.njk` also needs
 `ELEVENTY_ENV=production` set on the production build so the `noindex` meta tag
 stops being emitted.
 
-## 3. `src/_data/site.json` still has demo values
+## 3. `/about/` hero photo is a brand-signage render, not a confirmed office
+
+`src/pages/about/index.njk` — the hero image (`hero-building-branded.png`) is a
+render the client supplied directly: the real Admizz logo composited onto a
+building facade. It was **not** confirmed as a photo of an actual Admizz
+location; used on the client's explicit instruction as directional brand
+imagery after the fabrication concern was raised (CLAUDE.md non-negotiable #1
+— see the template's header comment for the full note).
+
+**Before launch:** either get explicit confirmation this depicts a real,
+current Admizz office (in which case this note can be deleted), or replace it
+with real office photography / the plain unbranded building photo already in
+`src/assets/images/story/hero-building.jpg`.
+
+## 4. `src/_data/site.json` still has demo values
 
 `url` is `https://admizz.com` now (good), but `social` is all empty strings and
 `legalName` ("Admizz Group") vs. the live `og:site_name` ("Admizz Consulting
