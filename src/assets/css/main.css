@@ -1127,7 +1127,9 @@
 /* ---------- Hero — two columns, plain photo ---------- */
 .story-hero {
   padding-top: clamp(7rem, 10vw, 9rem);
-  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+  /* No bottom padding, on purpose — the photo/CTA row runs straight into
+     the Journey section with zero gap between them. */
+  padding-bottom: 0;
 }
 .story-hero-grid {
   display: grid;
