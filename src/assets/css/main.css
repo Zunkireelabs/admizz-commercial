@@ -1162,6 +1162,10 @@
 /* Plain — no border, no radius, no shadow, no fill. Just the image. */
 .story-hero-photo {
   width: 100%;
+  /* The row is centred (.story-hero-grid), but the photo is shorter than
+     the copy column, which left a gap under it. Anchor it to the row's
+     bottom instead so its base sits flush with the bottom of the hero. */
+  align-self: end;
 }
 .story-hero-photo :is(picture, img) {
   width: 100%;
