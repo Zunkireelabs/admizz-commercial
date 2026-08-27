@@ -51,194 +51,182 @@ interaction-level claim, not just something the previous session happened to do:
   - Verify claims with a real screenshot before stating them as fact, every time, at the viewport
     size actually in question.
   - When two constraints fight, find the structural fix, not another spacing tweak.
+  - After ANY structural CSS edit, re-screenshot the WHOLE page, not just the piece you were
+    working on. A find/replace that matched a nested selector silently deleted two entire rule
+    blocks last session; the build stayed green (valid CSS, just less of it) and the homepage
+    guard passed (the homepage didn't use those classes). The user found it, not the tooling.
+  - A green build is not evidence the CSS you wrote survived. Check the compiled output for the
+    literal class, and assert the page's styled classes exist in both the HTML and the CSS.
 ```
 
 ---
 
-## Quick state (keep this current — last updated 2026-08-25, later same day)
+## Quick state (keep this current — last updated 2026-08-27)
 
-**Phase:** Still Phase 4 (homepage), now considerably further along. Same day as the last update
-below, a second session picked up where it left off — one more commit, `1e62998`, still local to
-`redesign/hero-globe-light-bg` — **nothing pushed to origin, still true.**
+**Phase:** Inner pages. The homepage is done and shipped; work has moved to the five
+non-homepage templates. One of the five (`/ventures/`) is complete.
 
-- `1e62998` — **Insights section finished, statement band hidden, hero-image duplication fixed.**
-  The previous session had left the Insights section mid-change, uncommitted (text-only cards,
-  no photography — see the now-superseded reasoning in the commit this replaced). This session
-  reversed that: Insights is photo-anchored again, reusing the rounded-lg/bg-navy-deep thumbnail
-  pattern from `/insights/` — number badge overlaid on the photo with a gradient scrim, group-hover
-  zoom, a closing "Read the piece" link. Also caught and fixed a real crop bug: all 3 source photos
-  carry an Admizz logo watermark baked into the left edge, and a centered `object-fit: cover` crop
-  was slicing it in half — biased `object-position` right to clear it, verified against the actual
-  compiled CSS, not just eyeballed.
-  Separately, the homepage hero photo and Insights post 1's thumbnail turned out to be the *same
-  file* (`global-opportunities.jpg`), so it appeared twice in one scroll. Left the hero alone (too
-  much bespoke art direction — parallax target, tuned crop, brand-shape overlay — built around that
-  exact file) and gave post 1 a new thumbnail instead: `study-abroad.jpg`, a licensed Pexels photo
-  (Pexels License — free commercial use, no attribution required), flagged via `insights.json`'s
-  new `imageSource` field and an `index.njk` comment. Same exception pattern as
-  `education.jpg`/`workforce.jpg` in `ecosystem-journey.njk` — see that section below, now a
-  4th instance of it, not a new policy.
-  Also hidden on request: the navy "From vision to reality..." statement band, wrapped in
-  `{% if false %}...{% endif %}` in `index.njk` rather than deleted — a one-line revert if it comes
-  back, not a rebuild.
+### Branch — READ THIS FIRST
 
-This session's work sits on top of four commits from earlier the same day, all also local, all
-still unpushed:
+```
+origin/main    e09e88b  production, untouched
+origin/stage   8faffac  LIVE on dev-web.admizz.com (PR #1 merged 2026-08-25)
+                 │
+               c5fb5a3
+                 └── redesign/inner-pages  79f9d3b   ← 4 commits, LOCAL ONLY, never pushed
+```
 
-- `e061a7d` — **Nav redesign.** Header now defaults to a simple, flush full-width bar (also the
-  correct no-JS/reduced-motion state) and morphs into a floating pill via a GSAP ScrollTrigger
-  scrub over the first 140px of scroll. Fixed two regressions that fell out of the shape change
-  (a fake "full-width" bar that still carried a permanent gutter margin; the hero photo's top
-  offset was tuned against the old floating-pill footprint and needed retuning against the new,
-  shorter resting height). Also blends the hero photo's top edge into the paper ground with a
-  gradient, and bumped the logo from 28px to 32px.
-- `18318c6` — **CTA gold correction.** `gold.DEFAULT` had drifted to an invented `#F2B33D` during
-  the earlier blue rebrand; sampled the actual logo file directly and found the real brand gold is
-  `#FDD63F` (which also matches the original pre-rebrand palette CLAUDE.md documents). Corrected
-  the token and moved `.btn-primary` from navy/white to gold/navy-deep — every CTA site-wide now
-  picks this up from the one shared component.
-- `716c6f6` — **"One Ecosystem" rebuilt, twice.** First pass was an editorial card-grid with a
-  pinned scroll sequence — user rejected it outright ("looks so crap... i dont like this approach").
-  Rebuilt from scratch as a sticky-photo-plus-scrolling-text layout instead: no cards, no borders,
-  no page pin. A sticky photo column crossfades between the three ventures as the matching text
-  block scrolls to center; scroll is never hijacked. Bolder ghost numbers, staggered content
-  reveal, a real scale+crossfade image transition, minimal progress ticks. Photography for all
-  three ventures is now purpose-cropped with `sharp` — see the content-authenticity flag below.
-- `e9271ee` — **"Our Story" rebuilt as a drag-scrub journey; statement band resized, enhanced, and
-  moved.** See both sub-sections immediately below — this is the most consequential commit to
-  understand before continuing.
+`redesign/inner-pages` was cut 2026-08-26 from `c5fb5a3`. It reports "1 behind stage", but that
+commit is only PR #1's merge commit — the trees are identical, so **no rebase is needed**.
 
-### "Our Story" — deliberate, explicit overrides of this project's own rules
+The previous branch `redesign/hero-globe-light-bg` **was** pushed and merged to stage (the old
+version of this file claimed otherwise — that claim was wrong twice over and is now corrected).
+The homepage on dev-web.admizz.com is current.
 
-The user explicitly asked to lift two of this project's own core anti-"generic AI site" rules for
-this one section, after being asked to confirm exactly that via a structured multiple-choice
-question (not assumed): **glassmorphism** (CLAUDE.md/00-BRIEF.md §13 explicitly ban this) and
-**gratuitous 3D** ("DO NOT ADD 3D JUST BECAUSE IT LOOKS COOL"). Both are now live in
-`story-journey.njk`:
+Local `stage` is stale at `0db5030`, 16 behind. Fetch before ever working from it.
 
-- A frosted glass panel (`backdrop-blur-xl`, translucent white) floats over a blurred real photo
-  (the same lecture-hall photo used for the Institute ecosystem card), tinted with a vibrant
-  navy/gold gradient wash — NOT the flat dark overlay it started with, which was muddying into the
-  photo's warm tones almost to the point of looking brown, not on-brand blue. If you see `/92` as
-  an opacity value anywhere and something looks unexpectedly washed out, see the Tailwind bug note
-  below — that's almost certainly why.
-- A restrained Three.js particle layer (~200 slow-drifting gold points, gentle mouse parallax)
-  sits behind the panel. **First and only 3D in the project.** `three` is now a real dependency
-  (package.json), lazy-imported only when `.story-particles` exists in the DOM and
-  `prefers-reduced-motion` is off.
-- GSAP Draggable + InertiaPlugin (both free, bundled in the installed `gsap` package already — no
-  separate install needed) drive a horizontal drag-scrub card track, PLUS wheel/trackpad support
-  (the interaction most people actually reach for — click-drag alone wasn't enough, confirmed by
-  the user's real-world testing). Not a page-scroll pin — the page scrolls past normally; the
-  horizontal movement is entirely self-contained (drag directly, wheel-scroll while hovering, or
-  use the arrow buttons / ruler-style scrubber). A soft edge fade-mask replaces what was originally
-  a hard clip that sliced the last card in half at rest. Cards have real active/inactive states
-  (scale + opacity) so scrubbing gives per-card feedback, not just the connecting-line node dot.
-- **This override is scoped to this one section, not a new project-wide default.** Every relevant
-  file has a comment saying exactly that. Don't casually reuse glassmorphism or 3D elsewhere
-  without the same explicit confirmation this section got.
-- Mobile gets native `overflow-x` scroll instead of Draggable/Three.js — no desktop interaction
-  forced onto small screens, same pattern as everywhere else on this page.
+### The governing constraint: THE HOMEPAGE MUST NOT CHANGE
 
-### A genuine, silent Tailwind JIT bug found this session — worth knowing before touching colors
+Everything on this branch is additive. Frozen, do not edit:
 
-`bg-navy-deep/92` (and only that specific value, in that specific spot) **silently failed to
-generate any CSS at all**, while `/75`, `/78`, `/85`, `/90`, `/95`, and `/20` all compiled fine on
-the same file, same session. Confirmed by grepping the actual compiled `dist/assets/main-*.css` —
-the class was present in the HTML output but had zero corresponding rule in the CSS. No root cause
-found (not worth the time sink); the fix was just switching to `/90`. **If a color/opacity change
-doesn't visually show up despite a clean build, don't assume you mis-eyeballed it — grep the
-compiled CSS for the literal class before spending time on anything else.**
+    src/pages/index.njk   base.njk   header.njk   footer.njk
+    ecosystem-journey.njk   story-journey.njk   facet-field.njk
+    tailwind.config.js   .eleventy.js
+    every EXISTING field in all five src/_data/*.json   (new fields are fine)
 
-### Statement band ("From vision to reality...") — hidden, not deleted
+`.link-underline` is shared with the homepage — add a new class rather than editing it.
+`.register-row` (/insights/ only) and `.data-row` (/contact/ only) are safe to change.
 
-Was `max-w-[18ch]` at up to 64px text — an 18-character column forced the ~115-character quote
-across 5-6 towering lines, ballooning the section to ~2 viewport-heights of solid navy with empty
-space beside it. Widened to 42ch + stepped down to `text-h1`. Also given a phrase-by-phrase
-staggered reveal (same duration/ease as the hero entrance, just ScrollTrigger-gated) and an ambient
-glow layer — **deliberately not** the `.facet-field` texture, which a code comment explicitly
-restricts to the hero+close "bookend" sections only. **Moved in page order**: was between the
-ecosystem section and "Our Story"; sat directly below Insights, immediately above the closing CTA
-band, per explicit instruction. **Then hidden entirely** later the same day — wrapped in
-`{% if false %}...{% endif %}` in `index.njk`, markup and all the above tuning still in place. The
-page currently flows Insights straight into the closing CTA band. Bringing it back is a one-line
-revert (delete the `{% if false %}`/`{% endif %}` pair), not a rebuild — don't redo this work if
-asked to restore it, just unwrap it.
+**The guard, run after every commit:** build, then diff `dist/index.html` against a saved
+baseline with asset hashes normalised —
+`sed -E 's/-[A-Za-z0-9_-]{8}\.(css|js|jpeg|jpg|webp|png|svg)/-HASH.\1/g'`.
+The homepage fingerprint has been **`c8f97e30da7b6bed63bbcbd212d5221f6f8b1644`** across every
+commit on this branch. Also assert no class the homepage renders lost its CSS rule (406 classes).
 
-### Content-authenticity flags carried forward — read before adding more photography
+### What shipped: `/ventures/` (4 commits)
 
-Three ecosystem-section photos (`src/assets/images/ecosystem/`) are user-supplied, not the
-original admizz.com-sourced insights photos:
-- `institute.jpg` — a real conference/lecture-hall photo, used full per explicit instruction
-  despite unrelated third-party (ABB Robotics) branding visible on the projector screen in frame.
-- `education.jpg` and `workforce.jpg` — read as stock/AI-generated (over-uniform lighting,
-  slightly-too-symmetric faces) and are lower resolution than the rest of the site's imagery
-  (1024×768 / 1200×800 source vs. 1600×900 elsewhere). Used per explicit instruction.
-- All three are flagged in code comments as **explicit exceptions the user confirmed, not a
-  default any future session should repeat without the same explicit ask** — this project's
-  content-authenticity rule (CLAUDE.md non-negotiable #1) is otherwise unchanged and still governs
-  everything else.
+Was a plain list rendering the same eight fields as the homepage's ecosystem section — a live
+broken promise, since the homepage CTA points here offering depth. Rebuilt as the **reference
+record** for partners/institutions/press: the homepage pitches, this page documents.
 
-A 4th instance of the same pattern, added later the same day: Insights post 1's thumbnail
-(`src/assets/images/insights/study-abroad.jpg`) is a **licensed Pexels stock photo** (Pexels
-License — free commercial use, no attribution required), not Admizz's own photography. Cause: the
-original `global-opportunities.jpg` was simultaneously the homepage hero photo AND this post's
-thumbnail, so it appeared twice on the same page — swapped just the thumbnail usage, left the
-(heavily art-directed) hero alone. Flagged via `insights.json`'s `imageSource` field on that one
-entry, and a comment in `index.njk`. The other two Insights posts' images
-(`lifelong-learning.jpg`, `exams.jpg`) are still real Admizz-branded originals, untouched.
+- **Masthead**: index rail (jumps to each record) · statement · field diagram · a 4-across
+  record strip of hard facts spanning the full width.
+- **Field diagram**: three overlapping circles, brand mark at the shared centre, labels inside.
+  Deliberately NOT an arrow sequence — a sequence is exactly the claim the audit rejects.
+- **Positions row**: all three side by side, connectors are plain rules with no arrowheads.
+- **Records**: three columns — numbered photo plate, entry, ledger — with the ICEF credential
+  as a certificate affordance.
+- **Close**: left-weighted band on sunk paper (deliberately not /about/'s centred navy close).
+
+**Framing correction.** "Three distinct stages of the same journey" → **"Three businesses, one
+group."** The audit establishes Workforce Solutions as US vocational rehabilitation, not the
+careers arm of a study-abroad company. ⚠️ **The homepage still carries the original framing**
+("three stages of the same journey", in the frozen ecosystem section). The two pages disagree
+until that separate PR happens.
+
+**Three things surfaced that existed in the data but reached no template:** `hrefLabel` (fixes
+the dead Institute link — now a plain status, verified not focusable); the ICEF credential
+(IAS 6499, with an explicit note that it is held by Admizz Education and does **not** extend to
+the other two); the venture↔article mapping derived from `insights.json`.
+
+### Still queued: four pages
+
+1. **`/insights/<slug>/` ×3** — weakest page on the site. `post.njk` renders the entire article
+   as ONE `<p>` (`{{ post.body }}`). Add real paragraphs, article typography, reading time via
+   the existing (unused here) `readingTime` filter in `.eleventy.js`. No date/author — that data
+   doesn't exist.
+2. **`/insights/`** — "featured + rest" makes one post big and two small for no editorial reason.
+   Only three exist. `venture` is a real organising dimension already in the data.
+3. **`/about/`** — the masthead intro is `{{ site.description }}`, i.e. META-DESCRIPTION copy
+   used as body prose. Fix in the template, never by editing `site.json` (it also feeds every
+   page's meta tags and the footer). "The Record" replays the homepage's timeline flatly.
+4. **`/contact/`** — the form has `novalidate` AND `required` with no replacement validation, so
+   **it submits empty**. Worse: on submit it fakes a 500ms wait then says "Thanks — we'll be in
+   touch. A member of the Admizz team will reach out shortly." **Nothing is sent anywhere and
+   nobody will.** Proposed fix (agreed, not yet built): validate properly, then hand off to a
+   prefilled `mailto:` to info@admizz.com so the message genuinely arrives, with a success state
+   that says what actually happened. Swap to the CRM endpoint (CLAUDE.md §7) once the form slug,
+   API key and CORS origin are confirmed. Also: the confirmation SVG hardcodes `#8A5E10`.
+
+### Content permissions as they now stand
+
+The user granted **"you can create the new content"** — taken as licence to write prose,
+headings, section framing, labels and microcopy, and a lot of that is now on `/ventures/`.
+It is NOT licence to invent checkable business facts (student numbers, partner universities,
+success rates, testimonials, extra accreditations, offices, staff names). That distinction was
+stated explicitly and accepted. CLAUDE.md non-negotiable #1 still governs.
+
+Copy written this session, all in the page template, none in `_data`: the masthead paragraph
+("…access to opportunity shouldn't depend on where someone starts"), "Where the three meet" and
+its paragraph, the ICEF scope note, "No accreditation on record" (deliberately not "None" —
+absence of a record is not evidence of absence), and the close band.
+
+### Photography
+
+`institute-plate.jpg` is a NEW derivative committed this session. The full `institute.jpg` frame
+is dominated by a projector carrying unrelated third-party branding (**ABB Robotics**,
+"Transforming the future of construction industry"). Incidental at the homepage's small sticky
+size; at this page's plate size it read as a partnership Admizz does not have — on the one page
+whose entire job is verifiable credibility. Cropped to the audience only.
+
+`education.jpg` and `workforce.jpg` remain the ones a previous session flagged as reading like
+stock/AI-generated. They are the only venture photography in the repo and are used under the
+same explicit exception. **On a credibility page they are the weakest element — real photography
+would lift `/ventures/` more than any further code.** Worth raising with the client.
+
+### Five traps this session cost real time on — read before touching CSS or GSAP
+
+1. **A find/replace matched a NESTED selector and silently deleted two rule blocks.**
+   `css.index('.masthead-figure {')` hit the copy inside a media query, swallowing
+   `.record-strip*` and `.masthead-index-*` entirely. Build green, homepage guard green, page
+   visibly broken. Anchor replacements on something unique, and re-screenshot the whole page.
+2. **GSAP rewrites an element's ENTIRE transform.** A CSS `translate(-50%,-100%)` was silently
+   discarded when GSAP animated `y` on the same element, dropping a label onto a circle's arc.
+   Use `xPercent`/`yPercent` so GSAP owns the centring, or animate an inner child.
+3. **The build reports a misleading error when CSS fails to parse.** A PostCSS
+   "Unclosed block" surfaced as `ENOENT ... .11ty-vite/robots.txt`. Grep the log for the PostCSS
+   error before chasing the file it names.
+4. **`npm run dev` overwrites `dist/` with development output.** Never verify a production build
+   against `dist/` while `eleventy --serve` is running. Protocol: stop dev → `npm run build` →
+   serve `dist/` on a static port → verify → restart dev.
+5. **The header is FIXED and ~70px tall at rest (66px mobile).** Any page opening on a full-bleed
+   band needs `padding-top` that clears it. A symmetric padding value tuned for the bottom put
+   the eyebrow and index rail *underneath* the header at every width. Measure clearance.
+
+### Verification scripts — gitignored, recreate as needed
+
+Playwright 1.62.1 resolves from the project's `node_modules`; run scripts from the repo root.
+The ones that earned their keep: bounded-viewport scroll screenshots with real `page.mouse.wheel`
+(never `fullPage`); a no-JS + `reducedMotion:'reduce'` probe asserting content renders finished;
+a geometry probe comparing label boxes against circle equations; and a **CSS contract check**
+asserting every styled class on a page exists in both the HTML and the compiled CSS — that last
+one exists specifically because trap #1 got past everything else.
 
 ### Open items carried forward, still unresolved
 
-- **Blue palette vs. navy/gold is still not resolved** — flagged as open across at least three
-  sessions now including this one. Nobody has said yes/no explicitly; don't assume silence means
-  "settled on blue" just because that's what's shipped. Confirm explicitly before changing it
-  either direction.
+- **Palette.** Still blue (`navy.DEFAULT: #3D5AFE`). `docs/briefs/A-palette-revert.md` would
+  revert to `#002856`, but **a palette revert repaints the homepage**, so it cannot happen on
+  this branch. It needs its own branch where a homepage change is the point. Note `ink.faint`
+  currently measures 3.03:1 on paper and is failing AA on 10px mono labels; the brief's
+  `#666E80` fixes it. Still never explicitly decided by the user — do not assume.
 - **The lookalike-silhouette test (non-negotiable #4) has still never been run on any page.**
-- Inner pages (`/about/`, `/insights/`, `/contact/`) still haven't had the line-by-line content
-  grounding the homepage sections have now had multiple passes of.
-- `/ventures/` page still uses the older `ventures-register.njk` partial (plain indexed list, no
-  cards, no sticky photo) — deliberately untouched both times the homepage's ecosystem section was
-  rebuilt, since a full-viewport-height interactive treatment doesn't suit a page that's mostly
-  just this content. Worth a deliberate decision at some point, not an oversight.
-- Two open content-provenance questions from before, still unresolved: `site.json.legalName`
-  ("Admizz Group" vs. live `og:site_name` "Admizz Consulting Group"), and `site.json.description`'s
-  wording/source tag.
-- `robots.txt` still `Disallow: /` — correct for now, flip only at actual launch.
-
-### Impeccable — installed, still untracked
-
-`https://impeccable.style` is installed project-scoped (`.claude/skills/impeccable/`,
-`.github/agents/`, `.github/hooks/`, `.github/skills/` — still **untracked**, deliberately not
-committed alongside content changes, unchanged this session). Its PostToolUse hook flagged one real
-issue this session (a CSS `width` animation causing layout thrash on the ecosystem progress ticks)
-— fixed with `transform: scaleX()` instead. Worth actually reading its findings when they appear,
-not reflexively suppressing them.
-
-### Content/infra facts carried forward, unchanged
-
-- `/verify-admizz-content` skill still exists (`.claude/skills/verify-admizz-content/SKILL.md`),
-  read-only, re-checks `src/_data/*.json` against live admizz.com.
-- CI/CD (`stage` → `dev-web.admizz.com` auto-deploy), the public-repo decision, and the
-  `ssh vps` (`manjila`) vs. pipeline `VPS_USER` (`zunkireelabs`) distinction are all unchanged.
-- `temp_ss/` is still untracked scratch (screenshots used as visual references this session — the
-  ones actually cropped into real assets were saved to `src/assets/images/ecosystem/` and ARE
-  committed; the raw screenshots themselves are not, by existing convention).
+- **The dead Institute link is still in the frozen footer**, therefore on all 8 pages. Fixed on
+  `/ventures/` only. Belongs in the same small homepage PR as the framing correction.
+- `docs/briefs/` (4 briefs) and the Impeccable install are still untracked, deliberately.
+- Two content-provenance questions: `site.json.legalName` ("Admizz Group" vs live og:site_name
+  "Admizz Consulting Group") and `site.json.description`'s wording/source tag.
+- `robots.txt` still `Disallow: /` — correct until launch.
+- `/verify-admizz-content` skill still exists and is read-only.
 
 ## If you only remember five things
 
-1. **`redesign/hero-globe-light-bg` has 5 new commits total across today's two sessions
-   (`e061a7d`…`1e62998`), all local, nothing pushed.** Working tree is clean as of `1e62998`.
-   Don't assume anything from this branch is live anywhere.
-2. **The glassmorphism + Three.js in "Our Story" is a confirmed, scoped exception, not a new
-   house style.** Don't reuse either elsewhere without the same explicit confirmation this section
-   got — every relevant file says so in its own comments.
-3. **Tailwind can silently drop a class with no error.** `bg-navy-deep/92` did exactly that this
-   session. If a style change doesn't show up despite a clean build, grep the compiled CSS for the
-   literal class before assuming you mis-eyeballed something.
-4. **The blue-vs-navy/gold palette question is still open after three-plus sessions.** Stop
-   treating "that's what's currently shipped" as an answer — it isn't one until the user says so.
-5. **Measure, don't guess — and don't trust full-page composite screenshots for sticky/fixed
-   elements.** Both cost real time this session in the opposite direction each time: a synthetic
-   drag test that "failed" only because it measured the wrong element's bounding box, and a
-   full-page screenshot that made a correctly-working sticky photo and fixed nav look broken.
+1. **`redesign/inner-pages` has 4 commits, all local, never pushed.** Nothing built since
+   2026-08-26 exists anywhere but this machine.
+2. **The homepage must not change.** Byte-diff `dist/index.html` (hashes normalised) against
+   `c8f97e30da7b6bed63bbcbd212d5221f6f8b1644` after every commit. It has held so far.
+3. **A green build proves nothing about your CSS surviving.** Rules were deleted silently once
+   already. Assert styled classes exist in the compiled output, and re-screenshot whole pages.
+4. **`/contact/` currently lies to visitors** — it claims someone will be in touch and sends
+   nothing. That is the most damaging thing left on the site.
+5. **Measure, don't guess.** The diagram's label overflow was arithmetic (a 91px region holding
+   119px of text), not placement — no amount of nudging would ever have fixed it.
