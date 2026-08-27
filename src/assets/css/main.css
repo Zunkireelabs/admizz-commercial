@@ -8,6 +8,15 @@
 @layer base {
   html {
     /* Deliberately no `scroll-behavior: smooth` — it fights Lenis smooth-scroll. */
+    /* Stops Safari/Chrome from reading a horizontal trackpad swipe as a
+       back/forward navigation gesture — that gesture is what draws the
+       browser's own floating page-icon indicator over the site (reported
+       as a "nav bar bug"; it's OS/browser chrome, not this site's DOM —
+       confirmed by frame-by-frame capture through real navigation showing
+       nothing broken, and by the indicator appearing mid-content, which a
+       position:fixed header can never do). This can't remove an animation
+       that isn't ours to control, but it removes the trigger for it. */
+    overscroll-behavior-x: none;
   }
 
   body {
