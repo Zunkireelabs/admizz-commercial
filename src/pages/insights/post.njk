@@ -11,32 +11,79 @@ eleventyComputed:
   description: "{{ post.deck }}"
 ---
 
-<section class="bg-navy-deep py-section-sm">
-  <div class="shell">
+{# ============================================================================
+   /insights/<slug>/ — rebuilt 2026-08-27. Previously rendered the entire
+   article body as ONE <p> with no reading time, despite the readingTime
+   filter already existing (used elsewhere, unused here) and the article
+   page being the obvious place for it.
+
+   post.bodyParagraphs (insights.json, new field, post.body left untouched)
+   splits each article into 2 real paragraphs. This is typesetting, not
+   invented content — same sentences, same order, just where the breaks
+   fall; the source copy (insights.json's `body`) never had paragraph
+   breaks of its own to preserve.
+   ============================================================================ #}
+
+<section class="insights-hero bg-navy-deep py-section-sm">
+  {# Large faint Admizz mark — simple, on purpose: the real brand mark
+     (same asset the header uses inverted, and /ventures/'s field diagram
+     crops), not a per-venture icon or number that needed explaining.
+     Kept plain: no bespoke draw-in, just the same on-load fade the rest
+     of this masthead already uses (data-hero-in). #}
+  <img src="/assets/images/brand/mark-white.png" alt="" width="1024" height="308"
+    class="insights-hero-mark" data-hero-in aria-hidden="true">
+
+  <div class="shell relative">
     <a href="/insights/" class="inline-flex items-center gap-2 text-small font-medium text-navy-on-muted hover:text-navy-soft transition-colors duration-press ease-signature fade-up">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 7H2M6 3L2 7l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       All insights
     </a>
-    <span class="eyebrow-on-navy mt-8 fade-up" style="animation-delay:60ms">{{ post.venture }}</span>
-    <h1 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[20ch] text-balance fade-up" style="animation-delay:120ms">{{ post.title }}</h1>
-    <p class="mt-6 text-body-lg text-navy-on-muted max-w-measure fade-up" style="animation-delay:180ms">{{ post.deck }}</p>
+    <span class="eyebrow-on-navy mt-7 fade-up" style="animation-delay:60ms">{{ post.venture }}</span>
+    <h1 class="mt-3 font-display font-light text-display-2 text-navy-on max-w-[20ch] text-balance fade-up" style="animation-delay:120ms">{{ post.title }}</h1>
+    <p class="mt-5 text-body-lg text-navy-on-muted max-w-measure fade-up" style="animation-delay:180ms">{{ post.deck }}</p>
+    <span class="mt-5 block font-mono text-micro uppercase tracking-widest text-navy-on-muted fade-up" style="animation-delay:220ms">{{ post.body | readingTime }} min read</span>
   </div>
 </section>
 
 <section class="bg-paper py-section">
   <div class="shell grid grid-cols-1 md:grid-cols-[1fr_16rem] gap-10 md:gap-16">
-    <div class="fade-up">
+    {# data-hero-in, not .fade-up: this block sits right at the fold under
+       the navy masthead, so .fade-up's scroll-gated reveal left it at
+       opacity:0 (invisible, not just unrendered) on an ordinary viewport
+       height until the visitor scrolled — reading as a blank section
+       right after load. data-hero-in animates in on page load instead
+       (same generic, page-agnostic hook the homepage hero uses in
+       main.js), so it's already visible by the time anyone scrolls down
+       to it. Still fully visible by default with no CSS hiding of its
+       own — GSAP sets the hidden state itself only once it has loaded. #}
+    <div data-hero-in>
       <div class="rounded-lg overflow-hidden bg-navy-deep mb-10">
         {% imageEager "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 768px) 60vw, 100vw" %}
       </div>
-      <p class="prose-body text-body-lg leading-relaxed">{{ post.body }}</p>
-      <a href="{{ post.ventureHref }}" class="mt-8 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
+
+      <div class="insights-article-prose">
+        {% for para in post.bodyParagraphs %}
+        <p>{{ para }}</p>
+        {% endfor %}
+      </div>
+
+      {# hrefLabel-style fix, same pattern as /ventures/ and /contact/: where
+         there's no real URL (Institute — ventureHref is "#"), render a
+         status, not a link dressed as one; real links get target=_blank +
+         rel=noopener since they leave the site. #}
+      {% for v in ventures %}{% if v.name == post.venture %}
+      {% if v.href == "#" %}
+      <p class="mt-8 text-small text-ink-faint">{{ v.hrefLabel }}</p>
+      {% else %}
+      <a href="{{ v.href }}" class="mt-8 inline-flex items-center gap-2 text-small font-medium text-ink link-underline" target="_blank" rel="noopener noreferrer">
         Explore {{ post.venture }}
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
+      {% endif %}
+      {% endif %}{% endfor %}
     </div>
 
-    <aside class="fade-up" style="animation-delay:80ms">
+    <aside data-hero-in>
       <span class="eyebrow">More Insights</span>
       <div class="mt-4 flex flex-col">
         {% for other in insights %}
@@ -44,6 +91,7 @@ eleventyComputed:
         <a href="/insights/{{ other.slug }}/" class="py-4 border-t border-rule first:border-t-0 group">
           <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ other.venture }}</span>
           <h3 class="mt-1 text-h4 font-display font-book text-ink group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ other.title }}</h3>
+          <span class="mt-1 block font-mono text-micro uppercase tracking-widest text-ink-muted">{{ other.body | readingTime }} min read</span>
         </a>
         {% endif %}
         {% endfor %}

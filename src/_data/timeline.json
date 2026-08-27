@@ -3,24 +3,32 @@
     "year": "2015",
     "label": "The Beginning",
     "text": "Admizz was founded with a vision to revolutionize education.",
-    "source": "admizz"
+    "source": "admizz",
+    "image": "timeline-2015.jpg",
+    "imageAlt": "A team meeting around a conference table"
   },
   {
     "year": "2020",
     "label": "Going Global",
     "text": "Expanded globally, offering international study opportunities.",
-    "source": "admizz"
+    "source": "admizz",
+    "image": "timeline-2020.jpg",
+    "imageAlt": "A city skyline silhouetted at dusk"
   },
   {
     "year": "2021",
     "label": "A New Scale",
     "text": "Successfully completed 1,000+ student admissions worldwide.",
-    "source": "admizz"
+    "source": "admizz",
+    "image": "timeline-2021.jpg",
+    "imageAlt": "Colleagues collaborating around a table"
   },
   {
     "year": "Today",
     "label": "Building What's Next",
     "text": "Three ventures, one purpose: helping people reach their next opportunity.",
-    "source": "written"
+    "source": "written",
+    "image": "timeline-today.jpg",
+    "imageAlt": "Detail of a modern glass building facade"
   }
 ]

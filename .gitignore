@@ -33,3 +33,16 @@ scripts/output/
 
 # Claude Code harness runtime state, not project config
 .claude/scheduled_tasks.lock
+.shot.mjs
+.verify.mjs
+.measure.mjs
+.venn.mjs
+.venn2.mjs
+.venn3.mjs
+.dbg.mjs
+.narrow.mjs
+.cssaudit.mjs
+.check.mjs
+.crop.mjs
+.hdr.mjs
+.strip.mjs

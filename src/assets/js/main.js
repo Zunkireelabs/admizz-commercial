@@ -154,17 +154,6 @@ if (!prefersReducedMotion) {
       });
     });
 
-    gsap.utils.toArray('.grow-line').forEach((line) => {
-      const sequence = line.closest('.relative');
-      if (!sequence) return;
-      gsap.set(line, { scaleY: 0, transformOrigin: 'top' });
-      gsap.to(line, {
-        scaleY: 1,
-        ease: 'none',
-        scrollTrigger: { trigger: sequence, start: 'top 75%', end: 'bottom 65%', scrub: 0.4 },
-      });
-    });
-
     // Ecosystem story (homepage "One Ecosystem" section) — sticky photo
     // (plain CSS position:sticky, set in the markup, not GSAP pin) crossfades
     // as each text block scrolls to center. No pinning, no scroll-hijacking —
@@ -340,15 +329,207 @@ if (!prefersReducedMotion) {
       });
     }
 
-    gsap.utils.toArray('.sequence-row').forEach((row) => {
-      row.classList.add('js-scroll-armed');
-      ScrollTrigger.create({
-        trigger: row,
-        start: 'top center',
-        end: 'bottom center',
-        toggleClass: { targets: row, className: 'is-active' },
+
+    // -----------------------------------------------------------------
+    // /ventures/ — "The Record"
+    //
+    // Page-scoped: the whole block is behind DOM checks, so no other page
+    // pays for it and DrawSVGPlugin is only fetched where it's used (same
+    // lazy pattern as the Three.js layer above).
+    //
+    // Everything here animates elements that are ALREADY FULLY RENDERED in
+    // the base HTML/CSS. GSAP sets the hidden/undrawn state itself, and only
+    // after the plugin has actually resolved — so a no-JS visitor, a crawler
+    // or a screenshotter sees the finished page, never a blank one.
+    // -----------------------------------------------------------------
+    const ventureRecords = gsap.utils.toArray('[data-venture-record]');
+    const fieldDiagram = document.querySelector('[data-field-diagram]');
+
+    if (ventureRecords.length || fieldDiagram) {
+      import('gsap/DrawSVGPlugin').then(({ DrawSVGPlugin }) => {
+        gsap.registerPlugin(DrawSVGPlugin);
+
+        // Field diagram — the three circles describe themselves in sequence,
+        // then the mark and labels settle into the shared centre. It's in the
+        // initial viewport, so this runs on load rather than on scroll.
+        if (fieldDiagram) {
+          const circles = gsap.utils.toArray('.field-circle', fieldDiagram);
+          const nodes = gsap.utils.toArray('.field-node', fieldDiagram);
+          const mark = fieldDiagram.querySelector('.field-mark');
+          gsap.set(circles, { drawSVG: '0%' });
+          // xPercent/yPercent, NOT a bare `y` on top of a CSS translate:
+          // GSAP rewrites the element's whole transform, so a CSS
+          // translate(-50%,-50%) it also animates is silently discarded —
+          // that dropped a label onto a circle's arc once already. Handing
+          // GSAP the centring explicitly keeps both in agreement, and the
+          // CSS transform still holds for the no-JS case.
+          gsap.set(nodes, { xPercent: -50, yPercent: -50, opacity: 0, y: 8 });
+          if (mark) gsap.set(mark, { xPercent: -50, yPercent: -50, opacity: 0, scale: 0.9 });
+
+          // Circles describe themselves, then the labels name each field, and
+          // the mark settles into the shared centre last — the diagram
+          // assembling in the order it reads.
+          gsap.timeline({ defaults: { ease: 'signature' }, delay: 0.25 })
+            .to(circles, { drawSVG: '100%', duration: 1.1, stagger: 0.14 }, 0)
+            .to(nodes, { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 }, 0.55)
+            .to(mark, { opacity: 1, scale: 1, duration: 0.6 }, 0.95);
+        }
+
+        ventureRecords.forEach((record) => {
+          const head = record.querySelector('.venture-head');
+          const plate = record.querySelector('.venture-plate');
+          const name = record.querySelector('[data-venture-name]');
+          const ledgerRows = gsap.utils.toArray('.venture-ledger-row, .icef-seal', record);
+
+          const tl = gsap.timeline({
+            defaults: { ease: 'signature' },
+            scrollTrigger: { trigger: record, start: 'top 76%' },
+          });
+
+          if (head) {
+            gsap.set(head, { opacity: 0 });
+            tl.to(head, { opacity: 1, duration: 0.5 }, 0);
+          }
+          // The plate lifts and settles rather than fading — a physical
+          // object being laid onto the record, matching what it is.
+          if (plate) {
+            gsap.set(plate, { opacity: 0, y: 20 });
+            tl.to(plate, { opacity: 1, y: 0, duration: 0.8 }, 0.1);
+          }
+          if (name) {
+            gsap.set(name, { opacity: 0, y: 14 });
+            tl.to(name, { opacity: 1, y: 0, duration: 0.7 }, 0.2);
+          }
+          // Ledger rows arrive in sequence, the way a list is read rather
+          // than the way a block appears.
+          if (ledgerRows.length) {
+            gsap.set(ledgerRows, { opacity: 0, y: 10 });
+            tl.to(ledgerRows, { opacity: 1, y: 0, duration: 0.5, stagger: 0.07 }, 0.3);
+          }
+        });
+
+        // ICEF seal — ring, then the check struck into it. Sequenced rather
+        // than simultaneous so it reads as a mark being made: the credential
+        // is the most load-bearing fact on this site and earns its own beat.
+        const seal = document.querySelector('[data-icef-seal]');
+        if (seal) {
+          const ring = seal.querySelector('.icef-ring');
+          const check = seal.querySelector('.icef-check');
+          const marks = [ring, check].filter(Boolean);
+          if (marks.length) {
+            gsap.set(marks, { drawSVG: '0%' });
+            gsap.timeline({
+              defaults: { ease: 'signature' },
+              scrollTrigger: { trigger: seal, start: 'top 85%' },
+            })
+              .to(ring, { drawSVG: '100%', duration: 0.8 }, 0)
+              .to(check, { drawSVG: '100%', duration: 0.45 }, 0.4);
+          }
+        }
       });
-    });
+    }
+
+    // -----------------------------------------------------------------
+    // /about/ — "Our Story" timeline
+    //
+    // Page-scoped: gated behind a DOM check so no other page pays for it.
+    // The connecting line is scroll-SCRUBBED, not a one-shot reveal — same
+    // exception the ventures/positions line uses (see the comment block
+    // above .fade-up in main.css): it carries no hiding CSS of its own,
+    // its resting state IS scaleY(1), and GSAP sets it to 0 itself only
+    // once this code has actually run, right before scrubbing it back as
+    // the visitor scrolls the section. No DrawSVGPlugin needed here, so
+    // this sits outside the conditional import above.
+    // -----------------------------------------------------------------
+    const storyTimeline = document.querySelector('[data-story-timeline]');
+    if (storyTimeline) {
+      const line = storyTimeline.querySelector('.story-timeline-line');
+      const rows = gsap.utils.toArray('.story-timeline-row', storyTimeline);
+
+      if (line) {
+        gsap.set(line, { scaleY: 0, transformOrigin: 'top' });
+        gsap.to(line, {
+          scaleY: 1,
+          ease: 'none',
+          scrollTrigger: { trigger: storyTimeline, start: 'top 65%', end: 'bottom 75%', scrub: 0.4 },
+        });
+      }
+
+      // Each row (dot, text, photo) arrives as its own beat rather than
+      // simultaneously — same idiom as the ventures records above.
+      rows.forEach((row) => {
+        const dot = row.querySelector('.story-timeline-dot');
+        const body = row.querySelector('.story-timeline-body');
+        const photo = row.querySelector('.story-timeline-photo');
+        const tl = gsap.timeline({
+          defaults: { ease: 'signature' },
+          scrollTrigger: { trigger: row, start: 'top 82%' },
+        });
+        if (dot) { gsap.set(dot, { scale: 0 }); tl.to(dot, { scale: 1, duration: 0.4 }, 0); }
+        if (body) { gsap.set(body, { opacity: 0, y: 14 }); tl.to(body, { opacity: 1, y: 0, duration: 0.6 }, 0.05); }
+        if (photo) { gsap.set(photo, { opacity: 0, y: 14 }); tl.to(photo, { opacity: 1, y: 0, duration: 0.6 }, 0.12); }
+
+        // Ongoing scroll feedback, separate from the one-shot arrival above:
+        // .is-active toggles as THIS row crosses the viewport centre, purely
+        // additive (lift + shadow + dot pop — see main.css), so the row
+        // that's actually being read stands off the page a little rather
+        // than every row just sitting flat once revealed.
+        ScrollTrigger.create({
+          trigger: row,
+          start: 'top center',
+          end: 'bottom center',
+          onToggle: (self) => row.classList.toggle('is-active', self.isActive),
+        });
+      });
+    }
+
+    // -----------------------------------------------------------------
+    // /about/ — business cards + leadership stat entrance. Plain, discrete
+    // reveals (not scroll-scrubbed), same gsap.set-then-animate idiom as
+    // the hero above — gated so only /about/ pays for it.
+    // -----------------------------------------------------------------
+    const storyVentureCards = gsap.utils.toArray('[data-story-venture-card]');
+    if (storyVentureCards.length) {
+      gsap.set(storyVentureCards, { opacity: 0, y: 16 });
+      gsap.timeline({
+        defaults: { ease: 'signature', duration: 0.6 },
+        scrollTrigger: { trigger: storyVentureCards[0].closest('section'), start: 'top 75%' },
+      }).to(storyVentureCards, { opacity: 1, y: 0, stagger: 0.1 });
+    }
+
+    // -----------------------------------------------------------------
+    // /about/ — Journey → Three Businesses card-stack handoff.
+    //
+    // The incoming section is already visually a "card" in pure CSS
+    // (rounded top + shadow, main.css) — that part needs no JS and holds
+    // even with motion off. What GSAP adds is timing: pin the outgoing
+    // section briefly once its bottom reaches the viewport bottom, so the
+    // next section's rounded edge visibly slides up and over it instead of
+    // an instant cut. pinSpacing:false — the incoming section is already
+    // next in normal flow, so no extra gap should open up while pinned.
+    // -----------------------------------------------------------------
+    const stackOutgoing = document.querySelector('[data-stack-outgoing]');
+    if (stackOutgoing) {
+      // The outgoing section itself shrinks and dims WHILE pinned — not
+      // just sitting static underneath — so the handoff reads as one card
+      // being tucked away behind the next, not a coincidental overlap.
+      gsap.set(stackOutgoing, { transformOrigin: 'top center' });
+      ScrollTrigger.create({
+        trigger: stackOutgoing,
+        start: 'bottom bottom',
+        end: '+=400',
+        pin: true,
+        pinSpacing: false,
+        scrub: true,
+        onUpdate: (self) => {
+          gsap.set(stackOutgoing, {
+            scale: 1 - self.progress * 0.06,
+            opacity: 1 - self.progress * 0.4,
+          });
+        },
+        onLeaveBack: () => gsap.set(stackOutgoing, { scale: 1, opacity: 1 }),
+      });
+    }
   });
 }
 

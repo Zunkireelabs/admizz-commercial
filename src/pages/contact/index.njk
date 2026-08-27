@@ -1,116 +1,367 @@
 ---
 layout: base.njk
 title: Contact — Admizz Group
-description: Get in touch with Admizz Group — Denver, Colorado.
+description: Contact Admizz Group in Denver, Colorado — reach the team behind Admizz Institute, Admizz Education and Admizz Workforce Solutions.
 permalink: /contact/
 ---
 
 {#
-  Front-end complete; not yet wired to a backend. The CRM already has an Admizz Education
-  tenant with a public submission endpoint (see CLAUDE.md §7) — wiring this form to it is
-  next, pending confirmation of the endpoint contract, API key and allowed CORS origin.
-  Today this shows a real confirmation state client-side so the interaction can be reviewed
-  end to end, without pretending to have submitted anywhere.
+  ============================================================================
+  /contact/ — built to match the supplied design mockup (2026-08-27).
+
+  ⚠️  THIS FORM DOES NOT SUBMIT ANYWHERE YET. `submitEnquiry()` in the inline
+  component is the single seam for a real POST (CLAUDE.md §7). Until it is
+  wired, a valid submit swaps the form for a confirmation panel that says
+  plainly the form is not connected and gives the real routes. Revisit that
+  copy — and public/robots.txt — before launch (docs/briefs/LAUNCH-BLOCKERS.md).
+
+  ⚠️  FACTS PENDING CLIENT CONFIRMATION (marked CONFIRM below): the "80202"
+  ZIP, the "Mon–Fri 9–6 MST" phone hours, the "within 24 hours" reply claim,
+  and the "Kathmandu, Nepal — Global Education Hub" second location. None of
+  these is verified in this repo. They are placeholders matching the mockup
+  and must be confirmed or corrected before this page is public.
+  ============================================================================
 #}
 
-<section class="bg-paper py-section">
-  <div class="shell grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-14 md:gap-20">
+<div x-data="contactDesk()">
 
-    <div class="fade-up">
-      <span class="eyebrow">Get in Touch</span>
-      <h1 class="mt-4 font-display font-light text-display-2 text-ink max-w-[14ch] text-balance">Let's talk.</h1>
-      <p class="mt-6 text-body-lg text-ink-muted max-w-measure leading-relaxed">
-        Whether you're a student, a partner institution, or exploring a career move — tell us a little about what you're looking for and we'll point you to the right part of Admizz.
-      </p>
+  {# ==================================================== MASTHEAD #}
+  <section class="contact-hero">
+    <div class="shell contact-hero-inner">
+      <div class="contact-hero-copy">
+        <span class="contact-kicker">Contact Admizz</span>
+        <h1 class="contact-hero-title">
+          Let&rsquo;s start a<br><span class="contact-hero-title-accent">conversation.</span>
+        </h1>
+        <p class="contact-hero-sub">
+          Tell us which part of Admizz your message is for and it reaches the team that handles it &mdash; not a general pile.
+        </p>
 
-      <div class="mt-12">
-        <div class="data-row">
-          <span class="data-label">Address</span>
-          <span class="text-body text-ink text-right">{{ site.address }}</span>
-        </div>
-        <div class="data-row">
-          <span class="data-label">Phone</span>
-          <a href="{{ site.phoneHref }}" class="text-body text-ink link-underline">{{ site.phone }}</a>
-        </div>
-        <div class="data-row">
-          <span class="data-label">Email</span>
-          <a href="mailto:{{ site.email }}" class="text-body text-ink link-underline">{{ site.email }}</a>
-        </div>
+        <ul class="contact-badges">
+          <li class="contact-badge">
+            <span class="contact-chip" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H8l-4 4V5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="contact-badge-text">One inbox &mdash; <strong>routed by topic</strong></span>{# CONFIRM: mockup said "We reply within 24 hours" — no verified SLA #}
+          </li>
+          <li class="contact-badge">
+            <span class="contact-chip" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="9" r="2.4" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 19c.6-3 3-4.5 5.5-4.5S13.9 16 14.5 19M15 15c2 .2 3.8 1.4 4.4 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            <span class="contact-badge-text">Talk to the <strong>right team</strong></span>
+          </li>
+          <li class="contact-badge">
+            <span class="contact-chip" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="contact-badge-text">Denver, Colorado &mdash; <strong>one home base</strong></span>
+          </li>
+        </ul>
       </div>
 
-      <div class="mt-12">
-        <span class="eyebrow">Or Go Straight To A Venture</span>
-        <ul class="mt-4 flex flex-col">
-          {% for v in ventures %}
-          <li class="py-3 border-t border-rule first:border-t-0">
-            <a href="{{ v.href }}" class="inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
-              {{ v.name }}
-              <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
+      {# Right-side figure — a paper aircraft on a dotted flight path, matching
+         the mockup. Purely decorative: aria-hidden, non-focusable, valid with
+         no JS, no motion to disable. #}
+      <div class="contact-hero-figure" aria-hidden="true">
+        <svg viewBox="0 0 420 320" fill="none" focusable="false">
+          <circle cx="320" cy="96" r="132" fill="currentColor" fill-opacity="0.05"/>
+          <circle cx="256" cy="188" r="82" fill="currentColor" fill-opacity="0.05"/>
+          {# dotted flight path, looping up toward the plane #}
+          <path d="M14 262C104 258 150 214 214 206c70-9 96-52 96-92 0-34-30-56-52-40-24 17-16 58 20 66 40 9 78-8 96-42"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 8"/>
+          {# clean 3-facet origami plane #}
+          <g transform="translate(300 40) rotate(12)">
+            <path d="M96 4 L2 40 L44 52 L60 96 Z" fill="#3D5AFE"/>
+            <path d="M96 4 L44 52 L2 40 Z" fill="#6E82FF"/>
+            <path d="M96 4 L60 96 L44 52 Z" fill="#2C3FC4"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  {# ==================================================== BODY #}
+  <section class="contact-body">
+    <div class="shell contact-body-grid">
+
+      {# -------- Left: the form -------- #}
+      <div class="contact-form-col">
+        <h2 class="contact-h2">Send us a message</h2>
+        <p class="contact-lead">Fill this in and it lands with the team that handles your topic. Nothing goes to a general pile.</p>
+
+        <template x-if="!sent">
+          <form class="contact-form contact-form-card" @submit.prevent="handleSubmit" novalidate>
+
+            <div class="contact-field">
+              <label for="c-name" class="contact-flabel">Full name <span class="contact-req" aria-hidden="true">*</span></label>
+              <div class="contact-input-wrap">
+                <svg class="contact-input-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="6.5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M4 16.5c1-3 3.2-4.5 6-4.5s5 1.5 6 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <input id="c-name" name="name" type="text" autocomplete="name" placeholder="Your full name"
+                  class="contact-input contact-input-ic" x-model="fields.name" @input="onInput('name')" @blur="onBlur('name')"
+                  :aria-invalid="errors.name ? 'true' : 'false'" :aria-describedby="errors.name ? 'c-name-err' : null">
+              </div>
+              <p id="c-name-err" class="contact-error" role="alert" x-show="errors.name" x-cloak>
+                <svg class="contact-error-mark" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5l6.5 11.5H1.5L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6v3.2M8 11.2v.1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                <span x-text="errors.name"></span>
+              </p>
+            </div>
+
+            <div class="contact-field">
+              <label for="c-email" class="contact-flabel">Email address <span class="contact-req" aria-hidden="true">*</span></label>
+              <div class="contact-input-wrap">
+                <svg class="contact-input-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="2.5" y="4" width="15" height="12" rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M3 5.5l7 5 7-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                <input id="c-email" name="email" type="email" autocomplete="email" placeholder="you@example.com"
+                  class="contact-input contact-input-ic" x-model="fields.email" @input="onInput('email')" @blur="onBlur('email')"
+                  :aria-invalid="errors.email ? 'true' : 'false'" :aria-describedby="errors.email ? 'c-email-err' : null">
+              </div>
+              <p id="c-email-err" class="contact-error" role="alert" x-show="errors.email" x-cloak>
+                <svg class="contact-error-mark" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5l6.5 11.5H1.5L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6v3.2M8 11.2v.1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                <span x-text="errors.email"></span>
+              </p>
+            </div>
+
+            <div class="contact-field">
+              <label for="c-phone" class="contact-flabel">Phone number <span class="contact-optional">optional</span></label>
+              <div class="contact-input-wrap">
+                <svg class="contact-input-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 3h2.5l1.2 3.2-1.6 1.2a9 9 0 004.2 4.2l1.2-1.6L15.7 11v2.5A1.6 1.6 0 0114 15 13 13 0 015 6a1.6 1.6 0 000-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                <input id="c-phone" name="phone" type="tel" autocomplete="tel" placeholder="+1 (555) 123-4567"
+                  class="contact-input contact-input-ic" x-model="fields.phone">
+              </div>
+            </div>
+
+            <div class="contact-field">
+              <label for="c-topic" class="contact-flabel">I&rsquo;m reaching out about <span class="contact-req" aria-hidden="true">*</span></label>
+              <div class="contact-input-wrap">
+                <svg class="contact-input-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 9.5V4.5A1.5 1.5 0 014.5 3h5l7.5 7.5-6.5 6.5L3 9.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="7" r="1.2" fill="currentColor"/></svg>
+                <select id="c-topic" name="topic" class="contact-input contact-input-ic contact-select"
+                  x-model="fields.topic" @change="onInput('topic')" @blur="onBlur('topic')"
+                  :aria-invalid="errors.topic ? 'true' : 'false'" :aria-describedby="errors.topic ? 'c-topic-err' : null">
+                  <option value="">Select a topic</option>
+                  <option value="general">General enquiry</option>
+                  {% for v in ventures %}
+                  <option value="{{ v.id }}">{{ v.name }} &mdash; {{ v.vertical }}</option>
+                  {% endfor %}
+                </select>
+                <svg class="contact-select-chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <p id="c-topic-err" class="contact-error" role="alert" x-show="errors.topic" x-cloak>
+                <svg class="contact-error-mark" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5l6.5 11.5H1.5L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6v3.2M8 11.2v.1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                <span x-text="errors.topic"></span>
+              </p>
+            </div>
+
+            <div class="contact-field">
+              <label for="c-message" class="contact-flabel">Message <span class="contact-req" aria-hidden="true">*</span></label>
+              <textarea id="c-message" name="message" rows="4" placeholder="How can we help you?"
+                class="contact-input contact-textarea" x-model="fields.message" @input="onInput('message')" @blur="onBlur('message')"
+                :aria-invalid="errors.message ? 'true' : 'false'" :aria-describedby="errors.message ? 'c-message-err' : null"></textarea>
+              <p id="c-message-err" class="contact-error" role="alert" x-show="errors.message" x-cloak>
+                <svg class="contact-error-mark" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5l6.5 11.5H1.5L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6v3.2M8 11.2v.1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                <span x-text="errors.message"></span>
+              </p>
+            </div>
+
+            <button type="submit" class="contact-send" :disabled="submitting" :aria-busy="submitting">
+              <span x-show="!submitting">Send message</span>
+              <span x-show="submitting" x-cloak>Sending&hellip;</span>
+              <svg x-show="!submitting" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+
+            <p class="contact-fineprint">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 7V5.5a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.3"/></svg>
+              By sending this you agree to how we handle your details. A privacy note is being drafted.
+            </p>
+          </form>
+        </template>
+
+        <template x-if="sent">
+          <div class="contact-confirm contact-form-card" role="status">
+            <span class="contact-chip contact-chip-lg" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <h3 class="contact-h2" tabindex="-1">This form isn&rsquo;t connected yet</h3>
+            <p class="contact-lead">
+              Your message for <strong x-text="topicLabel()"></strong> is filled in, but it isn&rsquo;t being delivered while we finish wiring the form up &mdash; nothing has been sent. Reach us directly in the meantime:
+            </p>
+            <p class="contact-confirm-lines">
+              <a href="mailto:{{ site.email }}" class="contact-inline-link">{{ site.email }}</a><br>
+              <a href="{{ site.phoneHref }}" class="contact-inline-link">+1 (720) 505-3611</a>
+            </p>
+            <button type="button" class="contact-send contact-send-ghost" @click="sent = false">Back to the form</button>
+          </div>
+        </template>
+      </div>
+
+      {# -------- Right: contact information -------- #}
+      <aside class="contact-info-col">
+        <h2 class="contact-h2">Contact information</h2>
+        <p class="contact-lead">Prefer to reach us directly? Use any of the channels below.</p>
+
+        <ul class="contact-info-list">
+          <li class="contact-info-item">
+            <span class="contact-chip" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 21c5-4.5 7-8 7-11a7 7 0 10-14 0c0 3 2 6.5 7 11z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>
+            </span>
+            <div class="contact-info-body">
+              <p class="contact-info-title">Head office</p>
+              <p class="contact-info-line">{{ site.address }}</p>
+              <p class="contact-info-line contact-info-dim">80202 &nbsp;<span class="contact-confirm-tag">CONFIRM</span></p>
+            </div>
           </li>
-          {% endfor %}
+
+          <li class="contact-info-item">
+            <span class="contact-chip" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M6 4h3l1.5 4-2 1.5a11 11 0 005 5l1.5-2 4 1.5v3a2 2 0 01-2.2 2A16 16 0 014 6.2 2 2 0 016 4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            </span>
+            <div class="contact-info-body">
+              <p class="contact-info-title">Phone</p>
+              <p class="contact-info-line"><a href="{{ site.phoneHref }}" class="contact-inline-link">+1 (720) 505-3611</a></p>
+              <p class="contact-info-line contact-info-dim">Mon&ndash;Fri, 9:00 AM &ndash; 6:00 PM (MST) &nbsp;<span class="contact-confirm-tag">CONFIRM</span></p>
+            </div>
+          </li>
+
+          <li class="contact-info-item">
+            <span class="contact-chip" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5.5" width="17" height="13" rx="1.6" stroke="currentColor" stroke-width="1.6"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            </span>
+            <div class="contact-info-body">
+              <p class="contact-info-title">Email</p>
+              <p class="contact-info-line"><a href="mailto:{{ site.email }}" class="contact-inline-link">{{ site.email }}</a></p>
+              <p class="contact-info-line contact-info-dim">Routed to the relevant team by topic</p>
+            </div>
+          </li>
+
+          <li class="contact-info-item">
+            <span class="contact-chip" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 12h17M12 3.5c3 3 3 14 0 17-3-3-3-14 0-17z" stroke="currentColor" stroke-width="1.6"/></svg>
+            </span>
+            <div class="contact-info-body">
+              <p class="contact-info-title">Explore our businesses</p>
+              {% for v in ventures %}
+              {% if v.href == "#" %}
+              <p class="contact-info-line contact-info-dim">{{ v.name | replace("Admizz ", "") }} &mdash; {{ v.hrefLabel }}</p>
+              {% else %}
+              <p class="contact-info-line">
+                <a href="{{ v.href }}" class="contact-inline-link" target="_blank" rel="noopener noreferrer">{{ v.hrefLabel }}
+                  <svg viewBox="0 0 14 14" fill="none" aria-hidden="true" class="contact-ext"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+              </p>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  {# ==================================================== LOWER BAND #}
+  <section class="contact-reach">
+    <div class="shell contact-reach-grid">
+      <div class="contact-map" aria-hidden="true">
+        <svg viewBox="0 0 400 260" fill="none" focusable="false" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="260" fill="currentColor" fill-opacity="0.05"/>
+          <path d="M-20 60H420M-20 130H420M-20 200H420M70 -20V280M170 -20V280M270 -20V280M340 -20V280" stroke="currentColor" stroke-width="1" stroke-opacity="0.25"/>
+          <path d="M170 130l40 -70M170 130l-90 40M170 130l100 70" stroke="currentColor" stroke-width="6" stroke-opacity="0.14" stroke-linecap="round"/>
+          <path d="M200 118c0 22-16 30-16 30s-16-8-16-30a16 16 0 1132 0z" fill="currentColor"/>
+          <circle cx="184" cy="118" r="6" fill="#fff"/>
+        </svg>
+      </div>
+
+      <div class="contact-reach-copy">
+        <h2 class="contact-h2">Based in Denver, working worldwide.</h2>
+        <p class="contact-lead">One office and a distributed team &mdash; the businesses operate across borders, the accountability sits in one place.</p>
+
+        <ul class="contact-reach-list">
+          <li class="contact-reach-item">
+            <span class="contact-chip" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 21c5-4.5 7-8 7-11a7 7 0 10-14 0c0 3 2 6.5 7 11z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.2" stroke="currentColor" stroke-width="1.6"/></svg>
+            </span>
+            <p class="contact-info-title">Denver, USA</p>
+            <p class="contact-reach-tag">Head office</p>
+          </li>
+          <li class="contact-reach-item">
+            <span class="contact-chip" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 19c.6-3 3-4.8 5.5-4.8S13.9 16 14.5 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            <p class="contact-info-title">Kathmandu, Nepal <span class="contact-confirm-tag">CONFIRM</span></p>
+            <p class="contact-reach-tag">Global education hub</p>
+          </li>
+          <li class="contact-reach-item">
+            <span class="contact-chip" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 12h17M12 3.5c3 3 3 14 0 17-3-3-3-14 0-17z" stroke="currentColor" stroke-width="1.6"/></svg>
+            </span>
+            <p class="contact-info-title">Remote team</p>
+            <p class="contact-reach-tag">Worldwide</p>
+          </li>
         </ul>
       </div>
     </div>
+  </section>
 
-    <div
-      x-data="{ sent: false, submitting: false }"
-      class="bg-paper-raised border border-rule rounded-lg p-8 md:p-10 fade-up"
-      style="animation-delay:100ms"
-    >
-      <form
-        x-show="!sent"
-        @submit.prevent="submitting = true; setTimeout(() => { submitting = false; sent = true }, 500)"
-        class="flex flex-col gap-6"
-        novalidate
-      >
-        <div>
-          <label for="name" class="data-label block mb-2">Full name</label>
-          <input id="name" name="name" type="text" required autocomplete="name"
-            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-navy focus:outline-none transition-colors duration-press"
-            placeholder="Your name">
-        </div>
+</div>
 
-        <div>
-          <label for="email" class="data-label block mb-2">Email</label>
-          <input id="email" name="email" type="email" required autocomplete="email"
-            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-navy focus:outline-none transition-colors duration-press"
-            placeholder="you@example.com">
-        </div>
+<script>
+  window.contactDesk = function () {
+    return {
+      submitting: false,
+      sent: false,
+      fields: { name: '', email: '', phone: '', topic: '', message: '' },
+      errors: { name: '', email: '', topic: '', message: '' },
+      touched: { name: false, email: false, topic: false, message: false },
 
-        <div>
-          <label for="interest" class="data-label block mb-2">I'm interested in</label>
-          <select id="interest" name="interest"
-            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink focus:border-navy focus:outline-none transition-colors duration-press">
-            <option value="general">General enquiry</option>
-            {% for v in ventures %}
-            <option value="{{ v.id }}">{{ v.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
+      validateField(key) {
+        const v = (this.fields[key] || '').trim();
+        let msg = '';
+        if (key === 'name' && !v) msg = 'Enter your name so we know who to reply to.';
+        if (key === 'email') {
+          if (!v) msg = 'Enter an email address we can reach you at.';
+          else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) msg = 'That doesn’t look like a complete email address.';
+        }
+        if (key === 'topic' && !v) msg = 'Choose what your message is about.';
+        if (key === 'message' && !v) msg = 'Tell us what your enquiry is about.';
+        this.errors[key] = msg;
+        return !msg;
+      },
+      onBlur(key) { this.touched[key] = true; this.validateField(key); },
+      onInput(key) { if (this.touched[key]) this.validateField(key); },
 
-        <div>
-          <label for="message" class="data-label block mb-2">Message</label>
-          <textarea id="message" name="message" rows="4" required
-            class="w-full rounded-md border border-rule bg-paper px-4 py-3 text-body text-ink placeholder:text-ink-faint focus:border-navy focus:outline-none transition-colors duration-press resize-none"
-            placeholder="Tell us a little about what you're looking for"></textarea>
-        </div>
+      handleSubmit() {
+        if (this.submitting) return;
+        const keys = ['name', 'email', 'topic', 'message'];
+        keys.forEach((k) => { this.touched[k] = true; });
+        const ok = keys.map((k) => this.validateField(k)).every(Boolean);
+        if (!ok) {
+          this.$nextTick(() => {
+            const first = this.$root.querySelector('[aria-invalid="true"]');
+            if (first) first.focus();
+          });
+          return;
+        }
+        this.submitting = true;
+        this.submitEnquiry({ ...this.fields })
+          .then(() => { this.submitting = false; this.sent = true; this.$nextTick(() => { const h = this.$root.querySelector('.contact-confirm h3'); if (h) h.focus(); }); })
+          .catch(() => { this.submitting = false; });
+      },
 
-        <button type="submit" class="btn-primary justify-center" :disabled="submitting">
-          <span x-show="!submitting">Send message</span>
-          <span x-show="submitting" x-cloak>Sending&hellip;</span>
-        </button>
-      </form>
+      // -----------------------------------------------------------------
+      // THE ONE SUBMIT SEAM. Wiring this to the CRM (CLAUDE.md §7 —
+      // POST /api/public/submit/admizz/<formSlug>, Bearer form key, CORS)
+      // is a change to THIS FUNCTION ONLY. Today it resolves without sending.
+      // TODO: POST to CRM
+      // -----------------------------------------------------------------
+      submitEnquiry(payload) {
+        return Promise.resolve(payload);
+      },
 
-      <div x-show="sent" x-cloak class="py-12 text-center">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" class="mx-auto mb-4" aria-hidden="true">
-          <circle cx="20" cy="20" r="19" stroke="#8A5E10" stroke-width="1.4"/>
-          <path d="M12 20l6 6 10-12" stroke="#8A5E10" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <h2 class="text-h4 font-display font-book text-ink">Thanks — we'll be in touch.</h2>
-        <p class="mt-2 text-small text-ink-muted max-w-measure-tight mx-auto">A member of the Admizz team will reach out shortly.</p>
-      </div>
-    </div>
-
-  </div>
-</section>
+      topicLabel() {
+        return {
+          general: 'a general enquiry',
+          institute: 'Admizz Institute',
+          education: 'Admizz Education',
+          workforce: 'Admizz Workforce Solutions',
+        }[this.fields.topic] || 'your enquiry';
+      },
+    };
+  };
+</script>

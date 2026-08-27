@@ -5,36 +5,81 @@ description: Founded in 2015, Admizz Group has grown from a single idea into thr
 permalink: /about/
 ---
 
-{# ============================================================ PAGE HEADER
-   A full-width masthead stack, deliberately not the 14rem/1fr split grid used
-   elsewhere (Contact's header uses that grid for genuinely different content —
-   a details list beside a form; reusing it here for a single text block was
-   the repeated-module problem). Ventures' header is navy full-bleed; this one
-   is paper, single-column — a real structural difference, not just a recolor. #}
-<section class="bg-paper py-section">
-  <div class="shell max-w-measure">
-    <span class="eyebrow fade-up">Our Story</span>
-    <h1 class="mt-4 font-display font-light text-display-2 text-ink max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
-      Building since <em class="italic text-navy font-book">2015.</em>
-    </h1>
-    <p class="mt-6 text-body-lg text-ink-muted leading-relaxed fade-up" style="animation-delay:140ms">
-      {{ site.description }}
-    </p>
+{# ============================================================================
+   /about/ — "Our Story", rebuilt 2026-08-27 to the client-approved mockup.
+
+   Photography note:
+
+   hero-building-branded.png — supplied directly by the client (2026-08-27):
+   a brand-signage render, the Admizz logo composited onto a building
+   facade. NOT a photo of a real, confirmed Admizz office — used here on
+   the client's explicit instruction, purely as directional hero imagery,
+   after the fabricated-office-claim concern (CLAUDE.md non-negotiable #1)
+   was raised and the client chose to proceed. Nothing on the page states
+   or implies this IS an Admizz location. Flagged in
+   docs/briefs/LAUNCH-BLOCKERS.md — replace with real office photography,
+   or get explicit confirmation this render depicts a real location,
+   before the site goes public.
+
+   The four timeline thumbnails are stock photography sourced this session
+   (Pexels License — free for commercial use, no attribution required).
+   None depicts an actual Admizz location or person — atmospheric only,
+   same explicit-exception basis as the ecosystem photography (see
+   ecosystem-journey.njk). The founder photo is the one real, verified
+   image on this page.
+
+     timeline-2015.jpg   — pexels.com/photo/group-of-people-on-conference-room-1181396
+     timeline-2020.jpg   — pexels.com/photo/sunset-sky-above-city-building-silhouettes-5823921
+     timeline-2021.jpg   — pexels.com/photo/business-people-collaborating-together-7888680
+     timeline-today.jpg  — pexels.com/photo/abstract-pattern-of-modern-glass-facade-30650521
+   ============================================================================ #}
+
+{# ============================================================ HERO
+   Two columns: copy left, photo right — plain, no border/radius/shadow on
+   the photo, just the image sitting in its column. #}
+<section class="story-hero bg-paper">
+  <div class="shell story-hero-grid">
+    <div class="story-hero-copy">
+      <span class="eyebrow" data-hero-in>Our Story</span>
+      <h1 class="mt-4 font-display font-light text-display-2 text-ink text-balance" data-hero-in>
+        A journey of <em class="italic text-navy font-book">purpose.</em><br>
+        A future of <em class="italic text-gold font-book">impact.</em>
+      </h1>
+      <p class="mt-6 text-body-lg text-ink-muted max-w-measure-tight leading-relaxed" data-hero-in>
+        Since 2015, Admizz Group has worked at the intersection of education and opportunity &mdash; helping students and professionals find the preparation, guidance and pathways to their next milestone.
+      </p>
+      <a href="#journey" class="story-hero-cta" data-hero-in>
+        Our journey
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v9M4 8l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="story-hero-photo" data-hero-in>
+      {% imageEager "src/assets/images/story/hero-building-branded.png", "The Admizz mark on a building facade, directional brand imagery", "(min-width: 1000px) 44vw, 92vw" %}
+    </div>
   </div>
 </section>
 
-{# ============================================================ THE RECORD (full timeline) #}
-<section class="bg-paper-sunk py-section">
+{# ============================================================ TIMELINE #}
+<section id="journey" class="story-journey-section bg-paper-sunk py-section border-t border-rule" data-stack-outgoing>
   <div class="shell">
-    <span class="eyebrow fade-up">The Record</span>
-    <div class="mt-8 max-w-measure relative">
-      <div class="hidden md:block absolute left-8 inset-y-2 w-px bg-rule-strong" aria-hidden="true"></div>
+    <span class="eyebrow fade-up">The Journey</span>
+    <h2 class="mt-4 font-display font-light text-h1 text-ink max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
+      Milestones that shaped who we are.
+    </h2>
+
+    <div class="story-timeline-track" data-story-timeline>
+      <div class="story-timeline-line" aria-hidden="true"></div>
       {% for t in timeline %}
-      <div class="relative flex gap-6 md:gap-10 py-8 border-t border-rule first:border-t-0 fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
-        <span class="font-mono text-small text-navy-soft font-medium tabular-nums shrink-0 w-16 relative z-10 bg-paper-sunk">{{ t.year }}</span>
-        <div>
-          <h2 class="text-h3 font-display font-book text-ink">{{ t.label }}</h2>
-          <p class="mt-2 text-body text-ink-muted leading-relaxed">{{ t.text }}</p>
+      <div class="story-timeline-row">
+        <span class="story-timeline-dot" aria-hidden="true"></span>
+        <div class="story-timeline-body">
+          <span class="story-timeline-year font-mono text-small font-medium tabular-nums text-navy-soft">{{ t.year }}</span>
+          <h3 class="mt-1.5 font-display font-book text-h3 text-ink">{{ t.label }}</h3>
+          <p class="mt-1.5 text-body text-ink-muted leading-relaxed max-w-measure-tight">{{ t.text }}</p>
+        </div>
+        <div class="story-timeline-photo">
+          {% image "src/assets/images/story/" + t.image, t.imageAlt, "(min-width: 700px) 22rem, 90vw" %}
         </div>
       </div>
       {% endfor %}
@@ -42,8 +87,47 @@ permalink: /about/
   </div>
 </section>
 
-{# ============================================================ FOUNDER #}
-<section class="bg-paper py-section">
+{# ============================================================ THREE BUSINESSES
+   Same subjects as /ventures/, a lighter-touch summary here with a direct
+   link to each record. "Learn more" points at the real in-page anchor
+   /ventures/ already exposes (verified: id="record-{id}" on that page). #}
+<section class="story-businesses-section bg-paper py-section" data-stack-incoming>
+  <div class="shell">
+    <span class="eyebrow fade-up">Our Businesses</span>
+    <h2 class="mt-4 font-display font-light text-h1 text-ink max-w-[18ch] text-balance fade-up" style="animation-delay:80ms">
+      Three businesses. <em class="italic text-navy font-book">One purpose.</em>
+    </h2>
+    <p class="mt-4 text-body text-ink-muted max-w-measure-tight leading-relaxed fade-up" style="animation-delay:120ms">
+      Different focus areas, a shared conviction that access to opportunity shouldn&rsquo;t depend on where someone starts.
+    </p>
+
+    <div class="story-venture-grid mt-10">
+      {% for v in ventures %}
+      <article class="story-venture-card" data-story-venture-card>
+        <span class="story-venture-icon story-venture-icon-{{ v.id }}" aria-hidden="true">
+          {% if v.id == "institute" %}
+          <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          {% elif v.id == "education" %}
+          <svg viewBox="0 0 20 20" fill="none" focusable="false"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 10h15M10 2.5c4 4.5 4 10.5 0 15-4-4.5-4-10.5 0-15z" stroke="currentColor" stroke-width="1.4"/></svg>
+          {% else %}
+          <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 16V9M8 16V4M13 16v-5M18 16V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          {% endif %}
+        </span>
+        <h3 class="mt-4 font-display font-book text-h4 text-ink">{{ v.name }}</h3>
+        <p class="mt-1 font-mono text-micro uppercase tracking-widest text-navy-soft">{{ v.vertical }}</p>
+        <p class="mt-3 text-small text-ink-muted leading-relaxed">{{ v.verticalLine }}</p>
+        <a href="/ventures/#record-{{ v.id }}" class="story-venture-link">
+          Learn more
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ============================================================ LEADERSHIP #}
+<section class="bg-paper-sunk py-section border-t border-rule">
   <div class="shell grid grid-cols-1 md:grid-cols-[minmax(0,22rem)_1fr] gap-10 md:gap-16 items-start">
     <div class="fade-up">
       <div class="rounded-lg overflow-hidden bg-navy-deep">
@@ -52,7 +136,7 @@ permalink: /about/
     </div>
     <div class="fade-up" style="animation-delay:100ms">
       <span class="eyebrow">Leadership</span>
-      <h2 class="mt-3 font-display font-light text-h2 text-ink max-w-[16ch] text-balance">A vision for what's next.</h2>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink max-w-[16ch] text-balance">A vision for what&rsquo;s next.</h2>
       <blockquote class="mt-8 font-display italic font-book text-h3 text-ink leading-snug max-w-measure text-balance">
         &ldquo;{{ site.founder.quote }}&rdquo;
       </blockquote>
@@ -65,13 +149,12 @@ permalink: /about/
 {# ============================================================ CLOSE #}
 <section class="relative overflow-hidden bg-navy-deep py-section">
   {% include "partials/facet-field.njk" %}
-  <div class="shell relative text-center flex flex-col items-center">
-    <span class="eyebrow-on-navy fade-up">Our Ventures</span>
-    <h2 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
-      See where <em class="italic text-navy-accent font-book">we operate.</em>
-    </h2>
-    <div class="mt-10 fade-up" style="animation-delay:160ms">
-      <a href="/ventures/" class="btn-primary">Explore our ventures</a>
+  <div class="shell relative grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-end gap-8">
+    <div class="fade-up">
+      <p class="font-display font-light text-display-2 text-navy-on max-w-[20ch] text-balance">
+        The story continues. <em class="italic text-navy-accent font-book">We&rsquo;re just getting started.</em>
+      </p>
     </div>
+    <a href="/ventures/" class="btn-primary shrink-0 fade-up" style="animation-delay:80ms">Explore our ventures</a>
   </div>
 </section>
