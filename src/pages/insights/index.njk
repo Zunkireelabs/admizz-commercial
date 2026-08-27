@@ -88,7 +88,9 @@ permalink: /insights/
     {# Hidden outright when neither of the 2 grid posts matches the active
        filter (i.e. filtered to the featured post's own venture) — so no
        empty bordered strip is left behind either. #}
-    <div class="insights-grid mt-4" x-show="active === 'all' || active === 'Admizz Institute' || active === 'Admizz Workforce Solutions'">
+    <div class="insights-grid mt-4"
+      :class="active === 'all' ? '' : 'is-narrowed'"
+      x-show="active === 'all' || active === 'Admizz Institute' || active === 'Admizz Workforce Solutions'">
       {% for post in insights %}{% if not post.featured %}
       <article class="insights-card fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms" x-show="active === 'all' || active === '{{ post.venture }}'">
         <a href="/insights/{{ post.slug }}/" class="insights-card-photo">

@@ -1416,9 +1416,21 @@
 /* ---------- The rest, 2-up ---------- */
 /* auto-fit, not a fixed repeat(2, ...): a fixed 2-column grid left an
    empty column when a filter dropped the visible card count to one.
-   auto-fit collapses a track with no participating (display:none) items,
-   so a single visible card automatically fills the row — same 2-up look
-   whenever both cards are visible, no dead gap when only one is. */
+
+   FIRST attempt used grid-template-columns: repeat(auto-fit, minmax(18rem,
+   1fr)) to solve that, relying on auto-fit collapsing a track with no
+   visible items. That has a real side effect: auto-fit ALSO collapses to
+   1 column whenever the container is too narrow to fit 2 tracks of the
+   minmax minimum — which happens on an ordinary un-maximized browser
+   window, not just when a filter reduces the count. Both real cards would
+   then stack full-width and, because .insights-card-photo has a fixed
+   aspect-ratio, render enormous — exactly what got reported as "broken".
+
+   Fixed properly: grid-template-columns is a real fixed repeat(2, ...) at
+   this breakpoint (never width-dependent), and .is-narrowed — set by
+   Alpine only when a filter actually reduces the visible count to one —
+   is what switches it to a single full-width column. Column count now
+   tracks the real number of visible cards, never the viewport width. */
 .insights-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1427,7 +1439,8 @@
   border-top: 1px solid theme("colors.rule.DEFAULT");
 }
 @media (min-width: 700px) {
-  .insights-grid { grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 3rem; }
+  .insights-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+  .insights-grid.is-narrowed { grid-template-columns: 1fr; }
 }
 .insights-card-photo {
   display: block;
