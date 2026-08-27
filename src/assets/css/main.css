@@ -1163,7 +1163,10 @@
   border-radius: theme("borderRadius.xl");
   overflow: hidden;
   aspect-ratio: 5 / 4;
-  background-color: theme("colors.navy.deep");
+  /* No fill colour — the current hero source (hero-building-branded.png)
+     has a transparent corner, and this now shows the page's own paper
+     ground through it rather than a solid navy block. */
+  background-color: transparent;
   box-shadow: theme("boxShadow.lift");
 }
 .story-hero-photo :is(picture, img) {
