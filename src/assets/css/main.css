@@ -1515,21 +1515,26 @@
   color: theme("colors.ink.DEFAULT");
 }
 
-/* ---------- /insights/<slug>/ masthead record numeral ---------- */
+/* ---------- /insights/<slug>/ masthead mark ---------- */
 .insights-hero { position: relative; overflow: hidden; }
-.insights-hero-index {
+.insights-hero-mark {
   position: absolute;
   top: 50%;
-  right: clamp(-1rem, 4vw, 3rem);
+  right: clamp(-3rem, 6vw, 2rem);
   transform: translateY(-50%);
-  font-family: theme("fontFamily.display");
-  font-variation-settings: "wght" 260;
-  font-size: clamp(14rem, 26vw, 22rem);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  color: theme("colors.navy.on-muted / 12%");
+  width: clamp(11rem, 16vw, 15rem);
+  aspect-ratio: 210 / 308;
+  overflow: hidden;
+  /* filter, not opacity — data-hero-in's GSAP entrance animates the
+     element's opacity via inline style (0 -> 1), which would silently
+     override a plain `opacity` rule here once it finishes (inline style
+     always wins). filter:opacity() achieves the same faint look without
+     touching the property GSAP owns. */
+  filter: opacity(7%);
+  object-fit: cover;
+  object-position: left center;
   pointer-events: none;
 }
 @media (max-width: 900px) {
-  .insights-hero-index { display: none; }
+  .insights-hero-mark { display: none; }
 }

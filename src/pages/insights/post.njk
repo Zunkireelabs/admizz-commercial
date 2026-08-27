@@ -25,19 +25,13 @@ eleventyComputed:
    ============================================================================ #}
 
 <section class="insights-hero bg-navy-deep py-section-sm">
-  {# Large faint record-index numeral — fills the dead space with real data
-     instead of decoration: the same `index` field /ventures/ uses to
-     number these three businesses ("Record 01/03" etc.), so a reader who
-     notices it and clicks through sees the same number meaning the same
-     thing. Replaces an earlier line-icon watermark that read as an
-     unclear blob once scaled up this large — a numeral stays legible at
-     any size, an abstract icon doesn't. facet-field.njk (the site's other
-     navy texture) is reserved for bookend sections with a matching
-     open+close pair — this page has no navy close, so it isn't one;
-     left untouched. #}
-  {% for v in ventures %}{% if v.name == post.venture %}
-  <span class="insights-hero-index" aria-hidden="true">{{ v.index }}</span>
-  {% endif %}{% endfor %}
+  {# Large faint Admizz mark — simple, on purpose: the real brand mark
+     (same asset the header uses inverted, and /ventures/'s field diagram
+     crops), not a per-venture icon or number that needed explaining.
+     Kept plain: no bespoke draw-in, just the same on-load fade the rest
+     of this masthead already uses (data-hero-in). #}
+  <img src="/assets/images/brand/mark-white.png" alt="" width="1024" height="308"
+    class="insights-hero-mark" data-hero-in aria-hidden="true">
 
   <div class="shell relative">
     <a href="/insights/" class="inline-flex items-center gap-2 text-small font-medium text-navy-on-muted hover:text-navy-soft transition-colors duration-press ease-signature fade-up">
