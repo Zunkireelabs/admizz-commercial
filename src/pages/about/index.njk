@@ -34,27 +34,29 @@ permalink: /about/
      timeline-today.jpg  — pexels.com/photo/abstract-pattern-of-modern-glass-facade-30650521
    ============================================================================ #}
 
-{# ============================================================ HERO #}
-<section class="story-hero bg-paper">
-  <div class="shell story-hero-grid">
-    <div class="story-hero-copy">
-      <span class="eyebrow" data-hero-in>Our Story</span>
-      <h1 class="mt-4 font-display font-light text-display-2 text-ink text-balance" data-hero-in>
-        A journey of <em class="italic text-navy font-book">purpose.</em><br>
-        A future of <em class="italic text-navy font-book">impact.</em>
-      </h1>
-      <p class="mt-6 text-body-lg text-ink-muted max-w-measure-tight leading-relaxed" data-hero-in>
-        Since 2015, Admizz Group has worked at the intersection of education and opportunity &mdash; helping students and professionals find the preparation, guidance and pathways to their next milestone.
-      </p>
-      <a href="#journey" class="story-hero-cta" data-hero-in>
-        Our journey
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v9M4 8l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </div>
-
-    <div class="story-hero-photo" data-hero-in>
-      {% imageEager "src/assets/images/story/hero-building-branded.png", "The Admizz mark on a building facade, directional brand imagery", "(min-width: 1000px) 44vw, 92vw" %}
-    </div>
+{# ============================================================ HERO
+   Full-bleed — the photo runs edge-to-edge and behind the header (no
+   navyHeader flag needed: the header's default white-pill state already
+   reads correctly against this light photo, unlike its ghost/navy state
+   which is built for dark grounds). Copy overlays the photo on a scrim. #}
+<section class="story-hero-full">
+  <div class="story-hero-photo-full" data-hero-in>
+    {% imageEager "src/assets/images/story/hero-building-branded.png", "The Admizz mark on a building facade, directional brand imagery", "100vw" %}
+  </div>
+  <div class="story-hero-scrim-full" aria-hidden="true"></div>
+  <div class="shell story-hero-copy-full">
+    <span class="eyebrow-on-navy" data-hero-in>Our Story</span>
+    <h1 class="mt-4 font-display font-light text-display-2 text-navy-on text-balance" data-hero-in>
+      A journey of <em class="italic text-navy-accent font-book">purpose.</em><br>
+      A future of <em class="italic text-navy-accent font-book">impact.</em>
+    </h1>
+    <p class="mt-6 text-body-lg text-navy-on-muted max-w-measure-tight leading-relaxed" data-hero-in>
+      Since 2015, Admizz Group has worked at the intersection of education and opportunity &mdash; helping students and professionals find the preparation, guidance and pathways to their next milestone.
+    </p>
+    <a href="#journey" class="story-hero-cta" data-hero-in>
+      Our journey
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v9M4 8l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
   </div>
 </section>
 
