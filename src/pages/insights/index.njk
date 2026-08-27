@@ -9,7 +9,7 @@ permalink: /insights/
    /insights/ — rebuilt 2026-08-27 to the client's reference layout: a photo
    masthead, a venture filter, one featured row, a 2-up grid for the rest.
 
-   Two things in the reference were NOT carried over, on purpose:
+   Things NOT carried over from the reference, on purpose:
 
    1. The reference's filter pills were 5 categories (All / Education /
       Careers / Exams / Global Opportunities) that don't match anything in
@@ -24,20 +24,18 @@ permalink: /insights/
       All three posts are short, so it genuinely reads "1 min read" — a
       true number, not a rounder-looking invented one.
 
-   Masthead photo (masthead-notes.jpg) is new stock photography (Pexels
+   The 2-up grid uses `grid-template-columns: repeat(auto-fit, minmax(...))`
+   (main.css), not a fixed `repeat(2, ...)`. A fixed 2-column grid was tried
+   first and reintroduced the exact bug this page shipped without earlier:
+   filtering down to one visible card left its sibling's column empty.
+   auto-fit collapses that empty track, so a single visible card fills the
+   row — no JS counting needed, and the grid still reads as 2-up whenever
+   both cards are visible (the reference's actual look, by default).
+
+   Masthead photo (masthead-notes.jpg) is stock photography (Pexels
    License, free commercial use, no attribution required) — atmospheric
    only, not a real Admizz space, same basis as the /about/ and /ventures/
-   photography exceptions. Swapped 2026-08-27: the original was a
-   decorative still life (a vase and a stack of books) with no connection
-   to the page's subject; this one is someone actually writing out ideas,
-   which the page is about.
-
-   Every post uses the SAME photo-left/content-right row (the "Featured"
-   treatment) — there is no separate 2-column grid for the other two.
-   That was a deliberate fix: with a grid, filtering down to one result
-   left its sibling's column empty (a visible hole). A stack of full-width
-   rows has nothing to leave empty — filtering just shows or hides whole
-   rows.
+   photography exceptions.
    ============================================================================ #}
 
 <section class="insights-masthead bg-paper">
@@ -68,31 +66,46 @@ permalink: /insights/
       {% endfor %}
     </div>
 
-    <div class="insights-list">
-      {% for post in insights %}
-      <article class="insights-feature fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms" x-show="active === 'all' || active === '{{ post.venture }}'">
-        <a href="/insights/{{ post.slug }}/" class="insights-feature-photo">
-          {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 900px) 50vw, 92vw" %}
+    {% for post in insights %}{% if post.featured %}
+    <article class="insights-feature mt-10 fade-up" x-show="active === 'all' || active === '{{ post.venture }}'">
+      <a href="/insights/{{ post.slug }}/" class="insights-feature-photo">
+        {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 900px) 50vw, 92vw" %}
+      </a>
+      <div class="insights-feature-body">
+        <span class="font-mono text-micro uppercase tracking-widest text-gold-text">Featured</span>
+        <h2 class="mt-3 font-display font-book text-h2 text-ink text-balance">
+          <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+        </h2>
+        <p class="mt-3 text-body text-ink-muted max-w-measure-tight leading-relaxed">{{ post.deck }}</p>
+        <div class="insights-row-foot mt-5">
+          <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy link-underline">Read the article &rarr;</a>
+          <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
+        </div>
+      </div>
+    </article>
+    {% endif %}{% endfor %}
+
+    {# Hidden outright when neither of the 2 grid posts matches the active
+       filter (i.e. filtered to the featured post's own venture) — so no
+       empty bordered strip is left behind either. #}
+    <div class="insights-grid mt-4" x-show="active === 'all' || active === 'Admizz Institute' || active === 'Admizz Workforce Solutions'">
+      {% for post in insights %}{% if not post.featured %}
+      <article class="insights-card fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms" x-show="active === 'all' || active === '{{ post.venture }}'">
+        <a href="/insights/{{ post.slug }}/" class="insights-card-photo">
+          {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 700px) 34vw, 92vw" %}
         </a>
-        <div class="insights-feature-body">
-          <div class="insights-feature-meta">
-            <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
-            {% if post.featured %}
-            <span aria-hidden="true">&middot;</span>
-            <span class="font-mono text-micro uppercase tracking-widest text-gold-text">Featured</span>
-            {% endif %}
-          </div>
-          <h2 class="mt-3 font-display font-book text-h2 text-ink text-balance">
-            <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
-          </h2>
-          <p class="mt-3 text-body text-ink-muted max-w-measure-tight leading-relaxed">{{ post.deck }}</p>
-          <div class="insights-row-foot mt-5">
-            <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy link-underline">Read the article &rarr;</a>
-            <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
-          </div>
+        <span class="insights-card-num" aria-hidden="true">{{ "0" }}{{ loop.index }}</span>
+        <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
+        <h2 class="mt-2 font-display font-book text-h4 text-ink">
+          <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+        </h2>
+        <p class="mt-2 text-small text-ink-muted">{{ post.deck }}</p>
+        <div class="insights-row-foot mt-4">
+          <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy link-underline">Read the article &rarr;</a>
+          <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
         </div>
       </article>
-      {% endfor %}
+      {% endif %}{% endfor %}
     </div>
   </div>
 </section>
