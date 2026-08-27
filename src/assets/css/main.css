@@ -1192,36 +1192,56 @@
 .story-timeline-row {
   position: relative;
   padding-left: 2.25rem;
-  padding-block: 1.85rem;
+  padding-block: 1.5rem;
   border-top: 1px solid theme("colors.rule.DEFAULT");
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
   align-items: center;
+  /* Resting state IS full presence (see the .fade-up comment block above)
+     — .is-active only ever ADDS a lift/shadow as the row crosses the
+     viewport centre; a row that never gets that class (no-JS, reduced
+     motion, JS never loaded) simply stays at this same resting look. */
+  transform: translateY(0) scale(1);
+  transition: transform theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
+    opacity theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
 }
 .story-timeline-row:first-child { border-top: 0; padding-top: 0.5rem; }
 @media (min-width: 700px) {
   .story-timeline-row { grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; }
 }
+/* Scroll-driven "active card" — main.js toggles .is-active as each row
+   crosses the viewport centre. Purely additive (a lift + shadow); nothing
+   here ever drops a resting row below full opacity, so the base "no
+   hiding by default" rule still holds even with JS attached. */
+.story-timeline-row.is-active {
+  transform: translateY(-3px) scale(1.008);
+}
+.story-timeline-row.is-active .story-timeline-photo {
+  box-shadow: theme("boxShadow.lift");
+}
 .story-timeline-dot {
   position: absolute;
   left: -1px;
-  top: 2.5rem;
+  top: 2.1rem;
   width: 9px;
   height: 9px;
   border-radius: theme("borderRadius.full");
   background-color: theme("colors.navy.DEFAULT");
   box-shadow: 0 0 0 4px theme("colors.paper.sunk");
+  transition: transform theme("transitionDuration.press") theme("transitionTimingFunction.signature");
 }
-.story-timeline-row:first-child .story-timeline-dot { top: 1.1rem; }
+.story-timeline-row:first-child .story-timeline-dot { top: 0.7rem; }
+.story-timeline-row.is-active .story-timeline-dot { transform: scale(1.5); }
 .story-timeline-photo {
   width: 100%;
-  max-width: 11rem;
-  aspect-ratio: 4 / 3;
+  max-width: 22rem;
+  aspect-ratio: 12 / 5;
   border-radius: theme("borderRadius.lg");
   overflow: hidden;
   background-color: theme("colors.navy.deep");
   flex: none;
+  transition: box-shadow theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
 }
 .story-timeline-photo :is(picture, img) {
   width: 100%;
@@ -1277,3 +1297,18 @@
     color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
 }
 .story-venture-link:hover { color: theme("colors.navy.DEFAULT"); border-color: theme("colors.navy.DEFAULT"); }
+
+/* ---------- Section stacking: Journey → Three Businesses ---------- */
+/* GSAP (main.js) pins .story-journey-section briefly once its bottom
+   reaches the viewport bottom; the incoming section is already visually a
+   "card" (rounded top + shadow, both static CSS, not JS-dependent) so the
+   pin just gives the handoff a beat instead of an instant cut. With no JS
+   the two sections still read fine as an ordinary stacked pair — the
+   radius/shadow alone already signal "the next thing sits on top". */
+.story-journey-section { position: relative; z-index: 1; }
+.story-businesses-section {
+  position: relative;
+  z-index: 2;
+  border-radius: 1.75rem 1.75rem 0 0;
+  box-shadow: 0 -28px 56px -24px rgba(22, 27, 77, 0.22);
+}

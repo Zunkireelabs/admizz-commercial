@@ -49,7 +49,7 @@ permalink: /about/
 </section>
 
 {# ============================================================ TIMELINE #}
-<section id="journey" class="bg-paper-sunk py-section border-t border-rule">
+<section id="journey" class="story-journey-section bg-paper-sunk py-section border-t border-rule" data-stack-outgoing>
   <div class="shell">
     <span class="eyebrow fade-up">The Journey</span>
     <h2 class="mt-4 font-display font-light text-h1 text-ink max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
@@ -67,7 +67,7 @@ permalink: /about/
           <p class="mt-1.5 text-body text-ink-muted leading-relaxed max-w-measure-tight">{{ t.text }}</p>
         </div>
         <div class="story-timeline-photo">
-          {% image "src/assets/images/story/" + t.image, t.imageAlt, "(min-width: 700px) 9rem, 40vw" %}
+          {% image "src/assets/images/story/" + t.image, t.imageAlt, "(min-width: 700px) 22rem, 90vw" %}
         </div>
       </div>
       {% endfor %}
@@ -79,7 +79,7 @@ permalink: /about/
    Same subjects as /ventures/, a lighter-touch summary here with a direct
    link to each record. "Learn more" points at the real in-page anchor
    /ventures/ already exposes (verified: id="record-{id}" on that page). #}
-<section class="bg-paper py-section border-t border-rule">
+<section class="story-businesses-section bg-paper py-section" data-stack-incoming>
   <div class="shell">
     <span class="eyebrow fade-up">Our Businesses</span>
     <h2 class="mt-4 font-display font-light text-h1 text-ink max-w-[18ch] text-balance fade-up" style="animation-delay:80ms">

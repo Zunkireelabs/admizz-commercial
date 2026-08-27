@@ -468,6 +468,18 @@ if (!prefersReducedMotion) {
         if (dot) { gsap.set(dot, { scale: 0 }); tl.to(dot, { scale: 1, duration: 0.4 }, 0); }
         if (body) { gsap.set(body, { opacity: 0, y: 14 }); tl.to(body, { opacity: 1, y: 0, duration: 0.6 }, 0.05); }
         if (photo) { gsap.set(photo, { opacity: 0, y: 14 }); tl.to(photo, { opacity: 1, y: 0, duration: 0.6 }, 0.12); }
+
+        // Ongoing scroll feedback, separate from the one-shot arrival above:
+        // .is-active toggles as THIS row crosses the viewport centre, purely
+        // additive (lift + shadow + dot pop — see main.css), so the row
+        // that's actually being read stands off the page a little rather
+        // than every row just sitting flat once revealed.
+        ScrollTrigger.create({
+          trigger: row,
+          start: 'top center',
+          end: 'bottom center',
+          onToggle: (self) => row.classList.toggle('is-active', self.isActive),
+        });
       });
     }
 
@@ -483,6 +495,28 @@ if (!prefersReducedMotion) {
         defaults: { ease: 'signature', duration: 0.6 },
         scrollTrigger: { trigger: storyVentureCards[0].closest('section'), start: 'top 75%' },
       }).to(storyVentureCards, { opacity: 1, y: 0, stagger: 0.1 });
+    }
+
+    // -----------------------------------------------------------------
+    // /about/ — Journey → Three Businesses card-stack handoff.
+    //
+    // The incoming section is already visually a "card" in pure CSS
+    // (rounded top + shadow, main.css) — that part needs no JS and holds
+    // even with motion off. What GSAP adds is timing: pin the outgoing
+    // section briefly once its bottom reaches the viewport bottom, so the
+    // next section's rounded edge visibly slides up and over it instead of
+    // an instant cut. pinSpacing:false — the incoming section is already
+    // next in normal flow, so no extra gap should open up while pinned.
+    // -----------------------------------------------------------------
+    const stackOutgoing = document.querySelector('[data-stack-outgoing]');
+    if (stackOutgoing) {
+      ScrollTrigger.create({
+        trigger: stackOutgoing,
+        start: 'bottom bottom',
+        end: '+=220',
+        pin: true,
+        pinSpacing: false,
+      });
     }
   });
 }
