@@ -1515,19 +1515,21 @@
   color: theme("colors.ink.DEFAULT");
 }
 
-/* ---------- /insights/<slug>/ masthead icon ---------- */
+/* ---------- /insights/<slug>/ masthead record numeral ---------- */
 .insights-hero { position: relative; overflow: hidden; }
-.insights-hero-icon {
+.insights-hero-index {
   position: absolute;
   top: 50%;
-  right: clamp(-2rem, 4vw, 4rem);
+  right: clamp(-1rem, 4vw, 3rem);
   transform: translateY(-50%);
-  width: clamp(14rem, 22vw, 20rem);
-  height: clamp(14rem, 22vw, 20rem);
-  color: theme("colors.navy.on-muted / 14%");
+  font-family: theme("fontFamily.display");
+  font-variation-settings: "wght" 260;
+  font-size: clamp(14rem, 26vw, 22rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: theme("colors.navy.on-muted / 12%");
   pointer-events: none;
 }
-.insights-hero-icon svg { width: 100%; height: 100%; }
 @media (max-width: 900px) {
-  .insights-hero-icon { display: none; }
+  .insights-hero-index { display: none; }
 }

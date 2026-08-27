@@ -25,24 +25,18 @@ eleventyComputed:
    ============================================================================ #}
 
 <section class="insights-hero bg-navy-deep py-section-sm">
-  {# Large faint venture-icon watermark — fills the dead space on a plain
-     navy block without inventing a new device: reuses the exact icon
-     language /ventures/'s field diagram and /about/'s business cards
-     already established for Institute/Education/Workforce, rather than
-     new artwork or a photo that would duplicate the real one right below
-     in the body. facet-field.njk (the site's other navy texture) is
-     reserved for bookend sections with a matching open+close pair —
-     this page has no navy close, so it isn't one; left untouched. #}
+  {# Large faint record-index numeral — fills the dead space with real data
+     instead of decoration: the same `index` field /ventures/ uses to
+     number these three businesses ("Record 01/03" etc.), so a reader who
+     notices it and clicks through sees the same number meaning the same
+     thing. Replaces an earlier line-icon watermark that read as an
+     unclear blob once scaled up this large — a numeral stays legible at
+     any size, an abstract icon doesn't. facet-field.njk (the site's other
+     navy texture) is reserved for bookend sections with a matching
+     open+close pair — this page has no navy close, so it isn't one;
+     left untouched. #}
   {% for v in ventures %}{% if v.name == post.venture %}
-  <span class="insights-hero-icon" aria-hidden="true">
-    {% if v.id == "institute" %}
-    <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
-    {% elif v.id == "education" %}
-    <svg viewBox="0 0 20 20" fill="none" focusable="false"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.1"/><path d="M2.5 10h15M10 2.5c4 4.5 4 10.5 0 15-4-4.5-4-10.5 0-15z" stroke="currentColor" stroke-width="1.1"/></svg>
-    {% else %}
-    <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 16V9M8 16V4M13 16v-5M18 16V7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
-    {% endif %}
-  </span>
+  <span class="insights-hero-index" aria-hidden="true">{{ v.index }}</span>
   {% endif %}{% endfor %}
 
   <div class="shell relative">
