@@ -174,6 +174,45 @@
   .data-label-on-navy {
     @apply font-mono text-micro uppercase tracking-widest text-navy-on-muted;
   }
+
+  /* Academic-network register — same visual family as .data-row (flat,
+     hairline rule, no shadow), but a real <button> since each row toggles
+     an Alpine-collapse panel. Full-width, left-aligned text, no button
+     chrome of its own — reset first, then styled to read exactly like the
+     data rows around it. */
+  .academic-network-row {
+    @apply flex w-full items-center justify-between gap-6 py-4 border-t border-rule;
+    @apply text-left transition-colors duration-press ease-signature;
+  }
+  .academic-network-row:hover,
+  .academic-network-row:focus-visible {
+    @apply text-navy;
+  }
+  .academic-network-row:hover .academic-network-chevron,
+  .academic-network-row:focus-visible .academic-network-chevron {
+    @apply text-navy;
+  }
+  div:last-child > .academic-network-row {
+    @apply border-b border-rule;
+  }
+
+  .academic-network-list {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2.5 pb-6 pt-1 pl-9 pr-2;
+  }
+  .academic-network-item {
+    @apply flex items-center gap-2.5 text-small text-ink-muted;
+  }
+  /* Fixed-width BOX, not a fixed-size image — the source logos are mixed
+     aspect ratios (wide wordmarks, square crests), so forcing the <img>
+     itself to a 16x16 square squashed most of them into illegible smudges.
+     The box centers each logo at its own ratio, height-capped, width-capped;
+     object-contain on the img means nothing gets cropped or stretched. */
+  .academic-network-mark-box {
+    @apply shrink-0 w-7 h-5 flex items-center justify-center;
+  }
+  .academic-network-mark {
+    @apply max-w-full max-h-full object-contain grayscale opacity-80;
+  }
 }
 
 /* =====================================================
