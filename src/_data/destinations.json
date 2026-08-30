@@ -1,0 +1,16 @@
+{
+  "_note": "The 9 study destinations Admizz Education supports, each with a live destination page on admizzeducation.com. Harvested 2026-08-30.",
+  "source": "admizzeducation",
+  "status": "draft",
+  "countries": [
+    { "name": "United States", "code": "usa", "flag": "🇺🇸", "href": "https://admizzeducation.com/study-in-the-usa" },
+    { "name": "United Kingdom", "code": "uk", "flag": "🇬🇧", "href": "https://admizzeducation.com/study-in-the-uk" },
+    { "name": "Australia", "code": "australia", "flag": "🇦🇺", "href": "https://admizzeducation.com/study-in-australia" },
+    { "name": "Canada", "code": "canada", "flag": "🇨🇦", "href": "https://admizzeducation.com/study-in-canada" },
+    { "name": "India", "code": "india", "flag": "🇮🇳", "href": "https://admizzeducation.com/study-in-india" },
+    { "name": "New Zealand", "code": "new-zealand", "flag": "🇳🇿", "href": "https://admizzeducation.com/study-in-newzealand" },
+    { "name": "Finland", "code": "finland", "flag": "🇫🇮", "href": "https://admizzeducation.com/study-in-finland" },
+    { "name": "Germany", "code": "germany", "flag": "🇩🇪", "href": "https://admizzeducation.com/study-in-germany" },
+    { "name": "France", "code": "france", "flag": "🇫🇷", "href": "https://admizzeducation.com/study-in-france" }
+  ]
+}

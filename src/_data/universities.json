@@ -1,0 +1,487 @@
+{
+  "_note": "Harvested from admizzeducation.com (Admizz Group sister property), 2026-08-30. source: admizzeducation. Re-run scripts/harvest-university-logos.mjs to refresh.",
+  "source": "admizzeducation",
+  "status": "draft",
+  "totalCount": 104,
+  "groups": [
+    {
+      "country": "United Kingdom",
+      "code": "uk",
+      "flag": "🇬🇧",
+      "universities": [
+        {
+          "name": "Buckinghamshire New University",
+          "logo": "/assets/images/universities/uk/buckinghamshire-new-university.webp"
+        },
+        {
+          "name": "BPP University",
+          "logo": "/assets/images/universities/uk/bpp-university.webp"
+        },
+        {
+          "name": "Coventry University",
+          "logo": "/assets/images/universities/uk/coventry-university.webp"
+        },
+        {
+          "name": "Health Sciences University",
+          "logo": "/assets/images/universities/uk/health-sciences-university.webp"
+        },
+        {
+          "name": "Ravensbourne University London",
+          "logo": "/assets/images/universities/uk/ravensbourne-university-london.webp"
+        },
+        {
+          "name": "University of Sunderland",
+          "logo": "/assets/images/universities/uk/university-of-sunderland.webp"
+        },
+        {
+          "name": "University of East London",
+          "logo": "/assets/images/universities/uk/university-of-east-london.webp"
+        },
+        {
+          "name": "Ulster University",
+          "logo": "/assets/images/universities/uk/ulster-university.webp"
+        },
+        {
+          "name": "University of Greenwich",
+          "logo": "/assets/images/universities/uk/university-of-greenwich.webp"
+        },
+        {
+          "name": "The University of Law",
+          "logo": "/assets/images/universities/uk/the-university-of-law.webp"
+        },
+        {
+          "name": "University of Roehampton",
+          "logo": "/assets/images/universities/uk/university-of-roehampton.webp"
+        },
+        {
+          "name": "University of Worcester",
+          "logo": "/assets/images/universities/uk/university-of-worcester.webp"
+        },
+        {
+          "name": "University of West London",
+          "logo": "/assets/images/universities/uk/university-of-west-london.webp"
+        },
+        {
+          "name": "University of the West of Scotland",
+          "logo": "/assets/images/universities/uk/university-of-the-west-of-scotland.webp"
+        },
+        {
+          "name": "York St John University",
+          "logo": "/assets/images/universities/uk/york-st-john-university.webp"
+        }
+      ]
+    },
+    {
+      "country": "United States",
+      "code": "usa",
+      "flag": "🇺🇸",
+      "universities": [
+        {
+          "name": "Colorado State University",
+          "logo": "/assets/images/universities/usa/colorado-state-university.webp"
+        },
+        {
+          "name": "Webster University",
+          "logo": "/assets/images/universities/usa/webster-university.webp"
+        },
+        {
+          "name": "Avila University",
+          "logo": "/assets/images/universities/usa/avila-university.webp"
+        },
+        {
+          "name": "Concordia University",
+          "logo": "/assets/images/universities/usa/concordia-university.webp"
+        },
+        {
+          "name": "Southeast Missouri State University",
+          "logo": "/assets/images/universities/usa/southeast-missouri-state-university.webp"
+        },
+        {
+          "name": "Herzing University",
+          "logo": "/assets/images/universities/usa/herzing-university.webp"
+        },
+        {
+          "name": "Wright State University",
+          "logo": "/assets/images/universities/usa/wright-state-university.webp"
+        },
+        {
+          "name": "Washington University",
+          "logo": "/assets/images/universities/usa/washington-university.webp"
+        },
+        {
+          "name": "Texas State University",
+          "logo": "/assets/images/universities/usa/texas-state-university.webp"
+        },
+        {
+          "name": "Murray State University",
+          "logo": "/assets/images/universities/usa/murray-state-university.webp"
+        },
+        {
+          "name": "Youngstown State University",
+          "logo": "/assets/images/universities/usa/youngstown-state-university.webp"
+        },
+        {
+          "name": "University of Central Arkansas",
+          "logo": "/assets/images/universities/usa/university-of-central-arkansas.webp"
+        },
+        {
+          "name": "Dakota State University",
+          "logo": "/assets/images/universities/usa/dakota-state-university.webp"
+        },
+        {
+          "name": "University of South Dakota",
+          "logo": "/assets/images/universities/usa/university-of-south-dakota.webp"
+        },
+        {
+          "name": "Pacific Oaks College",
+          "logo": "/assets/images/universities/usa/pacific-oaks-college.webp"
+        },
+        {
+          "name": "Bethesda University",
+          "logo": "/assets/images/universities/usa/bethesda-university.webp"
+        },
+        {
+          "name": "St. Cloud State University",
+          "logo": "/assets/images/universities/usa/st-cloud-state-university.webp"
+        },
+        {
+          "name": "South Dakota State University",
+          "logo": "/assets/images/universities/usa/south-dakota-state-university.webp"
+        },
+        {
+          "name": "Post University",
+          "logo": "/assets/images/universities/usa/post-university.webp"
+        },
+        {
+          "name": "Northwest Missouri State University",
+          "logo": "/assets/images/universities/usa/northwest-missouri-state-university.webp"
+        },
+        {
+          "name": "University of Central Missouri",
+          "logo": "/assets/images/universities/usa/university-of-central-missouri.webp"
+        },
+        {
+          "name": "Minnesota State University",
+          "logo": "/assets/images/universities/usa/minnesota-state-university.webp"
+        }
+      ]
+    },
+    {
+      "country": "Australia",
+      "code": "australia",
+      "flag": "🇦🇺",
+      "universities": [
+        {
+          "name": "Western Sydney University",
+          "logo": "/assets/images/universities/australia/western-sydney-university.webp"
+        },
+        {
+          "name": "La Trobe University",
+          "logo": "/assets/images/universities/australia/la-trobe-university.webp"
+        },
+        {
+          "name": "Victoria University",
+          "logo": "/assets/images/universities/australia/victoria-university.webp"
+        },
+        {
+          "name": "University of Queensland",
+          "logo": "/assets/images/universities/australia/university-of-queensland.webp"
+        },
+        {
+          "name": "Monash University",
+          "logo": "/assets/images/universities/australia/monash-university.webp"
+        },
+        {
+          "name": "Kaplan Business School",
+          "logo": "/assets/images/universities/australia/kaplan-business-school.webp"
+        },
+        {
+          "name": "Southern Cross University",
+          "logo": "/assets/images/universities/australia/southern-cross-university.webp"
+        },
+        {
+          "name": "RMIT University",
+          "logo": "/assets/images/universities/australia/rmit-university.webp"
+        },
+        {
+          "name": "Macquarie University",
+          "logo": "/assets/images/universities/australia/macquarie-university.webp"
+        },
+        {
+          "name": "University of Tasmania",
+          "logo": "/assets/images/universities/australia/university-of-tasmania.webp"
+        }
+      ]
+    },
+    {
+      "country": "Canada",
+      "code": "canada",
+      "flag": "🇨🇦",
+      "universities": [
+        {
+          "name": "University of Toronto",
+          "logo": "/assets/images/universities/canada/university-of-toronto.webp"
+        },
+        {
+          "name": "University of British Columbia",
+          "logo": "/assets/images/universities/canada/university-of-british-columbia.webp"
+        },
+        {
+          "name": "McGill University",
+          "logo": "/assets/images/universities/canada/mcgill-university.webp"
+        },
+        {
+          "name": "University of Alberta",
+          "logo": "/assets/images/universities/canada/university-of-alberta.webp"
+        },
+        {
+          "name": "McMaster University",
+          "logo": "/assets/images/universities/canada/mcmaster-university.webp"
+        },
+        {
+          "name": "University of Waterloo",
+          "logo": "/assets/images/universities/canada/university-of-waterloo.webp"
+        },
+        {
+          "name": "Western University",
+          "logo": "/assets/images/universities/canada/western-university.webp"
+        },
+        {
+          "name": "Queen's University",
+          "logo": "/assets/images/universities/canada/queen-s-university.webp"
+        },
+        {
+          "name": "Simon Fraser University",
+          "logo": "/assets/images/universities/canada/simon-fraser-university.webp"
+        },
+        {
+          "name": "Dalhousie University",
+          "logo": "/assets/images/universities/canada/dalhousie-university.webp"
+        }
+      ]
+    },
+    {
+      "country": "France",
+      "code": "france",
+      "flag": "🇫🇷",
+      "universities": [
+        {
+          "name": "Sorbonne University",
+          "logo": "/assets/images/universities/france/sorbonne-university.webp"
+        },
+        {
+          "name": "Université PSL",
+          "logo": "/assets/images/universities/france/universite-psl.svg"
+        },
+        {
+          "name": "Université Grenoble Alpes",
+          "logo": "/assets/images/universities/france/universite-grenoble-alpes.webp"
+        },
+        {
+          "name": "Aix-Marseille University",
+          "logo": "/assets/images/universities/france/aix-marseille-university.webp"
+        },
+        {
+          "name": "Université de Strasbourg",
+          "logo": "/assets/images/universities/france/universite-de-strasbourg.webp"
+        },
+        {
+          "name": "Université de Bordeaux",
+          "logo": "/assets/images/universities/france/universite-de-bordeaux.webp"
+        },
+        {
+          "name": "Sciences Po",
+          "logo": "/assets/images/universities/france/sciences-po.webp"
+        },
+        {
+          "name": "École Polytechnique",
+          "logo": "/assets/images/universities/france/ecole-polytechnique.webp"
+        },
+        {
+          "name": "Université de Lille",
+          "logo": "/assets/images/universities/france/universite-de-lille.webp"
+        },
+        {
+          "name": "University of Paris-Saclay",
+          "logo": "/assets/images/universities/france/university-of-paris-saclay.webp"
+        }
+      ]
+    },
+    {
+      "country": "Germany",
+      "code": "germany",
+      "flag": "🇩🇪",
+      "universities": [
+        {
+          "name": "Technical University of Munich",
+          "logo": "/assets/images/universities/germany/technical-university-of-munich.webp"
+        },
+        {
+          "name": "Ludwig-Maximilians-Universität München",
+          "logo": "/assets/images/universities/germany/ludwig-maximilians-universitat-munchen.webp"
+        },
+        {
+          "name": "Heidelberg University",
+          "logo": "/assets/images/universities/germany/heidelberg-university.webp"
+        },
+        {
+          "name": "Freie Universität Berlin",
+          "logo": "/assets/images/universities/germany/freie-universitat-berlin.webp"
+        },
+        {
+          "name": "Karlsruhe Institute of Technology",
+          "logo": "/assets/images/universities/germany/karlsruhe-institute-of-technology.webp"
+        },
+        {
+          "name": "RWTH Aachen University",
+          "logo": "/assets/images/universities/germany/rwth-aachen-university.webp"
+        },
+        {
+          "name": "Technische Universität Berlin",
+          "logo": "/assets/images/universities/germany/technische-universitat-berlin.webp"
+        },
+        {
+          "name": "University of Hamburg",
+          "logo": "/assets/images/universities/germany/university-of-hamburg.webp"
+        },
+        {
+          "name": "University of Freiburg",
+          "logo": "/assets/images/universities/germany/university-of-freiburg.webp"
+        },
+        {
+          "name": "Humboldt-Universität zu Berlin",
+          "logo": "/assets/images/universities/germany/humboldt-universitat-zu-berlin.webp"
+        }
+      ]
+    },
+    {
+      "country": "New Zealand",
+      "code": "new-zealand",
+      "flag": "🇳🇿",
+      "universities": [
+        {
+          "name": "University of Auckland",
+          "logo": "/assets/images/universities/new-zealand/university-of-auckland.webp"
+        },
+        {
+          "name": "University of Otago",
+          "logo": "/assets/images/universities/new-zealand/university-of-otago.webp"
+        },
+        {
+          "name": "Victoria University of Wellington",
+          "logo": "/assets/images/universities/new-zealand/victoria-university-of-wellington.webp"
+        },
+        {
+          "name": "University of Canterbury",
+          "logo": "/assets/images/universities/new-zealand/university-of-canterbury.webp"
+        },
+        {
+          "name": "Massey University",
+          "logo": "/assets/images/universities/new-zealand/massey-university.webp"
+        },
+        {
+          "name": "Auckland University of Technology",
+          "logo": "/assets/images/universities/new-zealand/auckland-university-of-technology.webp"
+        },
+        {
+          "name": "Lincoln University",
+          "logo": "/assets/images/universities/new-zealand/lincoln-university.webp"
+        },
+        {
+          "name": "Unitec Institute of Technology",
+          "logo": "/assets/images/universities/new-zealand/unitec-institute-of-technology.webp"
+        },
+        {
+          "name": "Eastern Institute of Technology",
+          "logo": "/assets/images/universities/new-zealand/eastern-institute-of-technology.webp"
+        },
+        {
+          "name": "Southern Institute of Technology",
+          "logo": "/assets/images/universities/new-zealand/southern-institute-of-technology.webp"
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "code": "india",
+      "flag": "🇮🇳",
+      "universities": [
+        {
+          "name": "Vellore Institute of Technology (VIT)",
+          "logo": "/assets/images/universities/india/vellore-institute-of-technology-vit.webp"
+        },
+        {
+          "name": "University of Delhi",
+          "logo": "/assets/images/universities/india/university-of-delhi.webp"
+        },
+        {
+          "name": "Jawaharlal Nehru University",
+          "logo": "/assets/images/universities/india/jawaharlal-nehru-university.webp"
+        },
+        {
+          "name": "Banaras Hindu University",
+          "logo": "/assets/images/universities/india/banaras-hindu-university.webp"
+        },
+        {
+          "name": "Anna University",
+          "logo": "/assets/images/universities/india/anna-university.webp"
+        },
+        {
+          "name": "Manipal Academy of Higher Education",
+          "logo": "/assets/images/universities/india/manipal-academy-of-higher-education.webp"
+        },
+        {
+          "name": "Kalinga Institute of Technology",
+          "logo": "/assets/images/universities/india/kalinga-institute-of-technology.webp"
+        },
+        {
+          "name": "RK University",
+          "logo": "/assets/images/universities/india/rk-university.webp"
+        },
+        {
+          "name": "IISc Bangalore",
+          "logo": "/assets/images/universities/india/iisc-bangalore.webp"
+        },
+        {
+          "name": "Delhi Technological University (DTU)",
+          "logo": "/assets/images/universities/india/delhi-technological-university-dtu.webp"
+        },
+        {
+          "name": "Symbiosis International University",
+          "logo": "/assets/images/universities/india/symbiosis-international-university.webp"
+        }
+      ]
+    },
+    {
+      "country": "Finland",
+      "code": "finland",
+      "flag": "🇫🇮",
+      "universities": [
+        {
+          "name": "Haaga-Helia University of Applied Sciences",
+          "logo": "/assets/images/universities/finland/haaga-helia-university-of-applied-sciences.webp"
+        },
+        {
+          "name": "South-Eastern Finland University of Applied Sciences",
+          "logo": "/assets/images/universities/finland/south-eastern-finland-university-of-applied-sciences.webp"
+        },
+        {
+          "name": "LAB University of Applied Sciences",
+          "logo": "/assets/images/universities/finland/lab-university-of-applied-sciences.webp"
+        },
+        {
+          "name": "Satakunta University of Applied Sciences",
+          "logo": "/assets/images/universities/finland/satakunta-university-of-applied-sciences.webp"
+        },
+        {
+          "name": "Vaasa University of Applied Sciences",
+          "logo": "/assets/images/universities/finland/vaasa-university-of-applied-sciences.webp"
+        },
+        {
+          "name": "Karelia University of Applied Sciences",
+          "logo": "/assets/images/universities/finland/karelia-university-of-applied-sciences.webp"
+        }
+      ]
+    }
+  ]
+}
