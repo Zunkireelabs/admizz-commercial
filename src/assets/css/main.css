@@ -120,6 +120,18 @@
     @apply hover:decoration-navy-soft transition-colors duration-press ease-signature;
   }
 
+  /* The masthead logo was the only interactive element dead on EVERY page
+     (measured across all 5). It is the most-clicked affordance on any site;
+     it should acknowledge the pointer like everything else. Opacity, not a
+     colour change — the mark is an image and carries its own palette. */
+  .header-home img {
+    @apply transition-opacity duration-press ease-signature;
+  }
+  .header-home:hover img,
+  .header-home:focus-visible img {
+    @apply opacity-70;
+  }
+
   /* Primary-nav hover underline — a thin rule that grows in on the same
      signature curve as everything else, rather than a bare color change. */
   .nav-link {
