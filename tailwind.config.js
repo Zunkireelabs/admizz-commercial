@@ -34,20 +34,33 @@ export default {
 
       // Navy — ink, punctuation and the two full-bleed bookend bands;
       // still never the default page canvas.
+      // 2026-08-30: DEFAULT and gold.DEFAULT below moved to an EXACT match
+      // of admizzeducation.com's live brand colors (#0D1282 / #FFD800,
+      // confirmed via firecrawl branding scrape), at the user's explicit
+      // request, superseding the "sampled from the group logo" values this
+      // revert used minutes earlier. deep/soft re-derived by preserving the
+      // old ramp's HSL-lightness deltas against the new hue (not guessed) —
+      // see the contrast check below. navy.on/on-muted left as-is: still
+      // AA-safe against the new navy, and admizzeducation.com doesn't
+      // publish light-on-navy tokens to match against.
       navy: {
-        DEFAULT: '#002856',
-        deep: '#001B3B',
-        soft: '#1B4A7A',
+        DEFAULT: '#0D1282',
+        deep: '#0B0F69',
+        soft: '#131ABB',
         on: '#EAF0F6',
         'on-muted': '#A9BDD1',
-        accent: '#FDD63F', // gold — headline em-phrases on navy
+        accent: '#FFD800', // gold — headline em-phrases on navy
       },
 
       // Gold — foil / accent ONLY. Never text on a light ground (1.41:1,
       // fails). Use gold.text for gold-toned text on paper/white.
+      // DEFAULT is admizzeducation.com's exact #FFD800 (was #FDD63F,
+      // sampled from the group logo — nearly identical, but this request
+      // is for pixel parity with the sister site specifically).
       gold: {
-        DEFAULT: '#FDD63F',
-        text: '#8A6200', // 5.49:1 on white — AA
+        DEFAULT: '#FFD800',
+        text: '#8A6200', // 5.49:1 on white — AA; hue/lightness relationship to
+                          // the new gold unchanged, so the contrast math still holds
         sunk: '#FBF0D2',
       },
 

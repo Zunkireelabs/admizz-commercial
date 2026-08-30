@@ -818,7 +818,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 0.7rem;
-  background-color: rgba(0, 40, 86, 0.1);
+  background-color: rgba(13, 18, 130, 0.1);
   color: theme("colors.navy.DEFAULT");
 }
 .contact-chip svg { width: 1.25rem; height: 1.25rem; }
@@ -951,7 +951,7 @@
 .contact-input:focus {
   outline: none;
   border-color: theme("colors.navy.DEFAULT");
-  box-shadow: 0 0 0 3px rgba(0, 40, 86, 0.15);
+  box-shadow: 0 0 0 3px rgba(13, 18, 130, 0.15);
 }
 .contact-input[aria-invalid="true"] {
   border-color: theme("colors.crit.DEFAULT");
@@ -1031,7 +1031,7 @@
 .contact-inline-link {
   color: theme("colors.navy.DEFAULT");
   text-decoration: underline;
-  text-decoration-color: rgba(0, 40, 86, 0.35);
+  text-decoration-color: rgba(13, 18, 130, 0.35);
   text-underline-offset: 3px;
   display: inline-flex;
   align-items: center;
@@ -1352,7 +1352,7 @@
   position: relative;
   z-index: 2;
   border-radius: 1.75rem 1.75rem 0 0;
-  box-shadow: 0 -28px 56px -24px rgba(0, 27, 59, 0.22);
+  box-shadow: 0 -28px 56px -24px rgba(11, 15, 105, 0.22);
 }
 
 /* =====================================================
