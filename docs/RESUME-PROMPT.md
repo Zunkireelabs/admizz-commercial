@@ -10,9 +10,13 @@ transformation, not a redesign. This is a long-running project with substantial 
 
 Before doing ANYTHING, read these files in order:
 
-  1. ./docs/RESUME-PROMPT.md              ← this file, IN FULL — the "Quick state" section below
-                                             the fence has the actual current blockers and open
-                                             decisions; nothing below is optional context
+  1. ./docs/RESUME-PROMPT.md              ← this file, IN FULL. Start with the block headed
+                                             "SESSION 2026-08-29/30 — DIRECTION CHANGE" directly
+                                             under "Quick state" — that is the CURRENT direction.
+                                             Everything under "Inner-pages state" below it is a
+                                             DIFFERENT branch and its homepage-freeze rule does
+                                             NOT apply to the current work. Nothing here is
+                                             optional context.
   2. ./CLAUDE.md                          ← overrides the global ~/CLAUDE.md, which describes a
                                              DIFFERENT project (the Lead Gen CRM) and must be
                                              ignored in this repo
@@ -30,6 +34,13 @@ Then tell me, in a short summary:
   - what you think the single biggest open item is right now
 
 Do not write any site code or touch the VPS until I've confirmed direction.
+
+The immediate next action is NOT to start building. The 2026-08-30 block ends with three
+questions I have not answered yet (university logos: copy or link · the 1,000-vs-2,000 student
+number · the ~150 sister-site articles: link or write fresh), plus two older ones (is /ventures/
+confirmed as the canonical design language, and does the palette revert per docs/briefs/
+A-palette-revert.md). Ask me those first, in one short list, and wait. Step 1 of the agreed plan
+(the admizzeducation.com content harvest) depends on the answers.
 
 One more thing before you touch anything: across the last several sessions, one methodology has
 proven itself over and over on this project and should be your default for any pixel-level or
@@ -61,7 +72,207 @@ interaction-level claim, not just something the previous session happened to do:
 
 ---
 
-## Quick state (keep this current — last updated 2026-08-27)
+## Quick state (keep this current — last updated 2026-08-30)
+
+---
+
+# ⚠️ SESSION 2026-08-29/30 — DIRECTION CHANGE. READ THIS BEFORE THE INNER-PAGES STATE BELOW.
+
+**Nothing changed on disk this session except this document.** No code edits, no commits,
+no new branch. Everything below is analysis + an agreed plan, not work in progress.
+
+## The constraint that just changed
+
+The "**THE HOMEPAGE MUST NOT CHANGE**" rule further down governs `redesign/inner-pages` **only**.
+The plan agreed this session **deliberately rebuilds the homepage**. Do not start that work on
+`redesign/inner-pages` — cut a new branch from `stage`. The byte-diff guard
+(`c8f97e30da7b6bed63bbcbd212d5221f6f8b1644`) still applies to any further inner-pages commits.
+
+## How we got here
+
+The user asked why the site "does not have the premium feel," gave **bcg.com** and **rillet.com**
+as targets, then pivoted to content, then pointed at the sister site **admizzeducation.com**.
+The answer changed twice as evidence came in — the final answer is the content one.
+
+## Measured, not eyeballed (Playwright 1440×900 against a static `dist/` server)
+
+| Page | Height |
+|---|---|
+| `/` | **7,879px — of which ~3,220px (41%) is saturated navy/purple gradient** |
+| `/ventures/` | 3,576 |
+| `/about/` | 3,879 |
+| `/contact/` | 2,439 |
+| `/insights/` | 2,333 |
+
+**The `.story-journey` pin is NOT dead space — verified, do not "fix" it as a bug.** The section
+spans y=3,495→6,233 (2,738px); ~1,890px of that is a GSAP pin spacer (`main.js:248`,
+`end: innerHeight * (cards-1) * 0.7`). A `fullPage` screenshot renders it as a flat gradient void.
+Scroll-checkpoint screenshots at y=3900/4600/5400/6000 show a working horizontal scrub.
+The real criticism is proportion, not correctness: **1,890px of scroll to deliver four dates**,
+during which the panel floats with ~450px of empty gradient beneath it and the edge cards are
+clipped mid-word by the track mask ("2015" reads as "015", then "5").
+
+## Reference sites, measured (firecrawl `formats: ["screenshot","branding"]`)
+
+| | Rillet | BCG | Ours |
+|---|---|---|---|
+| Ground | `#FFFFFF` | `#FFFFFF` | `#F4F5FB` (blue-tinted) |
+| Primary button | **`#000000`** | brand green | **gold `#FDD63F`** |
+| Radius | 3.69px | 15px | 4→28px, inconsistent |
+| Component shadow | **none on any** | none | `shadow-xl`→`2xl` |
+| Decorative gradient | none | none | 41% of the homepage |
+| h1 / body | 59px / 12px | 44px / 16px | 54px / 15px |
+
+Rillet: `Space Grotesk` + `DM Sans`, one accent `#644EFF`, hero is a real product screenshot,
+12 real customer logos. BCG: proprietary `Henderson BCG Serif/Sans`, accent `#96F878`, six
+articles dated within the week. **Neither uses gradient, glassmorphism, particles, or glow.**
+Their premium comes from having real things to show, not from visual technique.
+
+## The structural finding: the site speaks three design languages
+
+1. **"The record"** — `/ventures/` + `/about/`. Navy masthead, mono labels, hairline rules, data
+   rows, Newsreader. **This is the good one. It is the canonical language.**
+2. **"The showcase"** — `/`. Gradients, glass, Three.js particles, gold buttons, curved SVG divider.
+3. **"The SaaS app"** — `/contact/`. Its hero title is `fontFamily.sans` at `wght 780`
+   (`main.css:770`) while every other page uses Newsreader 320–460. Rounded shadow cards,
+   icon chips, paper-plane illustration.
+
+BCG and Rillet each have exactly one language and repeat it. **Incoherence is what reads as
+"not premium" here — not craft.** The token layer (fluid type capped for WCAG 1.4.4, non-integer
+variable weights, one signature easing curve) is genuinely good and is not the problem.
+
+## Real bug found: gold text on a light ground
+
+`_includes/partials/ecosystem-journey.njk:91` renders `text-gold` (`#FDD63F`) on `paper`
+(`#F4F5FB`) — **≈1.25:1**, on the largest type on the homepage ("Institute", "Education",
+"Workforce Solutions"). Same class at `pages/about/index.njk:46` ("impact."). CLAUDE.md §5 states
+the rule ("Gold is never text on a light ground") and records gold-on-white as **1.41, FAIL**.
+
+**Brief A's palette revert does NOT fix this on its own** — the class itself must go.
+(`text-gold-text` at `insights/index.njk:75` and `ventures/index.njk:266` is the correct,
+AA-passing token and is fine.)
+
+## Blast radius of the cleanup — small and contained
+
+```
+bg-gradient         9 uses  → story-journey.njk, ecosystem-journey.njk, pages/index.njk
+rounded-2xl/3xl     3 uses  → pages/index.njk:134, story-journey.njk:41, header.njk:84
+text-gold (unsafe)  2 uses  → ecosystem-journey.njk:91, about/index.njk:46
+shadow-xl/2xl       2 uses  → pages/index.njk:134
+blur-/backdrop-blur 7 uses
+```
+
+## The content model, from bcg.com/industries/education/overview
+
+That one page carries **~25 named, checkable facts** (1.6bn students · 2.2m in India · Gates
+Foundation · UNICEF Generation Unlimited · WEF · Fulbright Vietnam · AVID: 111,780 educators
+across 4,200 schools · Medtronic · California · 4 named leaders with cities · 2 dated articles).
+Strip those out and about four paragraphs remain. **It is ~80% evidence, ~20% prose.**
+Our whole five-page site carries ~15 checkable facts. That inversion is the real gap.
+
+Its nine repeating blocks: what it is · why it matters (with a number) · what we do ·
+how we do it · **what we've achieved** · **client stories** · **our people** · **our thinking
+(dated)** · where next. Blocks 5–8 are all proof. **We currently have none of them.**
+
+---
+
+# ★ THE UNLOCK — admizzeducation.com already publishes the proof
+
+Mapped 200+ pages on the sister site. Everything the group site lacks is already published by
+Admizz themselves. **We are not blocked, and nothing needs inventing.**
+
+**Headline figures:** 2,000+ students enrolled · 100+ partner universities · **95% visa approval
+rate** · **$2M+ scholarships awarded** · 4.9/5 from 94 reviews · 10+ years · 24hr avg response ·
+IELTS Band 7+, GRE 320+, TOEFL 100+ · 8.08K YouTube subscribers.
+
+**~120 named universities WITH LOGOS**, grouped by country (UK · USA · Australia · Canada ·
+France · Finland · New Zealand · India · Germany) at
+`admizzeducation.com/images/universities/<country>/<name>.webp`. Monash, RMIT, Coventry,
+Greenwich, Toronto, McGill, Sorbonne, TU Munich, Colorado State, Auckland, VIT, Heidelberg…
+**This is the logo wall Rillet uses as its single strongest trust element.**
+
+**4 named testimonials** with university + country route: Niraj Bhattarai (UWS, Nepal→UK) ·
+Basant Khadka (Weber State, Nepal→USA) · Yousuf Abdirahman Mohamed (KIIT, Somalia→India) ·
+Satyam Jaiswal (Greenwich, Nepal→UK).
+
+**Also there:** 9 destination pages · ~150 published articles (visa guides, IELTS vs PTE,
+scholarship guides, 2026 policy changes) · offices in **Kathmandu, Birgunj, Janakpur** alongside
+Denver · audiences already segmented as **Students / Universities / Recruitment Partners** ·
+contact `hello@admizz.com` (**note: `site.json` currently says `info@admizz.com`** — a third
+provenance question for the existing list below).
+
+## Three conflicts this creates — resolve before publishing any of it
+
+1. **NUMBER CONFLICT.** `src/_data/timeline.json` says **"1,000+ student admissions"** (sourced
+   from admizz.com). The sister site says **"2,000+ students enrolled."** Same group, two numbers,
+   both public. Must be resolved — a visitor comparing the two sites sees a contradiction.
+2. **PROVENANCE.** These are Admizz's own marketing claims, not independently verified. Sourcing
+   them *with attribution* is not the same as inventing them, so **non-negotiable #1 is satisfied**
+   — but "95% visa approval" and "$2M+ scholarships" are exactly the claims that invite scrutiny,
+   and the group site is the serious partner/press-facing property. Confirm before amplifying.
+3. **STRUCTURAL.** The group site presents **Admizz Institute** as a separate venture with
+   "No public site yet"; the sister site delivers test prep **under Admizz Education**. The group
+   describes itself differently from how the business actually operates. This compounds the
+   framing correction already logged below ("three stages of the same journey" vs "three
+   businesses, one group").
+
+## The agreed plan — four steps, in this order
+
+1. **Harvest.** Pull the figures, university logos and testimonials into `src/_data/*` with a
+   provenance tag per fact (`source: "admizzeducation"` alongside the existing `source: "admizz"`),
+   plus a `status: verified | draft` field so unconfirmed values can be withheld from the public
+   build while still rendering in a client-preview build. (The `CONFIRM` chips already on
+   `/contact/` are an ad-hoc version of this — see the bug note below.)
+2. **Resolve.** One short message to Admizz: the 1,000-vs-2,000 conflict, and the source of the
+   95% / $2M figures. Not a long content request — three questions.
+3. **Build the proof blocks** the site has never had: a real stats row, the university logo wall,
+   real testimonials, the destinations. **The homepage's "Global Reach / Student First / Future
+   Ready" icon strip is filler with zero information — this is what replaces it.**
+4. **Design cleanup**, last: Brief A palette revert · dark buttons instead of gold ·
+   delete gradients/glass/particles/curved divider · fix the `text-gold` contrast bug ·
+   realign `/contact/` typography to Newsreader.
+
+**Register translation rule.** The group site is for partners and press, not students. Do not
+copy the student-facing voice across. Student site: *"95% visa success — start your journey."*
+Group site: *"Across 100+ institutional partners in 9 countries, Admizz Education maintains a 95%
+visa approval rate."* Same fact, different reader.
+
+## Bug to fold into step 4
+
+**Six `CONFIRM` placeholder chips are live in the built site** — `pages/contact/index.njk:208`
+(postcode 80202), `:219` (office hours), `:287` (Kathmandu) — as is *"A privacy note is being
+drafted"* at `:172`. Internal QA markers are reaching visitors. Not yet indexed (robots.txt
+disallows), so it is contained, but it must not survive launch. See also `LAUNCH-BLOCKERS.md §1`.
+
+## Three questions the user has NOT yet answered — ask first thing
+
+1. **University logos** — copy them into this repo, or link out to the sister site's partner page?
+2. **1,000 vs 2,000** — ask Admizz, or adopt the sister site's newer number?
+3. **The ~150 existing articles** — link out to them from `/insights/`, or write fresh
+   group-level pieces?
+
+Two earlier questions also still unanswered: whether `/ventures/` is confirmed as the canonical
+design language, and whether the palette reverts to warm paper `#F6F6F3` + navy `#002856`
+(Brief A) or stays on the current blue.
+
+## Tooling notes from this session
+
+- **`npx http-server dist` is broken for this site** — it 301s directory URLs and serves
+  `index.html` for every route, so `/ventures/` silently renders the homepage. Use
+  `python3 -m http.server` instead. Both `/ventures/` and `/about/` were briefly misdiagnosed
+  because of this.
+- **Check the port is actually yours.** `:8099` was held by a stale server from an earlier
+  session; the first homepage screenshot came from it. It happened to be serving the same
+  content, but re-verify on a fresh port before trusting any measurement.
+- Full-page screenshots were sliced for reading with a tiny `sharp` script
+  (`node_modules/sharp/dist/index.cjs` — the package has no `lib/index.js` entry).
+- `firecrawl_scrape` with `formats: ["screenshot","branding"]` returns a competitor's real
+  palette, fonts, radii and component shadows as structured data. Faster and more reliable than
+  reading a screenshot. `firecrawl_map` enumerated the sister site's 200+ URLs in one call.
+
+---
+
+## Inner-pages state (last updated 2026-08-27 — still accurate for that branch)
 
 **Phase:** Inner pages. The homepage is done and shipped; work has moved to the five
 non-homepage templates. One of the five (`/ventures/`) is complete.
@@ -219,6 +430,12 @@ one exists specifically because trap #1 got past everything else.
 - `/verify-admizz-content` skill still exists and is read-only.
 
 ## If you only remember five things
+
+> **Scope note (2026-08-30):** the five below describe the `redesign/inner-pages` branch and are
+> still accurate *for that branch*. They are NOT the current direction. The agreed next work is
+> the content harvest + homepage rebuild in the session block at the top of this file, which
+> happens on a NEW branch and deliberately changes the homepage. Read that block first.
+
 
 1. **`redesign/inner-pages` has 4 commits, all local, never pushed.** Nothing built since
    2026-08-26 exists anywhere but this machine.
