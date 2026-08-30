@@ -227,6 +227,43 @@ permalink: /ventures/
           <p class="mt-4 text-body-lg text-ink leading-snug font-book">{{ v.verticalLine }}</p>
           <p class="mt-4 text-body text-ink-muted leading-relaxed">{{ v.description }}</p>
 
+          {# ---- Market signal ----
+             The sector this venture operates in, not another Admizz claim
+             about itself — model is bcg.com/industries/education/overview:
+             lead with real, third-party sector data, then let the reader
+             verify it. Every figure in marketContext.json was checked
+             against its PRIMARY source page (not a search summary) before
+             being written in. Sources drawer reuses the exact expand/
+             collapse pattern already built for the homepage's academic-
+             network register (main.js's Alpine collapse plugin) rather
+             than inventing a second interaction. #}
+          {% set mc = marketContext[v.id] %}
+          {% if mc %}
+          <div class="mt-6 market-signal" x-data="{ sourcesOpen: false }">
+            <p class="font-mono text-micro uppercase tracking-widest text-ink-faint">The sector</p>
+            <p class="mt-2 text-body text-ink leading-relaxed">{{ mc.lead }}</p>
+            <button type="button" class="market-signal-toggle" @click="sourcesOpen = !sourcesOpen" :aria-expanded="sourcesOpen">
+              <span x-text="sourcesOpen ? 'Hide sources' : 'View sources ({{ mc.sources.length }})'"></span>
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true" class="transition-transform duration-press ease-signature" :class="sourcesOpen ? 'rotate-180' : ''">
+                <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div x-show="sourcesOpen" x-collapse x-cloak>
+              <ul class="market-signal-sources">
+                {% for s in mc.sources %}
+                <li>
+                  <a href="{{ s.href }}" target="_blank" rel="noopener noreferrer" class="market-signal-source-link">
+                    {{ s.publisher }}, {{ s.year }}
+                    <svg width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5M10 4v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <span class="block text-small text-ink-muted mt-0.5">{{ s.detail }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          {% endif %}
+
           {% if v.exams.length %}
           <p class="mt-6 font-mono text-small text-ink tracking-wide">
             {% for e in v.exams %}{{ e }}{% if not loop.last %} <span class="text-ink-faint" aria-hidden="true">/</span> {% endif %}{% endfor %}

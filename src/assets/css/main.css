@@ -760,6 +760,31 @@
   line-height: 1.55;
 }
 
+/* Market signal — the sourced sector fact inside each venture-entry.
+   Flat, hairline-bordered, no shadow/card — same restraint as the rest of
+   this page. The toggle button and source list reuse the exact visual
+   grammar of .academic-network-row/.academic-network-list (index.njk)
+   rather than inventing new component styles for a second instance of the
+   same expand/collapse idiom. */
+.market-signal {
+  padding-top: 1rem;
+  border-top: 1px solid theme("colors.rule.DEFAULT");
+}
+.market-signal-toggle {
+  @apply mt-3 inline-flex items-center gap-1.5 font-mono text-micro uppercase tracking-widest text-ink-faint;
+  @apply transition-colors duration-press ease-signature;
+}
+.market-signal-toggle:hover,
+.market-signal-toggle:focus-visible {
+  @apply text-navy;
+}
+.market-signal-sources {
+  @apply mt-3 space-y-3 pt-3 border-t border-rule;
+}
+.market-signal-source-link {
+  @apply inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline;
+}
+
 /* ICEF seal. The only accreditation that exists anywhere in this project and
    the strongest trust signal on the site, so it gets a real certificate
    affordance rather than the small chip it has on the homepage. Gold as a

@@ -1,0 +1,23 @@
+{
+  "_note": "One sourced sector fact per venture — the industry each business operates in, not Admizz's own marketing claims. Every figure below was independently verified against its PRIMARY source page (not a search-engine summary) on 2026-08-30 before being written in here. Model: bcg.com/industries/education/overview — lead with the sector, then show the venture operating inside it.",
+  "institute": {
+    "lead": "English-language proficiency testing underpins study, work and migration decisions for millions of people worldwide every year.",
+    "sources": [
+      { "label": "IELTS — official site", "detail": "“Trusted by millions of people every year.”", "href": "https://ielts.org/", "publisher": "IELTS.org", "year": "2026" }
+    ]
+  },
+  "education": {
+    "lead": "The United States alone hosted 1,177,766 international students in 2024/25 — up 5% on the year before — inside a global market projected to more than double by 2030.",
+    "sources": [
+      { "label": "Open Doors 2025 Report", "detail": "1,177,766 international students in the US, 2024/25 (+5% YoY).", "href": "https://www.iie.org/news/open-doors-2025-press-release/", "publisher": "Institute of International Education (IIE)", "year": "2025" },
+      { "label": "International education market outlook", "detail": "Direct annual expenditure projected to grow from $196B (2019) to $433B by 2030.", "href": "https://www.holoniq.com/notes/196b-international-education-market-set-to-reach-433b-by-2030", "publisher": "HolonIQ", "year": "2022" }
+    ]
+  },
+  "workforce": {
+    "lead": "872,460 people received vocational rehabilitation services nationally in the 2023/24 program year — in a country where the disability unemployment rate still runs roughly double the rate for people without disabilities.",
+    "sources": [
+      { "label": "2025 Disability Statistics Compendium, §14", "detail": "872,460 VR participants nationally; 52.1% achieved measurable skill gains, cohort 07/2023–06/2024.", "href": "https://researchondisability.org/annual-disability-statistics-collection/2025-compendium-table-contents/section-14-vocational-rehabilitation-compendium-2025", "publisher": "Center for Research on Disability", "year": "2025" },
+      { "label": "Labor Force Characteristics — 2025", "detail": "22.8% employment rate, 8.3% unemployment rate for people with a disability.", "href": "https://www.bls.gov/news.release/disabl.nr0.htm", "publisher": "US Bureau of Labor Statistics", "year": "2026" }
+    ]
+  }
+}

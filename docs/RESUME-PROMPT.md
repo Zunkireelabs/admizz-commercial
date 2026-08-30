@@ -244,6 +244,40 @@ visa approval rate."* Same fact, different reader.
 drafted"* at `:172`. Internal QA markers are reaching visitors. Not yet indexed (robots.txt
 disallows), so it is contained, but it must not survive launch. See also `LAUNCH-BLOCKERS.md §1`.
 
+## SESSION 2026-08-30 continued — branch `redesign/proof-content`, decisions made
+
+The 5 open questions below were answered this session and acted on. Commits so far (local
+only, not pushed): `8142600` data harvest · `efc4211` palette revert to logo-sampled navy/gold ·
+`8ce90b6` palette changed AGAIN to an exact match of admizzeducation.com's live colors
+(`#0D1282`/`#FFD800`) at explicit user request — **this was a deliberate choice, not a mistake,
+confirmed after the user raised and then dismissed a "does it look too similar" concern; colors
+are correct and closed** · `2d64b98` homepage: real stats + a 104-university "academic network"
+register replaced the empty icon strip.
+
+**Mid-session correction — the real problem isn't color, it's content genre.** User feedback,
+verbatim direction: the site "still looks like the educational consultancy... not the top notch
+premium consulting site." Diagnosis that held up: the new proof section relays
+admizzeducation.com's own consumer-facing marketing numbers (2,000 students, 95% visa approval)
+almost verbatim — that's a vendor testimonial, not sector intelligence. BCG's education page
+(the reference) is ~80% third-party-sourced market/sector data with the company's own work shown
+as *one instance* of understanding that landscape, not the whole pitch. **Next work: real,
+sourced sector-level content per venture** (international student mobility data for Education,
+testing-demand data for Institute, US vocational-rehab data for Workforce Solutions) — see the
+new content-research work below this block.
+
+**Forward-looking note, not a current build task — logged so it isn't lost:** the user gave
+`intrnforte.com` as a reference, then clarified it's **not for the group site now** — it's
+because **Admizz Institute is expected to commercialize into its own business later**, closer to
+intrnforte's model (structured programs, certifications, job-outcome tracking, its own enrollment
+numbers) rather than staying bundled inside Admizz Education as test-prep support. Do NOT build
+anything from intrnforte.com's look into the current homepage — Institute has no public content
+yet and inventing any would violate non-negotiable #1. What DOES change: treat Institute's
+current site presence ("No public site yet" in `ventures.json`, the dead link in the frozen
+footer) as a placeholder that should age well, not a permanent dead end — when Institute does
+launch, a "training → certification → job outcome" narrative (same shape as BCG's own AVID
+citation: "111,780 educators across 4,200 schools") is the right model *then*, with real
+Institute-specific facts, not before.
+
 ## Three questions the user has NOT yet answered — ask first thing
 
 1. **University logos** — copy them into this repo, or link out to the sister site's partner page?
