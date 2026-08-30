@@ -130,6 +130,8 @@ export default {
       transitionDuration: {
         press: '100ms',   // hover / press / focus — slower than ~120ms reads as lag
         enter: '480ms',   // entrances and reveals
+        reveal: '620ms',  // scroll reveals — longer than `enter` so the 28px
+                          // travel reads as movement rather than a jump
         slow: '720ms',
       },
 

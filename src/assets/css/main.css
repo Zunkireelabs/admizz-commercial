@@ -345,13 +345,18 @@
   transform: scale(1);
 }
 
+/* Travel and duration are deliberately larger than a typical "subtle" reveal.
+   At the previous 12px / 480ms, paired with a 60ms stagger, the sequence was
+   measurably correct but below the threshold of perception — the motion read
+   as nothing at all. 28px over 620ms, stepped 110ms apart (main.js), is the
+   smallest set of values at which the beat is actually legible as rhythm. */
 .fade-up.js-armed {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(28px);
 }
 @media (prefers-reduced-motion: no-preference) {
   .fade-up.js-armed[data-revealed="true"] {
-    animation: fade-up-in theme("transitionDuration.enter") theme("transitionTimingFunction.signature") forwards;
+    animation: fade-up-in theme("transitionDuration.reveal") theme("transitionTimingFunction.signature") forwards;
   }
 }
 .fade-up.js-armed[data-revealed="true"] {

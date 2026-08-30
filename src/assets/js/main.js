@@ -537,21 +537,56 @@ if (!prefersReducedMotion) {
 // do we "arm" them into the hidden pre-reveal state and start observing — so a no-JS
 // visitor, a crawler, or a screenshot tool that doesn't simulate real scrolling all see
 // the complete, correct page rather than content stuck at opacity:0.
+//
+// Stagger is computed PER GROUP, AT REVEAL TIME — not per document at load.
+// The earlier version assigned `i * 60ms` capped at 300ms using each element's
+// index across the whole document, once, on load. That produced two bugs:
+//   1. Every .fade-up past the 5th on a page hit the 300ms cap and therefore
+//      shared one delay, so they arrived SIMULTANEOUSLY — the uniform
+//      everything-at-once reveal this system exists to avoid.
+//   2. The delay was baked in at load but consumed on scroll, so a late
+//      element sat idle for 300ms after entering view. That is lag, not rhythm.
+// Elements that cross the threshold in the same observer callback are one
+// visual beat-group: they are ordered by document position and staggered
+// against each other. An element crossing alone gets 0ms and starts at once.
+const REVEAL_STEP_MS = 110;  // gap between beats inside one group
+const REVEAL_CAP_MS = 440;   // no element ever waits longer than this
+
+// An element's group is its nearest explicit [data-reveal-group], else its
+// nearest <section>. Opt a subtree out of its section's rhythm by marking it.
+const revealGroupOf = (el) => el.closest('[data-reveal-group], section') || document.body;
+
 const revealObserver = new IntersectionObserver(
   (entries) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        if (el.classList.contains('fade-up')) el.dataset.revealed = 'true';
-        revealObserver.unobserve(el);
+    const arriving = entries.filter((entry) => entry.isIntersecting);
+    if (!arriving.length) return;
+
+    // Callback order is not guaranteed to be document order; sort so the
+    // stagger always runs top-to-bottom, the direction the eye reads.
+    arriving.sort((a, b) =>
+      a.target.compareDocumentPosition(b.target) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+    );
+
+    const beatsSoFar = new Map();
+    for (const entry of arriving) {
+      const el = entry.target;
+      const group = revealGroupOf(el);
+      const beat = beatsSoFar.get(group) ?? 0;
+      beatsSoFar.set(group, beat + 1);
+
+      if (el.classList.contains('fade-up')) {
+        el.style.animationDelay = prefersReducedMotion
+          ? '0ms'
+          : `${Math.min(beat * REVEAL_STEP_MS, REVEAL_CAP_MS)}ms`;
+        el.dataset.revealed = 'true';
       }
+      revealObserver.unobserve(el);
     }
   },
   { threshold: 0.2, rootMargin: '0px 0px -8% 0px' }
 );
 
-document.querySelectorAll('.fade-up').forEach((el, i) => {
-  el.style.animationDelay = prefersReducedMotion ? '0ms' : `${Math.min(i * 60, 300)}ms`;
+document.querySelectorAll('.fade-up').forEach((el) => {
   el.classList.add('js-armed');
   revealObserver.observe(el);
 });
