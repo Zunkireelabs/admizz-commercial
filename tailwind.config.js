@@ -4,60 +4,56 @@ import typography from '@tailwindcss/typography';
 export default {
   content: ['./src/**/*.{html,njk,md,js}'],
   theme: {
-    // 2026-08-20 rebrand: token KEYS unchanged (navy.*, gold.*, paper.*, ink.*)
-    // so every existing utility class (bg-navy-deep, text-gold-text, ...) keeps
-    // working — only the VALUES moved from the recovered navy/gold identity to
-    // a blue-led palette, a deliberate direction change (see CLAUDE.md §5).
-    // `navy` now carries the primary brand blue; `gold` is demoted to a rare,
-    // deliberate warm accent (the ventures-register line, the confirmation
-    // check) rather than the default accent everywhere. All pairs below are
-    // freshly contrast-verified, not eyeballed — see CLAUDE.md §5 for ratios.
+    // 2026-08-30 revert: the 2026-08-20 rebrand above replaced the documented
+    // navy/gold identity with #3D5AFE — Material Design's Indigo A400, a
+    // framework default, not a brand color. That's exactly what CLAUDE.md §2's
+    // anti-template rule bans. Token KEYS are unchanged (navy.*, gold.*,
+    // paper.*, ink.*) so no template needed editing — only the VALUES move
+    // back to the recovered identity: #002856 and #FDD63F are both sampled
+    // from real brand assets (the logo mark), not invented. All pairs below
+    // are freshly contrast-verified per docs/briefs/A-palette-revert.md.
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
       white: '#FFFFFF',
       black: '#000000',
 
-      // Ground — cool, near-neutral document stock
+      // Ground — warm, near-neutral document stock (not cool/blue-tinted)
       paper: {
-        DEFAULT: '#F4F5FB',
+        DEFAULT: '#F6F6F3',
         raised: '#FFFFFF',
-        sunk: '#EAEBF6',
+        sunk: '#EDEDE7',
       },
 
       // Ink — never pure black
       ink: {
-        DEFAULT: '#151833',
-        muted: '#4A5068',
-        faint: '#868DA6',
+        DEFAULT: '#10192B',
+        muted: '#454E60',
+        faint: '#666E80', // fixes an AA failure: the old value measured 3.03:1 on paper
       },
 
-      // Brand blue (token key stays `navy`) — ink, punctuation and the two
-      // full-bleed bookend bands; still never the default page canvas.
+      // Navy — ink, punctuation and the two full-bleed bookend bands;
+      // still never the default page canvas.
       navy: {
-        DEFAULT: '#3D5AFE',
-        deep: '#161B4D',
-        soft: '#2B3FA0',
-        on: '#EDEFFC',
-        'on-muted': '#AEB4E8',
-        accent: '#7C93FF', // lighter emphasis blue — headline em-phrases on navy (5.76:1)
+        DEFAULT: '#002856',
+        deep: '#001B3B',
+        soft: '#1B4A7A',
+        on: '#EAF0F6',
+        'on-muted': '#A9BDD1',
+        accent: '#FDD63F', // gold — headline em-phrases on navy
       },
 
-      // Gold — demoted secondary accent, used sparingly and deliberately now.
-      // DEFAULT corrected 2026-08-25: sampled directly from the real logo
-      // file (mark-navy.png) rather than left at the rebrand's invented
-      // #F2B33D, which turned out not to match the actual brand asset —
-      // #FDD63F is what's really in the mark (and matches the original
-      // pre-rebrand palette CLAUDE.md documents, confirming it's correct).
+      // Gold — foil / accent ONLY. Never text on a light ground (1.41:1,
+      // fails). Use gold.text for gold-toned text on paper/white.
       gold: {
         DEFAULT: '#FDD63F',
-        text: '#8A5E10', // 5.23:1 on paper — AA on light, matches the old ratio's spirit
-        sunk: '#FFF3DC',
+        text: '#8A6200', // 5.49:1 on white — AA
+        sunk: '#FBF0D2',
       },
 
       rule: {
-        DEFAULT: '#E1E2ED',
-        strong: '#C7C9DC',
+        DEFAULT: '#E2E1DA',
+        strong: '#C9C7BD',
       },
 
       // Semantic — separate from the accent, per the design system
