@@ -552,37 +552,6 @@
   }
 }
 
-/* ---------- World globe (homepage §01, The Shift) ----------
-   v2: was a flat rectangular world map (a real one, MIT-licensed/
-   simplemaps.com, but the wrong overall SHAPE — the reference is round,
-   not a rectangle). Same source data, now zoomed into one hemisphere via
-   mask-size/-position (pixel values against the source SVG's 2000x857
-   viewBox, centered roughly on Africa/Europe/Western Asia — the classic
-   "globe" framing), clipped into a circle by the parent's rounded-full +
-   overflow-hidden, with a radial-gradient light overlay on top so it
-   reads as a lit sphere (bright upper-left, fading toward the rim) rather
-   than a flat disc of dots. */
-.world-globe-dots {
-  background-image: radial-gradient(circle, theme("colors.gold.text") 1px, transparent 1.3px);
-  background-size: 9px 9px;
-  -webkit-mask-image: url("/assets/images/brand/world-map-mask.svg");
-  mask-image: url("/assets/images/brand/world-map-mask.svg");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 4200px auto;
-  mask-size: 4200px auto;
-  -webkit-mask-position: -2113px -630px;
-  mask-position: -2113px -630px;
-  opacity: 0.55;
-}
-.world-globe-shade {
-  background: radial-gradient(circle at 32% 28%,
-    theme("colors.paper.DEFAULT / 0%") 0%,
-    theme("colors.paper.DEFAULT / 0%") 45%,
-    theme("colors.paper.DEFAULT / 55%") 78%,
-    theme("colors.paper.DEFAULT / 92%") 100%);
-}
-
 /* ---------- Ecosystem pathway (homepage §05) ----------
    The three REAL nodes (Preparation/Education/Work) lift into raised
    panels — negative-margin depth + a soft navy-hued shadow (single

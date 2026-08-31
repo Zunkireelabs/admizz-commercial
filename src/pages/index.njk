@@ -207,23 +207,15 @@ permalink: /
    (MIT-licensed, simplemaps.com) driving a CSS mask, but that produced a
    flat RECTANGLE (a map), not a globe.
 
-   v5 CORRECTION (against a closer look at the reference): the reference
-   graphic is round with light-to-dark shading — an actual globe silhouette
-   bleeding off the section's right edge, not a flat map sitting fully
-   inside it. Rebuilt again: the same dot-mapped world data, zoomed and
-   positioned to one hemisphere, clipped into a circle, with a radial-
-   gradient light overlay (bright upper-left, fading toward the rim) to
-   read as a lit sphere — still flat 2D/CSS, not CLAUDE.md's banned 3D
-   spinning globe. Also tightened the whole section's scale (narrower
-   headline column, smaller list type/spacing) — the first 2 passes ran
-   noticeably larger/looser than the reference at the same width. #}
-<section class="relative overflow-hidden bg-paper py-section-sm border-b border-rule">
-  <div class="world-globe absolute top-1/2 -translate-y-1/2 right-0 translate-x-[38%] w-[440px] h-[440px] rounded-full overflow-hidden pointer-events-none hidden lg:block" aria-hidden="true">
-    <div class="world-globe-dots absolute inset-0"></div>
-    <div class="world-globe-shade absolute inset-0"></div>
-  </div>
-
-  <div class="shell relative z-10 grid grid-cols-1 lg:grid-cols-[minmax(0,26rem)_minmax(0,15.5rem)] gap-x-12 gap-y-8 items-start">
+   v5: tried a round, shaded globe (bleeding off the section's right edge)
+   after v4's flat map wasn't right either. Reverted 2026-08-31 on
+   explicit instruction — content placement is the priority, not the
+   background graphic. Section is background-free again; the tightened
+   scale (narrower headline column, smaller list type/spacing) from v5
+   stays, since that was a real, separate fix matching the reference's
+   compactness. #}
+<section class="relative bg-paper py-section-sm border-b border-rule">
+  <div class="shell relative z-10 grid grid-cols-1 md:grid-cols-[minmax(0,26rem)_minmax(0,15.5rem)] gap-x-12 gap-y-8 items-start">
     <div>
       <span class="eyebrow fade-up">The Shift</span>
       <p class="mt-3 fade-up font-display font-light text-[clamp(1.5rem,1.1rem+1.8vw,2.3rem)] leading-[1.15] text-ink max-w-[20ch] text-balance" style="animation-delay:60ms">
