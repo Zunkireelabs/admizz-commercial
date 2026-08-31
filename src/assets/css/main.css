@@ -605,8 +605,11 @@
   margin-top: -0.75rem;
   padding: 1.25rem 1.125rem 1.375rem;
   border-radius: theme("borderRadius.lg");
-  background-color: theme("colors.navy.soft / 18%");
-  border: 1px solid theme("colors.navy.on-muted / 18%");
+  /* Raised from 18%/18% — at that low an opacity the panels barely read as
+     distinct from the surrounding navy, which was a real part of the
+     "too blue, too messy" problem: nothing to anchor the eye on. */
+  background-color: theme("colors.navy.soft / 34%");
+  border: 1px solid theme("colors.navy.on-muted / 32%");
   box-shadow: 0 12px 28px -14px rgba(3, 8, 30, 0.55);
   transition: transform theme("transitionDuration.reveal") theme("transitionTimingFunction.signature"),
     background-color theme("transitionDuration.press") theme("transitionTimingFunction.signature");

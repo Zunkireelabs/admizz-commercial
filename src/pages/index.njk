@@ -498,12 +498,23 @@ permalink: /
         { label: "Work", detail: "Admizz Workforce Solutions", real: true, href: "/ventures/#record-workforce" },
         { label: "Opportunity", detail: "Where the line leads.", real: false }
       ] %}
-      <div class="ecosystem-path-line relative hidden md:block h-px bg-navy-on-muted/25 mb-8" aria-hidden="true"></div>
+      {# The 6 dots used to be drawn per-node, each with its own offset math
+         — real nodes shifted up via their panel's negative margin, narrative
+         nodes didn't, so the dots landed ~46px apart instead of on one line
+         (measured, not eyeballed — a real bug, not a rendering quirk).
+         Drawing all 6 from ONE shared overlay, positioned purely by column
+         index, makes correct alignment structural instead of something each
+         node has to individually get right. #}
+      <div class="ecosystem-path-line relative hidden md:block h-px bg-navy-on-muted/25 mb-8" aria-hidden="true">
+        {% for n in pathNodes %}
+        <span class="ecosystem-path-dot absolute -top-1 block w-2 h-2 rounded-full {{ 'bg-gold' if n.real else 'bg-navy-on-muted/40' }}" style="left:calc({{ loop.index0 }} / 6 * 100% + 1rem)"></span>
+        {% endfor %}
+      </div>
       <div class="ecosystem-path-track grid grid-cols-2 md:grid-cols-6 gap-x-4 gap-y-10 md:gap-x-3">
         {% for n in pathNodes %}
         {% if n.real %}
         <a href="{{ n.href }}" class="ecosystem-path-node ecosystem-path-node-real group relative fade-up" style="animation-delay:{{ 160 + loop.index0 * 70 }}ms">
-          <span class="ecosystem-path-dot absolute left-4 -top-[27px] md:-top-[35px] block w-2 h-2 rounded-full bg-gold" aria-hidden="true"></span>
+          <span class="md:hidden ecosystem-path-dot absolute left-4 -top-[27px] block w-2 h-2 rounded-full bg-gold" aria-hidden="true"></span>
           <span class="font-mono text-micro uppercase tracking-widest text-navy-on">{{ n.label }}</span>
           <span class="mt-1.5 block text-small text-navy-on-muted">{{ n.detail }}</span>
           <span class="mt-3 inline-flex items-center gap-1 text-micro font-mono uppercase tracking-widest text-navy-accent opacity-0 group-hover:opacity-100">
@@ -512,7 +523,7 @@ permalink: /
         </a>
         {% else %}
         <div class="ecosystem-path-node relative pt-6 fade-up" style="animation-delay:{{ 160 + loop.index0 * 70 }}ms">
-          <span class="ecosystem-path-dot absolute left-0 top-0 block w-2 h-2 rounded-full bg-navy-on-muted/40" aria-hidden="true"></span>
+          <span class="md:hidden ecosystem-path-dot absolute left-0 top-0 block w-2 h-2 rounded-full bg-navy-on-muted/40" aria-hidden="true"></span>
           <span class="block font-mono text-micro uppercase tracking-widest text-navy-on-muted">{{ n.label }}</span>
           <span class="mt-1.5 block text-small text-navy-on-muted/60">{{ n.detail }}</span>
         </div>
