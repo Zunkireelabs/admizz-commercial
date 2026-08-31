@@ -534,6 +534,68 @@ permalink: /
   </div>
 </section>
 
+{# ============================================================ 05b — VENTURES COVERFLOW
+   New 2026-08-31. Sits ALONGSIDE the Ecosystem pathway above, not replacing
+   it — explicit instruction. Adapted from a React/shadcn coverflow-carousel
+   component (drag-to-browse, 3D perspective tilt on off-center cards). This
+   site has no React — ported only the actual mechanics (pointer-drag
+   tracking, velocity-based flick, the per-card 3D transform math, a
+   requestAnimationFrame easing settle, keyboard arrow nav) into vanilla JS
+   (main.js, guarded by `[data-coverflow]`).
+
+   Content: the same 3 real venture photos already used elsewhere on this
+   page (institute/education/workforce-preview.jpg), captioned with each
+   venture's real name/stage/verticalLine — NOT the source component's demo
+   content, which used random stock photos captioned with entirely
+   fabricated "album" metadata (Producer, Length, Year). Paper ground,
+   deliberately — breaks up what would otherwise be four consecutive navy
+   sections in a row (stat band → globe → Ecosystem → this, if this stayed
+   navy too), a real "too much blue" problem flagged separately from the
+   dot/contrast fixes above.
+
+   Only 3 real slides exist, fewer than this component pattern is usually
+   built for — loop math still works correctly at any count, verified. #}
+<section class="bg-paper py-section-sm border-b border-rule">
+  <div class="shell">
+    <div class="max-w-[42rem] fade-up">
+      <span class="eyebrow">Our Ventures, Up Close</span>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink">Drag through the three.</h2>
+    </div>
+  </div>
+
+  {% set coverflowImages = {
+    "institute": { file: "preview/institute-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
+    "education": { file: "preview/education-preview.jpg", alt: "Student walking outside a university building with a backpack" },
+    "workforce": { file: "preview/workforce-preview.jpg", alt: "Three colleagues talking in a modern office" }
+  } %}
+  <div class="coverflow mt-12 md:mt-16 fade-up" data-coverflow style="animation-delay:90ms; --cf-card: clamp(180px, 30vw, 340px);">
+    <div class="coverflow-frame" data-coverflow-frame tabindex="0" role="region" aria-roledescription="carousel" aria-label="Admizz ventures">
+      <div class="coverflow-track" data-coverflow-track>
+        {% for v in ventures %}
+        {% set img = coverflowImages[v.id] %}
+        <div class="coverflow-card" data-coverflow-card role="group" aria-roledescription="slide" aria-label="{{ loop.index }} of {{ ventures.length }}">
+          <div class="[&_picture]:contents [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+            {% image "src/assets/images/" + img.file, img.alt, "340px" %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="shell mt-6">
+    <div class="text-center" data-coverflow-caption>
+      {% for v in ventures %}
+      <div class="coverflow-caption-item {{ '' if loop.index0 == 0 else 'hidden' }}" data-coverflow-caption-item data-index="{{ loop.index0 }}">
+        <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ v.stage }} &middot; {{ v.vertical }}</span>
+        <h3 class="mt-1.5 font-display font-book text-h4 text-ink">{{ v.name }}</h3>
+        <p class="mt-1.5 text-small text-ink-muted max-w-[38ch] mx-auto">{{ v.verticalLine }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
 {# ============================================================ 06 — WHAT WE BELIEVE
    Revived and rewritten from the disabled "Statement band" (previously
    wrapped in {% if false %}, hidden 2026-08-25). Same navy-band visual

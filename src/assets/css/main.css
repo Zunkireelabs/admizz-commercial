@@ -552,6 +552,56 @@
   }
 }
 
+/* ---------- Ventures coverflow (homepage §05b) ----------
+   Vanilla port of a React coverflow-carousel component — see main.js for
+   the actual drag/settle/transform logic; this is just the static shape
+   the JS drives. `--cf-card` (set inline per-instance) drives everything:
+   card size, perspective distance, track height. */
+.coverflow-frame {
+  cursor: grab;
+  outline: none;
+  padding-block: 2.5rem; /* keeps card drop-shadows clear of the overflow clip */
+  overflow: hidden;
+  perspective: calc(var(--cf-card) * 3);
+  touch-action: pan-y; /* horizontal drag is ours; vertical scroll stays the page's */
+}
+.coverflow-frame:active {
+  cursor: grabbing;
+}
+/* No-JS/pre-init default: a plain wrapped row, every card visible, fully
+   reachable without JS. The interactive stacked-3D layout only applies
+   once main.js has actually measured the frame and adds .js-armed to the
+   track — same "never hide content behind JS that might not run" pattern
+   as .fade-up elsewhere on this site. */
+.coverflow-track {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: calc(var(--cf-card) * 0.08);
+  user-select: none;
+}
+.coverflow-track.js-armed {
+  display: block;
+  position: relative;
+  height: var(--cf-card);
+  transform-style: preserve-3d;
+}
+.coverflow-card {
+  position: relative;
+  width: var(--cf-card);
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: theme("borderRadius.xl");
+  background-color: theme("colors.navy.deep");
+  box-shadow: 0 20px 40px -18px rgba(16, 25, 43, 0.35);
+}
+.coverflow-track.js-armed .coverflow-card {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  will-change: transform;
+}
+
 /* ---------- World map dots (homepage §01, The Shift) ----------
    Restored 2026-08-31 — a prior pass misread "revert the world map" as
    "delete the world map" instead of "go back to the dotted world map

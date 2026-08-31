@@ -713,3 +713,150 @@ if (globeCanvas && !prefersReducedMotion) {
     // the visible state, nothing more to do.
   });
 }
+
+// ---------------------------------------------------------------------------
+// Ventures coverflow (homepage §05b) — vanilla port
+//
+// Source: a React/shadcn coverflow-carousel component. Ported only the real
+// mechanics (pointer-drag tracking with velocity-based flick, per-card 3D
+// transform math, a requestAnimationFrame easing settle, keyboard arrows) —
+// no React, no state library, just the same math against plain DOM nodes.
+// Runs regardless of prefers-reduced-motion: dragging is a direct
+// user-driven action, not an ambient animation, so it isn't gated the way
+// the globe's autoplay is — only the transition on settle would ever need
+// throttling, and CSS custom easing already handles that smoothly enough
+// to leave alone.
+// ---------------------------------------------------------------------------
+
+const coverflow = document.querySelector('[data-coverflow]');
+
+if (coverflow) {
+  const frame = coverflow.querySelector('[data-coverflow-frame]');
+  const track = coverflow.querySelector('[data-coverflow-track]');
+  const cards = Array.from(coverflow.querySelectorAll('[data-coverflow-card]'));
+  const captionItems = Array.from(
+    document.querySelectorAll('[data-coverflow-caption-item]')
+  );
+  const count = cards.length;
+
+  if (frame && track && count > 0) {
+    // Tuned to match the source component's own defaults.
+    const ROTATE = 44;
+    const DEPTH = 0.6;
+    const FALLOFF = 0.56;
+    const FADE = 0.1;
+    const GAP = 0.05;
+    const LOOP = true;
+
+    let pos = 0;
+    let target = 0;
+    let width = 0;
+    let rafId = null;
+    let drag = null; // { x, pos, v, t }
+
+    const indexAt = (p) => ((Math.round(p) % count) + count) % count;
+
+    const setCaption = (index) => {
+      captionItems.forEach((item) => {
+        item.classList.toggle('hidden', Number(item.dataset.index) !== index);
+      });
+    };
+
+    const paint = () => {
+      if (!width) return;
+      const pitch = width * (1 + GAP);
+      cards.forEach((card, index) => {
+        let offset = index - pos;
+        if (LOOP) {
+          offset = ((offset % count) + count) % count;
+          if (offset > count / 2) offset -= count;
+        }
+        const distance = Math.abs(offset);
+        const ramp = Math.pow(distance, FALLOFF);
+        const tilt = Math.min(ROTATE * ramp, 82) * Math.sign(offset);
+        card.style.transform =
+          `translateX(calc(-50% + ${offset * pitch}px)) ` +
+          `translateZ(${-DEPTH * width * ramp}px) rotateY(${-tilt}deg)`;
+        const edge = LOOP ? Math.min(1, Math.max(0, count / 2 - distance)) : 1;
+        card.style.opacity = String(Math.max(0, 1 - FADE * distance) * edge);
+        card.style.zIndex = String(100 - Math.round(distance));
+      });
+    };
+
+    const settle = (newTarget) => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      target = newTarget;
+      setCaption(indexAt(target));
+      const step = () => {
+        const remaining = target - pos;
+        if (Math.abs(remaining) < 0.0004) {
+          pos = target;
+          paint();
+          rafId = null;
+          return;
+        }
+        pos += remaining * 0.16;
+        paint();
+        rafId = requestAnimationFrame(step);
+      };
+      rafId = requestAnimationFrame(step);
+    };
+
+    const clampPos = (p) => (LOOP ? p : Math.max(0, Math.min(count - 1, p)));
+    const nudge = (by) => settle(clampPos(Math.round(target) + by));
+
+    // Only now — after cards, frame, and track are all confirmed present —
+    // does the layout switch from the plain flex-row fallback to the
+    // interactive stacked-3D one.
+    track.classList.add('js-armed');
+
+    const measure = () => {
+      width = cards[0].offsetWidth;
+      paint();
+    };
+    measure();
+    new ResizeObserver(measure).observe(frame);
+
+    frame.addEventListener('pointerdown', (e) => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      frame.setPointerCapture(e.pointerId);
+      frame.style.cursor = 'grabbing';
+      target = pos;
+      drag = { x: e.clientX, pos, v: 0, t: performance.now() };
+    });
+    frame.addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      const pitch = width * (1 + GAP);
+      if (!pitch) return;
+      const now = performance.now();
+      const previous = pos;
+      pos = clampPos(drag.pos - (e.clientX - drag.x) / pitch);
+      drag.v = ((pos - previous) / Math.max(now - drag.t, 1)) * 1000;
+      drag.t = now;
+      setCaption(indexAt(pos));
+      paint();
+    });
+    const endDrag = () => {
+      if (!drag) return;
+      const carried = Math.max(-2, Math.min(2, drag.v * 0.18));
+      drag = null;
+      frame.style.cursor = 'grab';
+      settle(clampPos(Math.round(pos + carried)));
+    };
+    frame.addEventListener('pointerup', endDrag);
+    frame.addEventListener('pointercancel', endDrag);
+
+    frame.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        nudge(-1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        nudge(1);
+      }
+    });
+  }
+}
