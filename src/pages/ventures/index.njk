@@ -229,38 +229,48 @@ permalink: /ventures/
 
           {# ---- Market signal ----
              The sector this venture operates in, not another Admizz claim
-             about itself — model is bcg.com/industries/education/overview:
-             lead with real, third-party sector data, then let the reader
-             verify it. Every figure in marketContext.json was checked
-             against its PRIMARY source page (not a search summary) before
-             being written in. Sources drawer reuses the exact expand/
-             collapse pattern already built for the homepage's academic-
-             network register (main.js's Alpine collapse plugin) rather
-             than inventing a second interaction. #}
+             about itself — model is bcg.com/industries/education/overview
+             for density, scaler.com for presentation (a stat pulled out as
+             its own block, one-line provenance caption directly under it,
+             rather than buried mid-sentence). Every figure in
+             marketContext.json was checked against its PRIMARY source page
+             (not a search summary) before being written in.
+
+             2026-08-31 v2: replaced 3 stacked prose paragraphs + a
+             click-to-expand sources drawer (measured as reading like a wall
+             of text with no visual proof — the numbers looked exactly like
+             any other word around them) with: an optional one-line intro,
+             real stat callouts (each sourced INLINE, no second click), then
+             one short analysis sentence that may cite one more figure as an
+             inline link instead of opening a separate interaction for it. #}
           {% set mc = marketContext[v.id] %}
           {% if mc %}
-          <div class="mt-6 market-signal" x-data="{ sourcesOpen: false }">
-            <p class="font-mono text-micro uppercase tracking-widest text-ink-faint">The sector</p>
-            <p class="mt-2 text-body text-ink leading-relaxed">{{ mc.lead }}</p>
-            <button type="button" class="market-signal-toggle" @click="sourcesOpen = !sourcesOpen" :aria-expanded="sourcesOpen">
-              <span x-text="sourcesOpen ? 'Hide sources' : 'View sources ({{ mc.sources.length }})'"></span>
-              <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true" class="transition-transform duration-press ease-signature" :class="sourcesOpen ? 'rotate-180' : ''">
-                <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div x-show="sourcesOpen" x-collapse x-cloak>
-              <ul class="market-signal-sources">
-                {% for s in mc.sources %}
-                <li>
-                  <a href="{{ s.href }}" target="_blank" rel="noopener noreferrer" class="market-signal-source-link">
-                    {{ s.publisher }}, {{ s.year }}
-                    <svg width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5M10 4v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </a>
-                  <span class="block text-small text-ink-muted mt-0.5">{{ s.detail }}</span>
-                </li>
-                {% endfor %}
-              </ul>
+          <div class="mt-6 market-signal">
+            <p class="data-label">The sector</p>
+
+            {% if mc.intro %}
+            <p class="mt-2 text-body text-ink leading-relaxed">
+              {{ mc.intro.text }}
+              <a href="{{ mc.intro.href }}" target="_blank" rel="noopener noreferrer" class="market-stat-inline-source">{{ mc.intro.publisher }}, {{ mc.intro.year }}</a>
+            </p>
+            {% endif %}
+
+            <div class="market-stat-row">
+              {% for stat in mc.stats %}
+              <div class="market-stat">
+                <p class="market-stat-value font-display font-light tabular-nums text-ink">{{ stat.value }}</p>
+                <p class="market-stat-label">{{ stat.label }}</p>
+                <a href="{{ stat.href }}" target="_blank" rel="noopener noreferrer" class="market-stat-source">
+                  {{ stat.publisher }}
+                  <svg width="9" height="9" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5M10 4v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+              </div>
+              {% endfor %}
             </div>
+
+            {% if mc.analysis %}
+            <p class="mt-4 text-body text-ink-muted leading-relaxed">{{ mc.analysis | safe }}</p>
+            {% endif %}
           </div>
           {% endif %}
 

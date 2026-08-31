@@ -1,23 +1,24 @@
 {
-  "_note": "One sourced sector fact per venture — the industry each business operates in, not Admizz's own marketing claims. Every figure below was independently verified against its PRIMARY source page (not a search-engine summary) on 2026-08-30 before being written in here. Model: bcg.com/industries/education/overview — lead with the sector, then show the venture operating inside it.",
+  "_note": "Sourced sector facts per venture — the industry each business operates in, not Admizz's own marketing claims. Every figure was independently verified against its PRIMARY source page (not a search-engine summary) before being written in here. Model: bcg.com/industries/education/overview for content density, scaler.com for presentation — a stat pulled out as its own block with a one-line provenance caption directly under it, not buried mid-sentence. 2026-08-31 v2: reworked from stacked prose paragraphs + a click-to-expand sources drawer (measured as reading like a wall of text with no visual proof) into: one short intro sentence (optional) -> real stat callouts, each sourced inline -> one short closing analysis sentence, which may cite one more figure inline as a link rather than opening a second interaction for it.",
   "institute": {
-    "lead": "English-language proficiency testing underpins study, work and migration decisions for millions of people worldwide every year.",
-    "sources": [
-      { "label": "IELTS — official site", "detail": "“Trusted by millions of people every year.”", "href": "https://ielts.org/", "publisher": "IELTS.org", "year": "2026" }
-    ]
+    "intro": { "text": "English-language proficiency testing underpins study, work and migration decisions for millions of people worldwide every year.", "publisher": "IELTS.org", "year": "2026", "href": "https://ielts.org/" },
+    "stats": [
+      { "value": "827,000", "label": "PTE Academic tests taken globally, 2022 — up 90% on 2021", "publisher": "Pearson", "year": "2023", "href": "https://in.pearson.com/our-story/news-room/2023/08/pearson-test-of-english--pte--volume-grows-by-76--globally-in-h1.html" }
+    ],
+    "analysis": "That growth reflects a widening set of tests now accepted by institutions and immigration authorities, not a single default exam — effective preparation increasingly means current, format-specific expertise across several tests rather than depth in one."
   },
   "education": {
-    "lead": "The United States alone hosted 1,177,766 international students in 2024/25 — up 5% on the year before — inside a global market projected to more than double by 2030.",
-    "sources": [
-      { "label": "Open Doors 2025 Report", "detail": "1,177,766 international students in the US, 2024/25 (+5% YoY).", "href": "https://www.iie.org/news/open-doors-2025-press-release/", "publisher": "Institute of International Education (IIE)", "year": "2025" },
-      { "label": "International education market outlook", "detail": "Direct annual expenditure projected to grow from $196B (2019) to $433B by 2030.", "href": "https://www.holoniq.com/notes/196b-international-education-market-set-to-reach-433b-by-2030", "publisher": "HolonIQ", "year": "2022" }
-    ]
+    "stats": [
+      { "value": "1.18M", "label": "international students in the US, 2024/25 — up 5% on the year before", "publisher": "IIE, Open Doors 2025", "year": "2025", "href": "https://www.iie.org/news/open-doors-2025-press-release/" },
+      { "value": "680,582", "label": "international students in Australia, year to May 2026 — down 6.9%", "publisher": "Australian Dept of Education", "year": "2026", "href": "https://www.education.gov.au/international-education-data-and-research/international-student-monthly-summary-and-data-tables" }
+    ],
+    "analysis": "International student mobility now tracks visa and post-study-work policy as closely as underlying demand — the same period that saw US enrolment grow 5% saw Australia's contract, inside a market <a href=\"https://www.holoniq.com/notes/196b-international-education-market-set-to-reach-433b-by-2030\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"link-underline\">HolonIQ projects will more than double</a>, from $196B to $433B, by 2030. A market that moves like that rewards counseling built around more than one destination country."
   },
   "workforce": {
-    "lead": "872,460 people received vocational rehabilitation services nationally in the 2023/24 program year — in a country where the disability unemployment rate still runs roughly double the rate for people without disabilities.",
-    "sources": [
-      { "label": "2025 Disability Statistics Compendium, §14", "detail": "872,460 VR participants nationally; 52.1% achieved measurable skill gains, cohort 07/2023–06/2024.", "href": "https://researchondisability.org/annual-disability-statistics-collection/2025-compendium-table-contents/section-14-vocational-rehabilitation-compendium-2025", "publisher": "Center for Research on Disability", "year": "2025" },
-      { "label": "Labor Force Characteristics — 2025", "detail": "22.8% employment rate, 8.3% unemployment rate for people with a disability.", "href": "https://www.bls.gov/news.release/disabl.nr0.htm", "publisher": "US Bureau of Labor Statistics", "year": "2026" }
-    ]
+    "stats": [
+      { "value": "872,460", "label": "people received vocational rehabilitation services nationally, 2023/24", "publisher": "CRD, 2025 Compendium", "year": "2025", "href": "https://researchondisability.org/annual-disability-statistics-collection/2025-compendium-table-contents/section-14-vocational-rehabilitation-compendium-2025" },
+      { "value": "52.1%", "label": "of that cohort recorded a measurable skill gain", "publisher": "CRD, 2025 Compendium", "year": "2025", "href": "https://researchondisability.org/annual-disability-statistics-collection/2025-compendium-table-contents/section-14-vocational-rehabilitation-compendium-2025" }
+    ],
+    "analysis": "Real movement on one half of the problem, a persistent gap on the other: nationally, the employment rate for people with a disability is <a href=\"https://www.bls.gov/news.release/disabl.nr0.htm\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"link-underline\">22.8%, against 8.3% unemployment</a> — roughly double the unemployment rate for people without one. Closing the distance between services received and jobs held is the specific gap workforce development exists to close."
   }
 }

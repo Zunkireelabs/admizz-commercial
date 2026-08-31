@@ -762,27 +762,52 @@
 
 /* Market signal — the sourced sector fact inside each venture-entry.
    Flat, hairline-bordered, no shadow/card — same restraint as the rest of
-   this page. The toggle button and source list reuse the exact visual
-   grammar of .academic-network-row/.academic-network-list (index.njk)
-   rather than inventing new component styles for a second instance of the
-   same expand/collapse idiom. */
+   this page.
+
+   2026-08-31 v2: the numbers are now their own visual unit — same
+   dt/dd + tabular-nums grammar as the masthead's .record-strip, just on
+   paper instead of navy, sized down to fit inside a body column instead of
+   spanning the full page width. Source is an inline caption directly under
+   each stat (scaler.com's device — "Based on the 2026 Scaler career
+   transition assessment") rather than a second click to a hidden drawer. */
 .market-signal {
   padding-top: 1rem;
   border-top: 1px solid theme("colors.rule.DEFAULT");
 }
-.market-signal-toggle {
-  @apply mt-3 inline-flex items-center gap-1.5 font-mono text-micro uppercase tracking-widest text-ink-faint;
+.market-stat-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin: 1.25rem 0;
+}
+@media (min-width: 480px) {
+  .market-stat-row {
+    grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  }
+}
+.market-stat-value {
+  font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+.market-stat-label {
+  @apply mt-1.5 text-small text-ink-muted leading-snug;
+}
+.market-stat-source {
+  @apply mt-2 inline-flex items-center gap-1 font-mono text-micro uppercase tracking-widest text-ink-faint;
   @apply transition-colors duration-press ease-signature;
 }
-.market-signal-toggle:hover,
-.market-signal-toggle:focus-visible {
+.market-stat-source:hover,
+.market-stat-source:focus-visible {
   @apply text-navy;
 }
-.market-signal-sources {
-  @apply mt-3 space-y-3 pt-3 border-t border-rule;
+.market-stat-inline-source {
+  @apply ml-1.5 font-mono text-micro uppercase tracking-widest text-ink-faint whitespace-nowrap;
+  @apply transition-colors duration-press ease-signature;
 }
-.market-signal-source-link {
-  @apply inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline;
+.market-stat-inline-source:hover,
+.market-stat-inline-source:focus-visible {
+  @apply text-navy;
 }
 
 /* ICEF seal. The only accreditation that exists anywhere in this project and
