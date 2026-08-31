@@ -208,13 +208,18 @@ permalink: /
    flat RECTANGLE (a map), not a globe.
 
    v5: tried a round, shaded globe (bleeding off the section's right edge)
-   after v4's flat map wasn't right either. Reverted 2026-08-31 on
-   explicit instruction — content placement is the priority, not the
-   background graphic. Section is background-free again; the tightened
-   scale (narrower headline column, smaller list type/spacing) from v5
-   stays, since that was a real, separate fix matching the reference's
-   compactness. #}
-<section class="relative bg-paper py-section-sm border-b border-rule">
+   after v4's flat map wasn't right either.
+
+   v6: v5's revert was misread as "delete the map" instead of "go back to
+   the dotted world MAP version" — restored the flat dotted world map
+   (world-map-dots, same as v4), positioned in the open space to the right
+   of the two-column grid so it doesn't overlap the text now that the
+   column widths/breakpoint are actually correct (see the placement fixes
+   made to this section since v5). The tightened scale (narrower headline
+   column, smaller list type/spacing) from v5 stays. #}
+<section class="relative overflow-hidden bg-paper py-section-sm border-b border-rule">
+  <div class="world-map-dots absolute right-0 top-1/2 -translate-y-1/2 w-[420px] h-[180px] opacity-[0.4] pointer-events-none hidden xl:block" aria-hidden="true"></div>
+
   <div class="shell relative z-10 grid grid-cols-1 md:grid-cols-[minmax(0,26rem)_minmax(0,15.5rem)] gap-x-12 gap-y-8 items-start">
     <div>
       <span class="eyebrow fade-up">The Shift</span>
