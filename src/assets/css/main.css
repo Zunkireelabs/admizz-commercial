@@ -575,6 +575,21 @@
   mask-size: 1600px auto;
   -webkit-mask-position: -680px -90px;
   mask-position: -680px -90px;
+  transition: opacity theme("transitionDuration.slow") theme("transitionTimingFunction.signature");
+}
+
+/* Interactive globe canvas (cobe) — sits over .world-map-dots, invisible
+   until main.js's dynamic import resolves and the first frame renders,
+   at which point JS fades this in and fades the flat fallback out. Never
+   loads at all under prefers-reduced-motion, so the fallback is the
+   PERMANENT state there, not a flash before the canvas takes over. */
+.globe-canvas {
+  cursor: grab;
+  touch-action: none;
+  transition: opacity theme("transitionDuration.slow") theme("transitionTimingFunction.signature");
+}
+.globe-canvas:active {
+  cursor: grabbing;
 }
 
 /* ---------- Ecosystem pathway (homepage §05) ----------

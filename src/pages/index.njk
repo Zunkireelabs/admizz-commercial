@@ -216,9 +216,26 @@ permalink: /
    of the two-column grid so it doesn't overlap the text now that the
    column widths/breakpoint are actually correct (see the placement fixes
    made to this section since v5). The tightened scale (narrower headline
-   column, smaller list type/spacing) from v5 stays. #}
+   column, smaller list type/spacing) from v5 stays.
+
+   v7: upgraded from the flat CSS dot-map to a real interactive globe
+   (cobe — a plain canvas/WebGL library, not React-dependent at its core,
+   so adapted directly into this site's existing vanilla-JS + Nunjucks
+   stack rather than pulling in React/Next.js/shadcn as the source
+   component's own setup instructions assumed). Explicit override of
+   CLAUDE.md's "no spinning globe" rule, on request — the flat dot-map
+   markup stays in the DOM as the permanent no-JS/reduced-motion state
+   (same progressive-enhancement pattern already used across this site,
+   e.g. ecosystem-story-photo): the canvas only takes over once cobe has
+   actually loaded and started, and never loads at all when
+   prefers-reduced-motion is set. Markers are real Admizz partner-country
+   capitals (from universities.json's own country list, universities.json
+   §groups), not invented cities. #}
 <section class="relative overflow-hidden bg-paper py-section-sm border-b border-rule">
-  <div class="world-map-dots absolute right-8 top-1/2 -translate-y-1/2 w-[240px] h-[140px] opacity-[0.42] pointer-events-none hidden xl:block" aria-hidden="true"></div>
+  <div class="absolute right-8 top-1/2 -translate-y-1/2 w-[170px] h-[170px] hidden xl:block" aria-hidden="true">
+    <div class="world-map-dots absolute inset-0 opacity-[0.42] pointer-events-none" data-globe-fallback></div>
+    <canvas class="globe-canvas absolute inset-0 w-full h-full rounded-full opacity-0" data-globe></canvas>
+  </div>
 
   <div class="shell relative z-10 grid grid-cols-1 md:grid-cols-[minmax(0,26rem)_minmax(0,15.5rem)] gap-x-12 gap-y-8 md:items-center">
     <div>

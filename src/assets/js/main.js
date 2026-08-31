@@ -590,3 +590,123 @@ document.querySelectorAll('.fade-up').forEach((el) => {
   el.classList.add('js-armed');
   revealObserver.observe(el);
 });
+
+// ---------------------------------------------------------------------------
+// Globe (homepage §01, The Shift) — cobe, adapted to vanilla JS
+//
+// The source component this was adapted from (Leonxlnx/taste-skill's
+// cobe-globe.tsx) assumed a React + shadcn project. This site has neither —
+// cobe's own API (`createGlobe(canvas, options)`) is plain canvas/WebGL with
+// no React dependency, so only that core logic was ported; the React
+// wrapper (hooks, JSX, CSS-anchor-positioned marker labels) was dropped.
+// Markers are real Admizz partner-country capitals, drawn from
+// universities.json's own country list (src/_data/universities.json), not
+// invented cities — same non-negotiable that governs every other stat on
+// this site.
+//
+// Explicit override of CLAUDE.md's "no spinning globe" rule, on request.
+// Progressive enhancement, same pattern as the rest of this site: the flat
+// .world-map-dots fallback (main.css) is the element's PERMANENT visible
+// state under prefers-reduced-motion or if this import ever fails — the
+// canvas only fades in once cobe has actually loaded and rendered a frame.
+// ---------------------------------------------------------------------------
+
+const globeCanvas = document.querySelector('[data-globe]');
+
+if (globeCanvas && !prefersReducedMotion) {
+  import('cobe').then(({ default: createGlobe }) => {
+    const fallback = document.querySelector('[data-globe-fallback]');
+
+    // Real coordinates (capital cities) for the 9 countries in
+    // universities.json's partner-university register — not arbitrary
+    // demo cities.
+    const markers = [
+      { location: [51.5074, -0.1278], size: 0.05 },  // United Kingdom — London
+      { location: [38.9072, -77.0369], size: 0.05 }, // United States — Washington, D.C.
+      { location: [-35.2809, 149.13], size: 0.05 },  // Australia — Canberra
+      { location: [45.4215, -75.6972], size: 0.05 }, // Canada — Ottawa
+      { location: [48.8566, 2.3522], size: 0.05 },   // France — Paris
+      { location: [60.1699, 24.9384], size: 0.05 },  // Finland — Helsinki
+      { location: [-41.2865, 174.7762], size: 0.05 }, // New Zealand — Wellington
+      { location: [28.6139, 77.209], size: 0.05 },   // India — New Delhi
+      { location: [52.52, 13.405], size: 0.05 },     // Germany — Berlin
+    ];
+
+    let phi = 0;
+    let width = 0;
+    let globe = null;
+    let pointerInteracting = null;
+
+    const onResize = () => {
+      width = globeCanvas.offsetWidth;
+    };
+    window.addEventListener('resize', onResize);
+    onResize();
+
+    // cobe v2's real API (checked node_modules/cobe/dist/index.d.ts — there
+    // is no `onRender` option, despite the source component using one;
+    // that was a bug in this port's first pass, silently doing nothing).
+    // Animation is driven by calling `globe.update()` inside your own
+    // requestAnimationFrame loop, same as the original component's actual
+    // `animate()` function.
+    globe = createGlobe(globeCanvas, {
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      width: width * 2,
+      height: width * 2,
+      phi: 0,
+      theta: 0.28,
+      dark: 0,
+      diffuse: 1.5,
+      mapSamples: 12000,
+      mapBrightness: 6,
+      // Brand colors, not the source component's demo blue — baseColor is
+      // this site's paper tone, markerColor its gold-text token, glowColor
+      // paper again so the sphere's rim blends into the section instead of
+      // reading as a hard-edged disc.
+      baseColor: [0.965, 0.965, 0.953],
+      markerColor: [0.541, 0.384, 0],
+      glowColor: [0.965, 0.965, 0.953],
+      markers,
+    });
+
+    const animate = () => {
+      if (!pointerInteracting) phi += 0.0032;
+      globe.update({ phi, width: width * 2, height: width * 2 });
+      requestAnimationFrame(animate);
+    };
+    animate();
+
+    // First-frame handoff: crossfade from the flat fallback to the canvas
+    // only once cobe has actually drawn something, never before.
+    requestAnimationFrame(() => {
+      globeCanvas.style.opacity = '1';
+      if (fallback) fallback.style.opacity = '0';
+    });
+
+    globeCanvas.addEventListener('pointerdown', (e) => {
+      pointerInteracting = e.clientX;
+      globeCanvas.style.cursor = 'grabbing';
+    });
+    window.addEventListener('pointerup', () => {
+      pointerInteracting = null;
+      globeCanvas.style.cursor = 'grab';
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (pointerInteracting !== null) {
+        const delta = e.clientX - pointerInteracting;
+        phi += delta / 200;
+        pointerInteracting = e.clientX;
+      }
+    });
+    globeCanvas.addEventListener('touchmove', (e) => {
+      if (pointerInteracting !== null && e.touches[0]) {
+        const delta = e.touches[0].clientX - pointerInteracting;
+        phi += delta / 100;
+        pointerInteracting = e.touches[0].clientX;
+      }
+    }, { passive: true });
+  }).catch(() => {
+    // cobe failed to load — the flat .world-map-dots fallback is already
+    // the visible state, nothing more to do.
+  });
+}
