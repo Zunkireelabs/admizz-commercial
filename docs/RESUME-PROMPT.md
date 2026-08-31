@@ -11,12 +11,14 @@ transformation, not a redesign. This is a long-running project with substantial 
 Before doing ANYTHING, read these files in order:
 
   1. ./docs/RESUME-PROMPT.md              ← this file, IN FULL. Start with the block headed
-                                             "SESSION 2026-08-29/30 — DIRECTION CHANGE" directly
-                                             under "Quick state" — that is the CURRENT direction.
-                                             Everything under "Inner-pages state" below it is a
-                                             DIFFERENT branch and its homepage-freeze rule does
-                                             NOT apply to the current work. Nothing here is
-                                             optional context.
+                                             "SESSION 2026-08-30/31 — BRANCH redesign/proof-content"
+                                             directly under "Quick state" — that is the CURRENT,
+                                             ACTIVE work and branch. The "DIRECTION CHANGE" block
+                                             below it is the PLAN that work executed — still
+                                             useful background, but superseded as a task list.
+                                             Everything under "Inner-pages state" further down is
+                                             an OLDER branch and its homepage-freeze rule does NOT
+                                             apply to current work. Nothing here is optional context.
   2. ./CLAUDE.md                          ← overrides the global ~/CLAUDE.md, which describes a
                                              DIFFERENT project (the Lead Gen CRM) and must be
                                              ignored in this repo
@@ -35,12 +37,13 @@ Then tell me, in a short summary:
 
 Do not write any site code or touch the VPS until I've confirmed direction.
 
-The immediate next action is NOT to start building. The 2026-08-30 block ends with three
-questions I have not answered yet (university logos: copy or link · the 1,000-vs-2,000 student
-number · the ~150 sister-site articles: link or write fresh), plus two older ones (is /ventures/
-confirmed as the canonical design language, and does the palette revert per docs/briefs/
-A-palette-revert.md). Ask me those first, in one short list, and wait. Step 1 of the agreed plan
-(the admizzeducation.com content harvest) depends on the answers.
+The immediate next action IS to start building — direction is confirmed, all 5 prior open
+questions are answered (see the 2026-08-30/31 block), and the next concrete task is agreed:
+deepen the content on the existing three `/ventures/` records (Institute, Education, Workforce
+Solutions) — NOT new dedicated pages per venture (that decision was made deliberately; the
+reasoning is in the session block, read it before reconsidering). Confirm you've read that
+reasoning back to me in one line before writing any content, then proceed — don't re-ask
+questions already answered in this file.
 
 One more thing before you touch anything: across the last several sessions, one methodology has
 proven itself over and over on this project and should be your default for any pixel-level or
@@ -72,7 +75,134 @@ interaction-level claim, not just something the previous session happened to do:
 
 ---
 
-## Quick state (keep this current — last updated 2026-08-30)
+## Quick state (keep this current — last updated 2026-08-31)
+
+---
+
+# ★ SESSION 2026-08-30/31 — BRANCH `redesign/proof-content` — READ THIS FIRST
+
+Cut from `redesign/consulting-experience` (which itself contains everything from the older
+`redesign/inner-pages` branch — one continuous line, not competing branches). **6 commits, all
+local, none pushed:**
+
+```
+e5bac14 feat(ventures): sourced sector data per venture, BCG-style        <- HEAD
+2d64b98 feat(home): real proof replaces the empty icon strip
+8ce90b6 style(palette): exact color match to admizzeducation.com
+efc4211 revert(palette): restore documented navy/gold, retire invented Indigo A400 blue
+8142600 content(data): harvest proof figures, partner universities, destinations
+a298dbc docs(resume): record the 2026-08-29/30 direction change
+```
+
+## The 5 open questions from the block below — ALL ANSWERED, do not re-ask
+
+1. University logos → **copied into repo, self-hosted.** `scripts/harvest-university-logos.mjs`
+   pulled 104 real logos into `src/assets/images/universities/<country>/`, `universities.json`
+   generated from the same manifest.
+2. 1,000 vs 2,000 students → **not a real conflict.** The sister site's own timeline shows 1,000
+   as the 2021 milestone, 2,000+ as current — a growth curve, not a contradiction. `timeline.json`
+   keeps "1,000+" on the 2021 entry; `stats.json` uses "2,000+" as the current headline.
+3. The ~150 sister-site articles → **not yet acted on** (deprioritized once the content-depth
+   problem below took over). Still open if picked back up: link a curated subset vs write fresh.
+4. `/ventures/` as canonical design language → **confirmed, in active use** — "the record" idiom
+   (mono labels, hairline rules, data-row, expand/collapse) is what every new section since has
+   followed.
+5. Palette revert → **done, then changed again.** First reverted to the group logo-sampled navy
+   `#002856`/gold `#FDD63F` (Brief A). Then, at explicit user request, changed AGAIN to an EXACT
+   match of admizzeducation.com's live colors: **navy `#0D1282`, gold `#FFD800`.** This was raised,
+   questioned (does it look too similar to the sister site?), and explicitly re-confirmed by the
+   user as correct and intentional — "the color is the way we wanted, admizz represents color from
+   this." **Closed. Do not revisit unless the user raises it again.**
+
+## What got built, in order
+
+1. **Data harvest** (`8142600`) — real, sourced facts from admizzeducation.com (same group, sister
+   property): stats, 104 university logos + names, 9 destinations, offices. Every fact tagged
+   `source`/`status` in `src/_data/*.json`. Two internal-consistency traps found and avoided: the
+   sister site's OWN "25,000+ students / 11 countries" figure is self-labelled "indicative" and
+   contradicts its own 2,000+/9-country figures elsewhere — not used. Its partner testimonials are
+   self-labelled "sample quotes... will be replaced" — not used; no fabricated testimonials exist
+   anywhere in this build.
+2. **Palette** (`efc4211`, `8ce90b6`) — see point 5 above. Also fixed a real accessibility bug
+   found along the way: `text-gold` on light backgrounds (1.41:1, fails) → `text-gold-text`
+   (5.49:1, AA) in two places.
+3. **Homepage proof section** (`2d64b98`) — the old "Global Reach / Student First / Future Ready"
+   icon strip (zero real facts) replaced by: (a) the 4 real headline stats, attributed ("Across
+   Admizz Education... as of 2026", not claimed as whole-group fact), (b) a new
+   `partials/academic-network.njk` — a country-by-country register of all 104 real universities,
+   click-to-expand (Alpine collapse), deliberately NOT a copy of admizzeducation.com's own
+   logo-carousel-with-filter-tabs (that pattern was considered and rejected as copying a sister
+   site's — and the generic B2B SaaS trust-wall's — own UI).
+4. **Ventures sector data** (`e5bac14`) — the real pivot point this session. User feedback,
+   verbatim: the site "still looks like the educational consultancy... not the top notch premium
+   consulting site." Diagnosis: relaying admizzeducation.com's own consumer stats is a vendor
+   testimonial, not sector intelligence — the opposite of how bcg.com/industries/education/overview
+   reads (~80% third-party sector data, own work shown as one instance of understanding that
+   landscape). Fix: each of the 3 venture records on `/ventures/` now opens with ONE sourced
+   sector-level fact (not another Admizz claim about itself), behind a "View sources" toggle
+   reusing the exact same expand/collapse pattern as the homepage register. `src/_data/marketContext.json`.
+
+   **Every figure was independently verified against its PRIMARY source page before being
+   written in — this caught real errors.** A first pass (via web search summaries) had a WRONG
+   VR-participant figure (937,969 claimed vs 872,460 actual) and an unverifiable market-research-
+   vendor stat (two different numbers found across two of the vendor's own pages). Both were
+   caught by fetching the actual primary source and dropped/corrected before committing, not
+   after. **Lesson for next session: a search-result summary is not a verified fact. Fetch the
+   primary source page directly before writing any external statistic into the site.**
+
+## References this session actually used, and for what — don't re-derive
+
+- **bcg.com/industries/education/overview** — content density/structure model (~80% evidence,
+  facts woven into real sentences, third-party sourced, own work as one instance not the whole
+  pitch). This is the standing bar for "premium consulting" content on this site.
+- **rillet.com** — visual restraint model (no shadows, near-zero radius, one accent color, flat).
+- **scaler.com** (checked live) — two specific devices borrowed: (1) a stat block with a one-line
+  provenance caption directly underneath ("Based on the 2026 Scaler career transition
+  assessment") — this is why the homepage stat band says "Figures published by Admizz Education,
+  as of 2026"; (2) grouping trust proof into labeled categories rather than one undifferentiated
+  logo wall.
+- **intrnforte.com** — **NOT a current design reference.** Given as a forward-looking signal only:
+  Admizz Institute is expected to commercialize later into something closer to intrnforte's model
+  (structured programs, certifications, job-outcome tracking). Do not build anything from
+  intrnforte.com's look into the current site — Institute has no public content yet, and building
+  toward it now would mean inventing facts. When Institute does launch, THAT is when a
+  "training → certification → job outcome" narrative (same shape as BCG's own AVID citation —
+  "111,780 educators across 4,200 schools") becomes appropriate, with real Institute-specific
+  facts, not before. Institute's current "No public site yet" status in `ventures.json` and the
+  dead footer link should be treated as an honest placeholder, not reworked to look permanent.
+
+## The agreed next step — content depth on the EXISTING /ventures/ records
+
+User feedback that started this: even after the sector-data fix above, the site is still "a
+small content update, but we need the major content to be demonstrated." The question of HOW to
+go bigger was explicitly decided this session — **read this reasoning before reconsidering it:**
+
+**Decision: expand the existing three `/ventures/` records substantially. Do NOT build three new
+dedicated pages (e.g. `/ventures/education/`, `/ventures/institute/`, `/ventures/workforce/`) —
+not yet.**
+
+Why: the three ventures do not have equal amounts of real, verifiable content behind them right
+now. Education has real substance (accreditation, real numbers, an actual sister site with 150+
+pages). Institute has almost nothing — "no public site yet." Workforce Solutions has some (the
+2024 state-department launch) but is thin next to Education. Building three equally-sized
+dedicated pages today would create real pressure to pad the thin ones to not look embarrassing
+next to Education's page — which is the spirit of inventing facts even without literally doing
+it. The safer, more honest sequence: deepen the current records proportionately to what's real
+(Education gets real weight, Institute and Workforce get honest, smaller treatment), and let any
+venture graduate to its own dedicated page later, once it has genuinely earned that with real
+material — Institute after it commercializes (see intrnforte.com note above), for instance.
+
+**Concretely, what "deepen" means:** more than the single lead-sentence-plus-citation pattern
+that's there now. More sourced facts per venture (especially Education, which can support it),
+real analytical paragraphs in the site's own voice (not just stats), matching bcg.com's density —
+while keeping the site's own "record" idiom (mono labels, hairline rules, no cards/shadows,
+expand/collapse reused not reinvented) rather than copying BCG's or anyone else's visual style.
+
+**Research method proven this session, reuse it:** WebSearch for candidate facts and sources →
+WebFetch or firecrawl_scrape the PRIMARY source page directly → quote the exact figure as stated
+→ only then write it into `_data`. Never skip the primary-source fetch step.
+
+---
 
 ---
 
