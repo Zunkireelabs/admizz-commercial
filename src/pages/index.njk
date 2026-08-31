@@ -335,7 +335,7 @@ permalink: /
             <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ v.stage }}</span>
           </div>
           <h3 class="mt-1 font-display font-light text-h4 text-ink text-balance">{{ v.name }}</h3>
-          <a href="{{ v.href if v.href != '#' else '/ventures/' }}" class="venture-preview-photo mt-4 block relative rounded-lg overflow-hidden bg-navy-deep aspect-[4/5]">
+          <a href="{{ v.href if v.href != '#' else '/ventures/' }}" class="venture-preview-photo mt-4 block relative rounded-lg overflow-hidden bg-navy-deep aspect-[3/2]">
             <div class="absolute inset-0 [&_picture]:contents [&_picture]:block [&_picture]:h-full [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
               {% image "src/assets/images/" + img.file, img.alt, "(min-width: 1024px) 22vw, (min-width: 640px) 30vw, 80vw" %}
             </div>
