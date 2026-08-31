@@ -621,15 +621,15 @@ if (globeCanvas && !prefersReducedMotion) {
     // universities.json's partner-university register — not arbitrary
     // demo cities.
     const markers = [
-      { location: [51.5074, -0.1278], size: 0.05 },  // United Kingdom — London
-      { location: [38.9072, -77.0369], size: 0.05 }, // United States — Washington, D.C.
-      { location: [-35.2809, 149.13], size: 0.05 },  // Australia — Canberra
-      { location: [45.4215, -75.6972], size: 0.05 }, // Canada — Ottawa
-      { location: [48.8566, 2.3522], size: 0.05 },   // France — Paris
-      { location: [60.1699, 24.9384], size: 0.05 },  // Finland — Helsinki
-      { location: [-41.2865, 174.7762], size: 0.05 }, // New Zealand — Wellington
-      { location: [28.6139, 77.209], size: 0.05 },   // India — New Delhi
-      { location: [52.52, 13.405], size: 0.05 },     // Germany — Berlin
+      { location: [51.5074, -0.1278], size: 0.028 },  // United Kingdom — London
+      { location: [38.9072, -77.0369], size: 0.028 }, // United States — Washington, D.C.
+      { location: [-35.2809, 149.13], size: 0.028 },  // Australia — Canberra
+      { location: [45.4215, -75.6972], size: 0.028 }, // Canada — Ottawa
+      { location: [48.8566, 2.3522], size: 0.028 },   // France — Paris
+      { location: [60.1699, 24.9384], size: 0.028 },  // Finland — Helsinki
+      { location: [-41.2865, 174.7762], size: 0.028 }, // New Zealand — Wellington
+      { location: [28.6139, 77.209], size: 0.028 },   // India — New Delhi
+      { location: [52.52, 13.405], size: 0.028 },     // Germany — Berlin
     ];
 
     let phi = 0;
@@ -660,11 +660,14 @@ if (globeCanvas && !prefersReducedMotion) {
       mapSamples: 20000,
       mapBrightness: 6,
       // Brand colors, not the source component's demo blue — baseColor is
-      // this site's paper tone, markerColor its gold-text token, glowColor
-      // paper again so the sphere's rim blends into the section instead of
-      // reading as a hard-edged disc.
+      // this site's paper tone, markerColor a lightened gold-text (blended
+      // toward paper — cobe has no marker opacity control, only color, so
+      // this is how "soften" is actually achieved) instead of the original
+      // solid gold-text, which read as flat stickers on the sphere at any
+      // size. glowColor is paper again so the sphere's rim blends into the
+      // section instead of reading as a hard-edged disc.
       baseColor: [0.965, 0.965, 0.953],
-      markerColor: [0.541, 0.384, 0],
+      markerColor: [0.75, 0.68, 0.48],
       glowColor: [0.965, 0.965, 0.953],
       markers,
     });
