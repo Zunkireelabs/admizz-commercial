@@ -290,17 +290,15 @@ permalink: /
     </div>
 
     {# Preview row: 3 venture cards + a mini pathway diagram alongside.
-       Photos: institute-preview.jpg is a user-supplied, explicitly
-       AI-generated image (against this project's own "no AI-look
-       imagery" rule in docs/00-BRIEF.md §13 — overridden here on
-       explicit instruction, same pattern as the ecosystem.jpg
-       exceptions elsewhere, NOT a default for future sessions to
-       repeat unprompted). Education/Workforce reuse the site's existing
-       real photos as placeholders until matching AI photos are supplied. #}
+       All 3 photos are user-supplied, explicitly AI-generated images
+       (against this project's own "no AI-look imagery" rule in
+       docs/00-BRIEF.md §13 — overridden here on explicit instruction,
+       same pattern as the ecosystem.jpg exceptions elsewhere, NOT a
+       default for future sessions to repeat unprompted). #}
     {% set previewImages = {
       "institute": { file: "preview/institute-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
-      "education": { file: "ecosystem/education.jpg", alt: "Graduates in caps and gowns walking together" },
-      "workforce": { file: "ecosystem/workforce.jpg", alt: "Colleagues collaborating around a table, one using a wheelchair" }
+      "education": { file: "preview/education-preview.jpg", alt: "Student walking outside a university building with a backpack" },
+      "workforce": { file: "preview/workforce-preview.jpg", alt: "Three colleagues talking in a modern office" }
     } %}
     <div class="mt-14 md:mt-16 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] gap-x-10 gap-y-10 items-start fade-up" style="animation-delay:140ms">
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-10">
