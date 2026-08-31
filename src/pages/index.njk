@@ -202,28 +202,38 @@ permalink: /
    eyebrow, the numbered "what's changing" breakdown, a background world
    map, and a closing link.
 
-   v4 CORRECTION: the first pass reused the hero's plain dot-grid CIRCLE
-   for this background — at a glance that's just a blob of dots, not a
-   world map, and it doesn't match the reference. Rebuilt properly: a real
-   world outline (MIT-licensed, simplemaps.com, src/assets/images/brand/
-   world-map-mask.svg) drives a CSS mask over a small repeating dot
-   pattern, so the dots are actually shaped like continents. Still flat
-   2D, still not the literal spinning 3D globe CLAUDE.md's Three.js
-   section bans — this is a static background texture. #}
-<section class="relative overflow-hidden bg-paper py-section-sm border-b border-rule">
-  <div class="world-map-dots absolute right-0 top-1/2 -translate-y-1/2 translate-x-[28%] w-[900px] h-[386px] opacity-[0.3] pointer-events-none hidden lg:block" aria-hidden="true"></div>
+   v4 CORRECTION: the first pass reused the hero's plain dot-grid CIRCLE —
+   just a blob of dots, not a world map. Rebuilt with a real world outline
+   (MIT-licensed, simplemaps.com) driving a CSS mask, but that produced a
+   flat RECTANGLE (a map), not a globe.
 
-  <div class="shell relative z-10 grid grid-cols-1 lg:grid-cols-[minmax(0,32rem)_minmax(0,18rem)] gap-x-16 gap-y-10 items-start">
+   v5 CORRECTION (against a closer look at the reference): the reference
+   graphic is round with light-to-dark shading — an actual globe silhouette
+   bleeding off the section's right edge, not a flat map sitting fully
+   inside it. Rebuilt again: the same dot-mapped world data, zoomed and
+   positioned to one hemisphere, clipped into a circle, with a radial-
+   gradient light overlay (bright upper-left, fading toward the rim) to
+   read as a lit sphere — still flat 2D/CSS, not CLAUDE.md's banned 3D
+   spinning globe. Also tightened the whole section's scale (narrower
+   headline column, smaller list type/spacing) — the first 2 passes ran
+   noticeably larger/looser than the reference at the same width. #}
+<section class="relative overflow-hidden bg-paper py-section-sm border-b border-rule">
+  <div class="world-globe absolute top-1/2 -translate-y-1/2 right-0 translate-x-[38%] w-[440px] h-[440px] rounded-full overflow-hidden pointer-events-none hidden lg:block" aria-hidden="true">
+    <div class="world-globe-dots absolute inset-0"></div>
+    <div class="world-globe-shade absolute inset-0"></div>
+  </div>
+
+  <div class="shell relative z-10 grid grid-cols-1 lg:grid-cols-[minmax(0,26rem)_minmax(0,15.5rem)] gap-x-12 gap-y-8 items-start">
     <div>
       <span class="eyebrow fade-up">The Shift</span>
-      <p class="mt-4 fade-up font-display font-light text-h1 text-ink max-w-[26ch] text-balance" style="animation-delay:60ms">
+      <p class="mt-3 fade-up font-display font-light text-[clamp(1.5rem,1.1rem+1.8vw,2.3rem)] leading-[1.15] text-ink max-w-[20ch] text-balance" style="animation-delay:60ms">
         Education is more global. Careers are less linear. The skills a job needs can shift <em class="italic text-navy font-book">faster</em> than a degree can be finished.
       </p>
-      <p class="mt-6 text-body-lg text-ink-muted max-w-measure fade-up" style="animation-delay:120ms">
+      <p class="mt-5 text-small text-ink-muted max-w-[36ch] fade-up" style="animation-delay:120ms">
         For most people, the constraint isn&rsquo;t access anymore &mdash; it&rsquo;s knowing what comes next, and having a real way to prepare for it.
         Admizz operates across the three places that question actually gets answered: preparation, education, and work.
       </p>
-      <a href="#what-admizz-is" class="mt-6 inline-flex items-center gap-2 text-small font-medium text-ink link-underline fade-up" style="animation-delay:170ms">
+      <a href="#what-admizz-is" class="mt-4 inline-flex items-center gap-2 text-small font-medium text-ink link-underline fade-up" style="animation-delay:170ms">
         Explore how we help
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -231,18 +241,18 @@ permalink: /
 
     {# The "what's changing" breakdown — three one-line elaborations of the
        headline statement above, not new claims about Admizz itself. #}
-    <div class="flex flex-col gap-6 fade-up" style="animation-delay:100ms">
+    <div class="flex flex-col gap-4 fade-up" style="animation-delay:100ms">
       {% set shifts = [
         { title: "Education is changing.", text: "More options, more destinations, more complexity." },
         { title: "Careers are changing.", text: "Paths aren't fixed anymore. People move, pivot and grow." },
         { title: "Skills are changing.", text: "What you learn today may not be enough tomorrow." }
       ] %}
       {% for s in shifts %}
-      <div class="flex gap-4 pt-5 border-t border-rule first:pt-0 first:border-t-0">
-        <span class="font-mono text-small tabular-nums text-navy-soft shrink-0">0{{ loop.index }}</span>
+      <div class="flex gap-3 pt-4 border-t border-rule first:pt-0 first:border-t-0">
+        <span class="font-mono text-micro tabular-nums text-navy-soft shrink-0">0{{ loop.index }}</span>
         <div>
-          <h3 class="font-display font-book text-body-lg text-ink">{{ s.title }}</h3>
-          <p class="mt-1 text-small text-ink-muted leading-relaxed">{{ s.text }}</p>
+          <h3 class="font-display font-book text-body text-ink">{{ s.title }}</h3>
+          <p class="mt-1 text-micro text-ink-muted leading-relaxed">{{ s.text }}</p>
         </div>
       </div>
       {% endfor %}
