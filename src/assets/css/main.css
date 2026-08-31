@@ -561,16 +561,20 @@
    continent shapes. Positioned to sit clear of the text columns, not
    overlapping — see the placement fixes made to this section since. */
 .world-map-dots {
-  background-image: radial-gradient(circle, theme("colors.gold.text") 1px, transparent 1.3px);
-  background-size: 9px 9px;
+  background-image: radial-gradient(circle, theme("colors.gold.text") 1.2px, transparent 1.6px);
+  background-size: 7px 7px;
   -webkit-mask-image: url("/assets/images/brand/world-map-mask.svg");
   mask-image: url("/assets/images/brand/world-map-mask.svg");
-  -webkit-mask-size: contain;
-  mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
+  /* Zoomed into one recognizable landmass (Africa/Europe, the source
+     SVG's 2000x857 viewBox) instead of the whole flattened world at
+     "contain" — at this box's small size, the full world just read as
+     a faint scatter, not a recognizable shape. */
+  -webkit-mask-size: 1600px auto;
+  mask-size: 1600px auto;
+  -webkit-mask-position: -680px -90px;
+  mask-position: -680px -90px;
 }
 
 /* ---------- Ecosystem pathway (homepage §05) ----------
