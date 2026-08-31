@@ -571,10 +571,10 @@
      SVG's 2000x857 viewBox) instead of the whole flattened world at
      "contain" — at this box's small size, the full world just read as
      a faint scatter, not a recognizable shape. */
-  -webkit-mask-size: 1600px auto;
-  mask-size: 1600px auto;
-  -webkit-mask-position: -680px -90px;
-  mask-position: -680px -90px;
+  -webkit-mask-size: 2250px auto;
+  mask-size: 2250px auto;
+  -webkit-mask-position: -900px -56px;
+  mask-position: -900px -56px;
   transition: opacity theme("transitionDuration.slow") theme("transitionTimingFunction.signature");
 }
 

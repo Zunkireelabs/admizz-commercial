@@ -657,7 +657,7 @@ if (globeCanvas && !prefersReducedMotion) {
       theta: 0.28,
       dark: 0,
       diffuse: 1.5,
-      mapSamples: 12000,
+      mapSamples: 20000,
       mapBrightness: 6,
       // Brand colors, not the source component's demo blue — baseColor is
       // this site's paper tone, markerColor its gold-text token, glowColor
