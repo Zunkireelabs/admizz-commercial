@@ -552,6 +552,55 @@
   }
 }
 
+/* ---------- Ecosystem pathway (homepage §05) ----------
+   The three REAL nodes (Preparation/Education/Work) lift into raised
+   panels — negative-margin depth + a soft navy-hued shadow (single
+   consistent light source, per the Taste Skill redesign checklist), radius
+   12px matching CLAUDE.md's "panels" tier (12-16px). The narrative nodes
+   (Potential/Skills/Opportunity) stay flush with no panel at all — the
+   asymmetry between the two node types IS the content: it shows which
+   three points on the line are actual Admizz businesses. */
+.ecosystem-path-node-real {
+  display: block;
+  margin-top: -0.75rem;
+  padding: 1.25rem 1.125rem 1.375rem;
+  border-radius: theme("borderRadius.lg");
+  background-color: theme("colors.navy.soft / 18%");
+  border: 1px solid theme("colors.navy.on-muted / 18%");
+  box-shadow: 0 12px 28px -14px rgba(3, 8, 30, 0.55);
+  transition: transform theme("transitionDuration.reveal") theme("transitionTimingFunction.signature"),
+    background-color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+}
+.ecosystem-path-node-real:hover,
+.ecosystem-path-node-real:focus-visible {
+  transform: translateY(-3px);
+  background-color: theme("colors.navy.soft / 28%");
+}
+
+/* ---------- Beliefs panels (homepage §06) ----------
+   Radius intentionally varied by size, per CLAUDE.md's radius scale (never
+   one uniform value): the featured panel gets the larger "panels" tier
+   (16px), the two smaller ones get the "cards" tier (8px) — a visible,
+   deliberate size/radius relationship, not an accident. */
+.belief-panel {
+  padding: 1.5rem 1.5rem 1.75rem;
+  border-radius: theme("borderRadius.lg");
+  background-color: theme("colors.navy.soft / 14%");
+  border: 1px solid theme("colors.navy.on-muted / 14%");
+  transition: transform theme("transitionDuration.reveal") theme("transitionTimingFunction.signature"),
+    background-color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+}
+.belief-panel:hover,
+.belief-panel:focus-within {
+  transform: translateY(-3px);
+  background-color: theme("colors.navy.soft / 22%");
+}
+.belief-panel-featured {
+  padding: 2rem 2.25rem 2.5rem;
+  border-radius: theme("borderRadius.xl");
+  box-shadow: 0 20px 40px -20px rgba(3, 8, 30, 0.6);
+}
+
 /* ---------- Field diagram ---------- */
 .masthead-figure {
   position: relative;

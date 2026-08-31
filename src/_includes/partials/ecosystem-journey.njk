@@ -91,7 +91,15 @@
         <span class="text-gold-text">{{ v.name.split(' ').slice(1).join(' ') }}</span>
       </h3>
       <span class="eco-field mt-2 font-mono text-micro uppercase tracking-widest text-navy-soft block">{{ v.vertical }}</span>
-      <p class="eco-field mt-5 text-body-lg text-ink-muted max-w-measure-tight">{{ v.description }}</p>
+
+      {# Problem statement — one line naming what this business exists to
+         close, before describing what it does. Own analytical framing, not
+         a new claim about Admizz itself. #}
+      {% if v.problem %}
+      <p class="eco-field mt-4 font-display font-light text-h4 text-ink text-balance">{{ v.problem }}</p>
+      {% endif %}
+
+      <p class="eco-field mt-4 text-body-lg text-ink-muted max-w-measure-tight">{{ v.description }}</p>
       {% if v.verticalLine %}
       <p class="eco-field mt-2 text-small text-ink-faint italic">{{ v.verticalLine }}</p>
       {% endif %}
@@ -100,6 +108,19 @@
         {% for e in v.exams %}<li class="font-mono text-micro uppercase tracking-wide text-ink-faint border border-rule rounded-sm px-2 py-1">{{ e }}</li>{% endfor %}
       </ul>
       {% endif %}
+
+      {# Evidence — the same verified sector stat already built and sourced
+         for /ventures/ (marketContext.json), reused here rather than a
+         second, separately-verified figure. Leads with the number, source
+         inline, exactly the /ventures/ pattern. #}
+      {% set mc = marketContext[v.id] %}
+      {% if mc and mc.stats.length %}
+      <div class="eco-field mt-6 pt-5 border-t border-rule flex items-baseline gap-3">
+        <span class="font-display font-light text-h3 tabular-nums text-ink shrink-0">{{ mc.stats[0].value }}</span>
+        <span class="text-small text-ink-muted leading-snug">{{ mc.stats[0].label }} <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">&mdash; {{ mc.stats[0].publisher }}</span></span>
+      </div>
+      {% endif %}
+
       <a href="{{ v.href }}" class="eco-field mt-6 inline-flex items-center gap-2 text-small font-medium text-ink link-underline w-fit">
         {{ v.cta }}
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -113,11 +134,11 @@
    redesign's move away from boxed chrome. #}
 <div class="shell mt-4 md:mt-8">
   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pt-10 border-t border-rule">
-    <p class="font-display font-light text-h3 text-ink max-w-[24ch] text-balance">
-      One ecosystem. <em class="italic text-navy font-book">Endless possibilities.</em>
+    <p class="font-display font-light text-h3 text-ink max-w-[26ch] text-balance">
+      Three businesses. <em class="italic text-navy font-book">One record, in full.</em>
     </p>
     <a href="/ventures/" class="btn-primary shrink-0">
-      Let's build your future
+      See the full record
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
   </div>

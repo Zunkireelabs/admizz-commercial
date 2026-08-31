@@ -192,6 +192,48 @@ permalink: /
   </div>
 </section>
 
+{# ============================================================ 01 — THE SHIFT
+   New 2026-08-31 (homepage-narrative rebuild). Editorial problem statement,
+   the opening move of the new homepage narrative: the world Admizz operates
+   in, before Admizz itself. Deliberately short — one screen, not a full
+   section of padding. Statement-led (no eyebrow, no card grid) — the first
+   deliberate break from the eyebrow+heading+paragraph+cards rhythm that
+   otherwise repeats down this page, per the brief's request for rhythm. #}
+<section class="bg-paper py-section-sm border-b border-rule">
+  <div class="shell">
+    <p class="fade-up font-display font-light text-h1 text-ink max-w-[26ch] text-balance">
+      Education is more global. Careers are less linear. The skills a job needs can shift faster than a degree can be finished.
+    </p>
+    <p class="mt-6 text-body-lg text-ink-muted max-w-measure fade-up" style="animation-delay:90ms">
+      For most people, the constraint isn&rsquo;t access anymore &mdash; it&rsquo;s knowing what comes next, and having a real way to prepare for it.
+      Admizz operates across the three places that question actually gets answered: preparation, education, and work.
+    </p>
+  </div>
+</section>
+
+{# ============================================================ 02 — WHAT ADMIZZ IS
+   Positioning section — explains WHY the three businesses are one group,
+   not just that they are. Doesn't exist as its own section pre-rebuild;
+   was only implied in the hero subhead. #}
+<section class="bg-paper-sunk py-section-sm border-b border-rule">
+  <div class="shell grid grid-cols-1 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] gap-10 lg:gap-16">
+    <div class="fade-up">
+      <span class="eyebrow">What Admizz Is</span>
+      <h2 class="mt-4 font-display font-light text-h1 text-ink max-w-[12ch] text-balance">
+        One group. <em class="italic text-navy font-book">Three connected businesses.</em>
+      </h2>
+    </div>
+    <div class="fade-up" style="animation-delay:90ms">
+      <p class="text-body-lg text-ink-muted leading-relaxed max-w-measure">
+        Admizz Institute, Admizz Education and Admizz Workforce Solutions each answer to a different market &mdash; test preparation, international admissions, and workforce development are not the same business, and we don&rsquo;t run them as one.
+      </p>
+      <p class="mt-4 text-body text-ink-muted leading-relaxed max-w-measure">
+        What connects them is where they sit on the same line: a test score determines what a university application can achieve; a university decision shapes the career that follows it; a career runs on skills that keep changing after graduation. Most organizations serve one point on that line. Admizz was built to serve more than one of them, without pretending the three are interchangeable.
+      </p>
+    </div>
+  </div>
+</section>
+
 {# ============================================================ THE ECOSYSTEM (register)
    The former standalone "Statement" section (its own eyebrow+headline+paragraph
    module) was cut here, not relocated — on inspection its copy was a near-verbatim
@@ -209,10 +251,10 @@ permalink: /
        right of the shell — that put real distance between a line and the
        heading it supports, reading as orphaned rather than connected. #}
     <div class="max-w-[42rem] fade-up">
-      <span class="eyebrow">One Ecosystem</span>
-      <h2 class="mt-3 font-display font-light text-h2 text-ink">Many ways forward.</h2>
+      <span class="eyebrow">Prepare / Study / Work</span>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink">Three businesses. Real ground covered.</h2>
       <p class="mt-4 text-body-lg text-ink-muted max-w-measure-tight">
-        Three ventures, three stages of the same journey — from readiness, to admission, to career.
+        Each of the three below solves a different problem, for a different audience &mdash; not three steps of one script.
       </p>
     </div>
   </div>
@@ -220,6 +262,172 @@ permalink: /
   {# Deliberately outside .shell — the sticky-photo/text grid inside this
      partial breaks full-bleed to the viewport edge on its photo side. #}
   {% include "partials/ecosystem-journey.njk" %}
+</section>
+
+{# ============================================================ 04 — OUR EXPERTISE
+   New 2026-08-31. Editorial index, not six identical cards — reuses the
+   exact .academic-network-row expand/collapse idiom (Alpine collapse,
+   already registered in main.js) for a second instance of the same pattern
+   rather than inventing a new one. Four categories, not six: verified
+   against ventures.json's actual descriptions — test prep, admissions
+   counseling, visa/scholarship support, and workforce development are the
+   only capabilities with real copy behind them anywhere in this repo.
+   Career Development and Learning & Training (from the brief's example
+   list) are NOT included — no distinct, verifiable service exists for
+   either beyond what Workforce Development already covers. #}
+<section class="bg-paper py-section-sm md:py-section border-t border-rule">
+  <div class="shell">
+    <div class="max-w-[42rem] fade-up">
+      <span class="eyebrow">Our Expertise</span>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink">What Admizz actually does.</h2>
+    </div>
+
+    <div class="mt-10 fade-up" style="animation-delay:90ms" x-data="{ open: 0 }">
+      {% set expertise = [
+        { index: "01", name: "Test Preparation", venture: "Admizz Institute", text: "Structured preparation for IELTS, PTE, SAT, GRE and GMAT — the tests that determine what an application can achieve before it's even submitted." },
+        { index: "02", name: "Admissions & Counseling", venture: "Admizz Education", text: "Choosing a destination, shortlisting institutions, and building an application around a student's actual academic profile, not a template." },
+        { index: "03", name: "Visa & Scholarship Support", venture: "Admizz Education", text: "Guidance through visa applications and scholarship opportunities — the practical steps that stand between an offer and actually enrolling." },
+        { index: "04", name: "Workforce Development", venture: "Admizz Workforce Solutions", text: "Supported employment, job coaching and career-transition guidance, focused on vocational rehabilitation for individuals with disabilities." }
+      ] %}
+      {% for e in expertise %}
+      <div>
+        <button
+          type="button"
+          class="academic-network-row"
+          @click="open = open === {{ loop.index0 }} ? null : {{ loop.index0 }}"
+          :aria-expanded="open === {{ loop.index0 }} ? 'true' : 'false'"
+          aria-controls="expertise-panel-{{ loop.index0 }}"
+        >
+          <span class="flex items-center gap-4">
+            <span class="font-mono text-small tabular-nums text-ink-faint">{{ e.index }}</span>
+            <span class="font-display font-light text-h4 text-ink">{{ e.name }}</span>
+          </span>
+          <span class="flex items-center gap-4">
+            <span class="hidden md:inline font-mono text-micro uppercase tracking-widest text-navy-soft">{{ e.venture }}</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"
+              class="academic-network-chevron text-ink-faint transition-transform duration-press ease-signature"
+              :class="open === {{ loop.index0 }} ? 'rotate-180' : ''">
+              <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+        <div id="expertise-panel-{{ loop.index0 }}" x-show="open === {{ loop.index0 }}" x-collapse x-cloak>
+          <p class="pb-5 pt-1 md:pl-11 text-body text-ink-muted leading-relaxed max-w-measure-tight">{{ e.text }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ============================================================ 05 — THE ADMIZZ ECOSYSTEM
+   New 2026-08-31. The conceptual pathway (Potential -> Opportunity),
+   distinct from the "One Ecosystem" business pitch above despite the
+   similar name — GSAP/CSS only, no Three.js: a horizontal (desktop) /
+   vertical (mobile) node line with staggered fade-up reveal per node is
+   sufficient to carry this idea; a WebGL layer wasn't judged to add
+   anything a typographic diagram doesn't already say. Two real business
+   stages (Preparation/Education/Work map to the three ventures) sit beside
+   three narrative stages (Potential, Skills, Opportunity) that are NOT
+   claimed as Admizz services — they're the surrounding context the three
+   real businesses operate inside.
+
+   2026-08-31 v2: applying the Taste Skill redesign checklist to the flat
+   repetition problem — grain texture instead of an empty flat navy block,
+   and the three REAL nodes now lift into raised panels (real depth via
+   negative margin + a soft, hue-matched shadow, radius 12px per CLAUDE.md's
+   "panels" tier) while the three narrative nodes stay flush/minimal — the
+   asymmetry IS the point: it visually separates "what Admizz operates" from
+   "the context around it" instead of six identical ticks in a row. Real
+   nodes link to their /ventures/ record instead of sitting inert. #}
+<section class="relative overflow-hidden bg-navy-deep py-section">
+  {% include "partials/grain-texture.njk" %}
+  <div class="shell relative z-10">
+    <div class="max-w-[46rem] fade-up">
+      <span class="eyebrow-on-navy">The Admizz Ecosystem</span>
+      <h2 class="mt-4 font-display font-light text-h1 text-navy-on max-w-[18ch] text-balance">
+        From potential <em class="italic text-navy-accent font-book">to opportunity.</em>
+      </h2>
+      <p class="mt-5 text-body-lg text-navy-on-muted max-w-measure">
+        Preparation, education and work aren't separate markets to us &mdash; they're three points on the same line a person actually walks. Admizz operates at three of them; the line runs further than that on both ends.
+      </p>
+    </div>
+
+    <div class="ecosystem-path mt-16 md:mt-20 fade-up" style="animation-delay:120ms">
+      {% set pathNodes = [
+        { label: "Potential", detail: "Where a person starts.", real: false },
+        { label: "Preparation", detail: "Admizz Institute", real: true, href: "/ventures/#record-institute" },
+        { label: "Education", detail: "Admizz Education", real: true, href: "/ventures/#record-education" },
+        { label: "Skills", detail: "What a career now runs on.", real: false },
+        { label: "Work", detail: "Admizz Workforce Solutions", real: true, href: "/ventures/#record-workforce" },
+        { label: "Opportunity", detail: "Where the line leads.", real: false }
+      ] %}
+      <div class="ecosystem-path-line relative hidden md:block h-px bg-navy-on-muted/25 mb-8" aria-hidden="true"></div>
+      <div class="ecosystem-path-track grid grid-cols-2 md:grid-cols-6 gap-x-4 gap-y-10 md:gap-x-3">
+        {% for n in pathNodes %}
+        {% if n.real %}
+        <a href="{{ n.href }}" class="ecosystem-path-node ecosystem-path-node-real group relative fade-up" style="animation-delay:{{ 160 + loop.index0 * 70 }}ms">
+          <span class="ecosystem-path-dot absolute left-4 -top-[27px] md:-top-[35px] block w-2 h-2 rounded-full bg-gold" aria-hidden="true"></span>
+          <span class="font-mono text-micro uppercase tracking-widest text-navy-on">{{ n.label }}</span>
+          <span class="mt-1.5 block text-small text-navy-on-muted">{{ n.detail }}</span>
+          <span class="mt-3 inline-flex items-center gap-1 text-micro font-mono uppercase tracking-widest text-navy-accent opacity-0 group-hover:opacity-100">
+            <svg width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </a>
+        {% else %}
+        <div class="ecosystem-path-node relative pt-6 fade-up" style="animation-delay:{{ 160 + loop.index0 * 70 }}ms">
+          <span class="ecosystem-path-dot absolute left-0 top-0 block w-2 h-2 rounded-full bg-navy-on-muted/40" aria-hidden="true"></span>
+          <span class="block font-mono text-micro uppercase tracking-widest text-navy-on-muted">{{ n.label }}</span>
+          <span class="mt-1.5 block text-small text-navy-on-muted/60">{{ n.detail }}</span>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ 06 — WHAT WE BELIEVE
+   Revived and rewritten from the disabled "Statement band" (previously
+   wrapped in {% if false %}, hidden 2026-08-25). Same navy-band visual
+   language, new job: a real point of view, not a generic mission quote.
+   Three concise principles, each one sentence — deliberately not slogans
+   ("unlock your potential" etc, banned by the brief). Grounded in what's
+   already established across ventures.json/marketContext.json, not new
+   claims.
+
+   2026-08-31 v2: was an equal 3-column grid — the exact "sameness" pattern
+   flagged as flat/templated. Reworked into an asymmetric 5/7-column split:
+   principle 01 gets a raised, larger panel of its own (the one this project
+   treats as foundational — everything else follows from taking preparation
+   seriously); 02 and 03 stack smaller beside it. Grain texture replaces the
+   section's previous plain gradient-only surface. #}
+<section class="relative overflow-hidden bg-navy py-section-sm">
+  {% include "partials/grain-texture.njk" %}
+  <div class="absolute -bottom-1/3 -right-1/4 w-[70%] h-[200%] bg-gradient-to-tl from-navy-accent/40 via-navy-soft/15 to-transparent -rotate-12 blur-3xl pointer-events-none" aria-hidden="true"></div>
+  <div class="shell relative">
+    <span class="eyebrow-on-navy fade-up">What We Believe</span>
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start">
+      <div class="belief-panel belief-panel-featured md:col-span-5 fade-up" style="animation-delay:80ms">
+        <span class="block font-mono text-small tabular-nums text-navy-accent">01</span>
+        <h3 class="mt-4 font-display font-light text-h2 text-navy-on max-w-[14ch] text-balance">Preparation is not a formality.</h3>
+        <p class="mt-4 text-body text-navy-on-muted leading-relaxed max-w-[34ch]">A test score or an application isn&rsquo;t a checkbox &mdash; it&rsquo;s the thing that decides which doors are actually open.</p>
+      </div>
+      <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 md:mt-10">
+        {% set beliefs = [
+          { title: "Education should lead somewhere.", text: "A university choice is a career decision made early. We treat it as one, not as an admissions transaction." },
+          { title: "Skills close gaps services alone don't.", text: "Access to a program is a start. What a person can actually do with it afterward is the part that's easy to overlook." }
+        ] %}
+        {% for b in beliefs %}
+        <div class="belief-panel fade-up" style="animation-delay:{{ loop.index0 * 90 + 170 }}ms">
+          <span class="block font-mono text-small tabular-nums text-navy-accent">0{{ loop.index + 1 }}</span>
+          <h3 class="mt-3 font-display font-light text-h3 text-navy-on max-w-[16ch] text-balance">{{ b.title }}</h3>
+          <p class="mt-3 text-small text-navy-on-muted leading-relaxed max-w-[32ch]">{{ b.text }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 </section>
 
 {% include "partials/academic-network.njk" %}
@@ -251,40 +459,64 @@ permalink: /
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 fade-up">
       <div>
         <span class="eyebrow">Insights</span>
-        <h2 class="mt-3 font-display font-light text-h2 text-ink">Ideas for what's next.</h2>
+        <h2 class="mt-3 font-display font-light text-h2 text-ink">Ideas shaping what's next.</h2>
       </div>
       <a href="/insights/" class="text-small font-medium text-ink link-underline shrink-0">View all insights</a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12 md:gap-y-0">
-      {% for post in insights %}
-      <article class="group md:border-l md:first:border-l-0 border-rule md:pl-8 md:first:pl-0 fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
-        <a href="/insights/{{ post.slug }}/" class="block relative rounded-lg overflow-hidden bg-navy-deep aspect-[4/3]" tabindex="-1" aria-hidden="true">
-          {# object-position biased right: all 3 source images carry a small
-             Admizz logo watermark baked into the top/bottom-LEFT corner
-             (verified via metadata — all exactly 1600x900, logo ~0-280px on
-             the x-axis). A 4:3 crop from a 16:9 source only trims width, not
-             height, so a centered crop sliced the watermark in half instead
-             of showing or hiding it cleanly. Shifting the crop window right
-             clears it with margin; nothing meaningful sits in the far-right
-             5-10% of any of these three photos. #}
+    {# 2026-08-31 v2: was an equal 3-column grid (the same sameness problem
+       as Beliefs) — reworked into a featured + rest layout using the
+       `featured` field that's existed in insights.json since it was first
+       written, unused until now. Featured post gets a wider 16:9 plate and
+       runs the width of its column; the other two stack in a narrower,
+       smaller-image column beside it — genuine editorial hierarchy, not
+       three identical tiles. #}
+    {% set featuredPost = insights | selectattr("featured") | first %}
+    {% set restPosts = insights | rejectattr("featured") %}
+    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-x-10 gap-y-12">
+      {% if featuredPost %}
+      <article class="group fade-up">
+        <a href="/insights/{{ featuredPost.slug }}/" class="block relative rounded-lg overflow-hidden bg-navy-deep aspect-[16/10]" tabindex="-1" aria-hidden="true">
           <div class="absolute inset-0 transition-transform duration-slow ease-signature group-hover:scale-105 [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[80%_50%]">
-            {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 768px) 33vw, 100vw" %}
+            {% image "src/assets/images/insights/" + featuredPost.image, featuredPost.imageAlt, "(min-width: 1024px) 56vw, 100vw" %}
           </div>
-          <span class="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-navy-deep/85 to-transparent" aria-hidden="true"></span>
-          <span class="absolute bottom-3 left-4 flex items-center gap-2 font-mono text-micro text-white">
+          <span class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-navy-deep/85 to-transparent" aria-hidden="true"></span>
+          <span class="absolute bottom-4 left-5 flex items-center gap-2 font-mono text-micro uppercase tracking-widest text-white">
             <span class="w-4 h-px bg-gold" aria-hidden="true"></span>
-            0{{ loop.index }}
+            Featured
           </span>
         </a>
-        <span class="mt-5 block font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }} &middot; {{ post.body | readingTime }} min read</span>
-        <h3 class="mt-2 font-display font-book text-h4 text-ink text-balance">
-          <a href="/insights/{{ post.slug }}/" class="group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+        <span class="mt-5 block font-mono text-micro uppercase tracking-widest text-navy-soft">{{ featuredPost.venture }} &middot; {{ featuredPost.body | readingTime }} min read</span>
+        <h3 class="mt-2 font-display font-light text-h2 text-ink text-balance max-w-[20ch]">
+          <a href="/insights/{{ featuredPost.slug }}/" class="group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ featuredPost.title }}</a>
         </h3>
-        <p class="mt-3 text-small text-ink-muted">{{ post.deck }}</p>
-        <a href="/insights/{{ post.slug }}/" class="mt-4 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">Read the piece</a>
+        <p class="mt-3 text-body text-ink-muted max-w-measure-tight">{{ featuredPost.deck }}</p>
+        <a href="/insights/{{ featuredPost.slug }}/" class="mt-4 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">Read the piece</a>
       </article>
-      {% endfor %}
+      {% endif %}
+
+      <div class="grid grid-cols-1 gap-y-10">
+        {% for post in restPosts %}
+        <article class="group flex gap-5 fade-up" style="animation-delay:{{ loop.index0 * 90 + 90 }}ms">
+          <a href="/insights/{{ post.slug }}/" class="block relative rounded-lg overflow-hidden bg-navy-deep aspect-square w-28 md:w-32 shrink-0" tabindex="-1" aria-hidden="true">
+            {# object-position biased right: all 3 source images carry a small
+               Admizz logo watermark baked into the top/bottom-LEFT corner
+               (verified via metadata — all exactly 1600x900, logo ~0-280px
+               on the x-axis). Shifting the crop window right clears it. #}
+            <div class="absolute inset-0 transition-transform duration-slow ease-signature group-hover:scale-105 [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[80%_50%]">
+              {% image "src/assets/images/insights/" + post.image, post.imageAlt, "128px" %}
+            </div>
+          </a>
+          <div class="min-w-0">
+            <span class="block font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }} &middot; {{ post.body | readingTime }} min read</span>
+            <h3 class="mt-1.5 font-display font-book text-h4 text-ink text-balance">
+              <a href="/insights/{{ post.slug }}/" class="group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+            </h3>
+            <a href="/insights/{{ post.slug }}/" class="mt-2 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline">Read the piece</a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </section>
@@ -337,6 +569,9 @@ permalink: /
     <h2 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
       Let's talk about <em class="italic text-navy-accent font-book">what's next.</em>
     </h2>
+    <p class="mt-5 text-body-lg text-navy-on-muted max-w-[38ch] fade-up" style="animation-delay:120ms">
+      Whether you're a student weighing options, an institution exploring partnership, or an organization building workforce capability &mdash; tell us which, and we'll route it to the right team.
+    </p>
     <div class="mt-10 flex flex-wrap items-center justify-center gap-4 fade-up" style="animation-delay:160ms">
       <a href="/contact/" class="btn-primary">Get in touch</a>
       <a href="mailto:{{ site.email }}" class="btn-ghost-on-navy">{{ site.email }}</a>

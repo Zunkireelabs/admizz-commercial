@@ -20,12 +20,30 @@
 <section class="bg-paper py-section-sm md:py-section border-t border-rule">
   <div class="shell">
     <div class="max-w-[42rem] fade-up">
-      <span class="eyebrow">Across Admizz Education</span>
+      <span class="eyebrow">Global Network</span>
       <h2 class="mt-3 font-display font-light text-h2 text-ink">{{ universities.totalCount }} partner institutions, {{ universities.groups.length }} countries.</h2>
       <p class="mt-4 text-body-lg text-ink-muted max-w-measure-tight">
-        The academic network behind Admizz Education's admissions work, indexed by country.
+        The academic network behind Admizz Education's admissions work — one part of what one of the group's three businesses has built, indexed here by country.
         Figures and partner names published by Admizz Education, as of 2026.
       </p>
+    </div>
+
+    {# Small, honest group-scale strip — three real, verifiable counts, not
+       a second "trust wall". Sits above the country register as context,
+       not a competing headline claim. #}
+    <div class="mt-8 flex flex-wrap gap-x-10 gap-y-4 fade-up" style="animation-delay:60ms">
+      <div>
+        <span class="block font-display font-light text-h3 tabular-nums text-ink">3</span>
+        <span class="mt-1 block font-mono text-micro uppercase tracking-widest text-ink-faint">Connected businesses</span>
+      </div>
+      <div>
+        <span class="block font-display font-light text-h3 tabular-nums text-ink">{{ site.founded }}</span>
+        <span class="mt-1 block font-mono text-micro uppercase tracking-widest text-ink-faint">Group founded</span>
+      </div>
+      <div>
+        <span class="block font-display font-light text-h3 tabular-nums text-ink">1</span>
+        <span class="mt-1 block font-mono text-micro uppercase tracking-widest text-ink-faint">Group, Admizz</span>
+      </div>
     </div>
 
     <div class="mt-10 fade-up" style="animation-delay:90ms" x-data="{ open: null }">
