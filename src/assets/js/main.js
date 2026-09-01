@@ -734,9 +734,11 @@ if (coverflow) {
   const frame = coverflow.querySelector('[data-coverflow-frame]');
   const track = coverflow.querySelector('[data-coverflow-track]');
   const cards = Array.from(coverflow.querySelectorAll('[data-coverflow-card]'));
+  const hint = coverflow.querySelector('[data-coverflow-hint]');
   const captionItems = Array.from(
     document.querySelectorAll('[data-coverflow-caption-item]')
   );
+  const dots = Array.from(document.querySelectorAll('[data-coverflow-dot]'));
   const count = cards.length;
 
   if (frame && track && count > 0) {
@@ -744,7 +746,6 @@ if (coverflow) {
     const ROTATE = 44;
     const DEPTH = 0.6;
     const FALLOFF = 0.56;
-    const FADE = 0.1;
     const GAP = 0.05;
     const LOOP = true;
 
@@ -753,15 +754,29 @@ if (coverflow) {
     let width = 0;
     let rafId = null;
     let drag = null; // { x, pos, v, t }
+    let wheelSettleTimer = null;
 
     const indexAt = (p) => ((Math.round(p) % count) + count) % count;
+
+    const dismissHint = () => hint && hint.classList.add('is-dismissed');
 
     const setCaption = (index) => {
       captionItems.forEach((item) => {
         item.classList.toggle('hidden', Number(item.dataset.index) !== index);
       });
+      dots.forEach((dot) => {
+        const active = Number(dot.dataset.index) === index;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
     };
 
+    // Distance drives a dark scrim + slight desaturation (via the --cf-dist
+    // custom property, read in main.css) instead of opacity. Fading via
+    // opacity against this section's light paper background made off-center
+    // cards blend toward WHITE, not recede into shadow — read as washed-out/
+    // broken rather than "further away". Opacity is now used only for the
+    // loop-wrap cutoff (`edge`), same as before.
     const paint = () => {
       if (!width) return;
       const pitch = width * (1 + GAP);
@@ -778,7 +793,8 @@ if (coverflow) {
           `translateX(calc(-50% + ${offset * pitch}px)) ` +
           `translateZ(${-DEPTH * width * ramp}px) rotateY(${-tilt}deg)`;
         const edge = LOOP ? Math.min(1, Math.max(0, count / 2 - distance)) : 1;
-        card.style.opacity = String(Math.max(0, 1 - FADE * distance) * edge);
+        card.style.opacity = String(edge);
+        card.style.setProperty('--cf-dist', String(Math.min(distance, 1.4)));
         card.style.zIndex = String(100 - Math.round(distance));
       });
     };
@@ -818,6 +834,7 @@ if (coverflow) {
     new ResizeObserver(measure).observe(frame);
 
     frame.addEventListener('pointerdown', (e) => {
+      dismissHint();
       if (rafId !== null) {
         cancelAnimationFrame(rafId);
         rafId = null;
@@ -852,11 +869,58 @@ if (coverflow) {
     frame.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
+        dismissHint();
         nudge(-1);
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
+        dismissHint();
         nudge(1);
       }
+    });
+
+    // Any wheel/trackpad gesture over the carousel moves it — vertical
+    // scroll included, since that's what a plain mouse actually produces
+    // (a first version only handled trackpad horizontal swipe, which meant
+    // nothing happened for anyone testing with a normal mouse wheel). This
+    // does mean scrolling while the cursor sits on the cards moves the
+    // carousel instead of the page — move the mouse off it to keep
+    // scrolling the page, same tradeoff as Apple-style scroll carousels.
+    // Prefers whichever axis has more motion so a trackpad's horizontal
+    // swipe still works exactly as before.
+    frame.addEventListener(
+      'wheel',
+      (e) => {
+        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+        if (!delta) return;
+        e.preventDefault();
+        dismissHint();
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+        const pitch = width * (1 + GAP);
+        if (!pitch) return;
+        // A single mouse-wheel notch sends deltaY around 100 — dividing by
+        // the full pitch made one notch move the carousel by ~9%, needing
+        // 10+ notches before anything visibly happened. This scales one
+        // notch to roughly a third of a card, so 2-3 notches clearly move
+        // it, while a trackpad's smaller continuous deltas still feel
+        // proportional rather than twitchy.
+        pos = clampPos(pos + delta / pitch / 0.9);
+        target = pos;
+        setCaption(indexAt(pos));
+        paint();
+        clearTimeout(wheelSettleTimer);
+        wheelSettleTimer = setTimeout(() => settle(Math.round(pos)), 140);
+      },
+      { passive: false }
+    );
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        dismissHint();
+        settle(clampPos(Number(dot.dataset.index)));
+      });
     });
   }
 }
