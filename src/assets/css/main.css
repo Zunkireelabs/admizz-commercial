@@ -43,6 +43,17 @@
     text-wrap: balance;
   }
 
+  /* Links get their color from context everywhere on this site (text-ink,
+     text-navy-soft, etc. via inheritance or explicit classes) — none of
+     that ever accounts for :visited, so a real visitor who has actually
+     clicked a link sees the browser's default visited-link purple/blue
+     instead of the site's palette the next time they see that same link
+     rendered anywhere. Caught on the homepage's featured insights link
+     after it had actually been visited once. */
+  a:visited {
+    color: inherit;
+  }
+
   :focus-visible {
     outline: 2px solid theme("colors.navy.DEFAULT");
     outline-offset: 3px;
@@ -196,22 +207,55 @@
     @apply border-b border-rule;
   }
 
-  .academic-network-list {
-    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2.5 pb-6 pt-1 pl-9 pr-2;
+  /* Tile grid (rillet.com-style square logo tiles) — shared by the full
+     country list on /ventures/ (.academic-network-grid, opens via Alpine's
+     x-collapse, staggers in on .is-open) and the homepage spotlight sample
+     (.academic-spotlight-grid, staggers in on .is-visible via
+     IntersectionObserver in main.js). Corrected after direct comparison
+     against rillet.com's actual integrations grid: no border box, no name
+     text under the logo (name stays as real alt-text, not a visual
+     label), no grayscale-by-default treatment — logos show in full color
+     always, matching the reference exactly rather than a guessed
+     approximation of it. */
+  .academic-network-grid,
+  .academic-spotlight-grid {
+    @apply grid gap-2 pb-6 pt-1;
+    grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
   }
-  .academic-network-item {
-    @apply flex items-center gap-2.5 text-small text-ink-muted;
+  .academic-network-tile,
+  .academic-spotlight-tile {
+    @apply relative flex items-center justify-center;
+    @apply p-3 rounded-md bg-paper-raised;
+    @apply transition-all duration-press ease-signature;
+    aspect-ratio: 1 / 1;
+    /* Popped in all at once the instant the trigger fired, before this —
+       staggering per tile via `--i` (set inline per <li>) makes the reveal
+       read as a quick cascade instead of a flat instant dump, matching the
+       "index-staggered, never simultaneous" motion rule used everywhere
+       else on this site. */
+    opacity: 0;
+    transform: translateY(6px);
   }
-  /* Fixed-width BOX, not a fixed-size image — the source logos are mixed
-     aspect ratios (wide wordmarks, square crests), so forcing the <img>
-     itself to a 16x16 square squashed most of them into illegible smudges.
-     The box centers each logo at its own ratio, height-capped, width-capped;
-     object-contain on the img means nothing gets cropped or stretched. */
-  .academic-network-mark-box {
-    @apply shrink-0 w-7 h-5 flex items-center justify-center;
+  .academic-network-grid.is-open .academic-network-tile,
+  .academic-spotlight-grid.is-visible .academic-spotlight-tile {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: calc(var(--i, 0) * 35ms);
   }
-  .academic-network-mark {
-    @apply max-w-full max-h-full object-contain grayscale opacity-80;
+  .academic-network-tile:hover,
+  .academic-network-tile:focus-within,
+  .academic-spotlight-tile:hover,
+  .academic-spotlight-tile:focus-within {
+    @apply shadow-raised;
+    transform: translateY(-3px);
+  }
+  .academic-network-tile-flag,
+  .academic-spotlight-flag {
+    @apply absolute top-1.5 right-1.5 text-small leading-none;
+  }
+  .academic-network-tile img,
+  .academic-spotlight-tile img {
+    @apply max-w-full max-h-full object-contain;
   }
 }
 

@@ -355,6 +355,16 @@ permalink: /ventures/
         </dl>
 
       </div>
+
+      {# Full academic network -- moved here 2026-09-01 from the homepage:
+         this is Admizz Education's own proof point, not a whole-group
+         claim, so it lives on this record rather than the homepage (which
+         now links here for "See the full network"). Full-width within the
+         record, outside the two-column venture-grid, since the country
+         list needs the whole row. #}
+      {% if v.id == "education" %}
+      {% include "partials/academic-network.njk" %}
+      {% endif %}
     </article>
     {% endfor %}
   </div>

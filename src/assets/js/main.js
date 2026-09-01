@@ -924,3 +924,22 @@ if (coverflow) {
     });
   }
 }
+
+// Academic network spotlight grid (homepage, replaces the old country
+// accordion) — tiles fade in with a per-tile stagger (--i, set inline per
+// <li>) the first time the grid scrolls into view. Not gated behind
+// prefers-reduced-motion since it's a one-time short reveal, same class of
+// motion as .fade-up elsewhere on this site (which also isn't gated).
+const spotlightGrid = document.querySelector('[data-spotlight-grid]');
+if (spotlightGrid) {
+  new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.15 }
+  ).observe(spotlightGrid);
+}

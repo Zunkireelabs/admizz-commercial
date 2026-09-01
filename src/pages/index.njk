@@ -686,7 +686,77 @@ permalink: /
   </div>
 </section>
 
-{% include "partials/academic-network.njk" %}
+{# ============================================================ ACADEMIC NETWORK SPOTLIGHT
+   Replaces the full country-accordion (moved to /ventures/'s Admizz
+   Education record 2026-09-01 -- it's that venture's own proof point, not
+   a whole-group claim, and belongs on that record rather than the
+   homepage). Rillet.com-style flat logo grid: one flat set, no country
+   grouping/accordion, real color logos, no name text under them.
+
+   Selection is a curated sample, NOT a ranking -- there is no ranking
+   data (no QS/THE score, no admit rate) behind these 104 institutions, so
+   nothing here claims "best" or "top". Picked for name recognition only,
+   at least one per country so no country is invisible, all pulled
+   directly from universities.json (nothing invented). Full real list of
+   104 stays one click away via the link below, not hidden. #}
+<section class="bg-paper py-section-sm md:py-section border-t border-rule">
+  <div class="shell">
+    <div class="max-w-[42rem] fade-up">
+      <span class="eyebrow">Global Network</span>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink">{{ universities.totalCount }} partner institutions, {{ universities.groups.length }} countries.</h2>
+      <p class="mt-4 text-body-lg text-ink-muted max-w-measure-tight">
+        A look inside the network behind Admizz Education's admissions work &mdash; one part of what one of the group's three businesses has built.
+        Figures and partner names published by Admizz Education, as of 2026.
+      </p>
+    </div>
+
+    {# Data note on one entry below: universities.json records "Washington
+       University" plainly, but its logo file actually reads "Washington
+       University of Science and Technology" — a different, real
+       institution from the famous St. Louis one. That fuller name is used
+       here instead of the shorter data-file name, so the tile can't be
+       misread as the well-known university it isn't. #}
+    {% set spotlight = [
+      { flag: "🇨🇦", name: "University of Toronto", logo: "/assets/images/universities/canada/university-of-toronto.webp" },
+      { flag: "🇨🇦", name: "McGill University", logo: "/assets/images/universities/canada/mcgill-university.webp" },
+      { flag: "🇨🇦", name: "University of British Columbia", logo: "/assets/images/universities/canada/university-of-british-columbia.webp" },
+      { flag: "🇫🇷", name: "Sorbonne University", logo: "/assets/images/universities/france/sorbonne-university.webp" },
+      { flag: "🇫🇷", name: "Sciences Po", logo: "/assets/images/universities/france/sciences-po.webp" },
+      { flag: "🇫🇷", name: "Université de Bordeaux", logo: "/assets/images/universities/france/universite-de-bordeaux.webp" },
+      { flag: "🇩🇪", name: "Technical University of Munich", logo: "/assets/images/universities/germany/technical-university-of-munich.webp" },
+      { flag: "🇩🇪", name: "Heidelberg University", logo: "/assets/images/universities/germany/heidelberg-university.webp" },
+      { flag: "🇩🇪", name: "Humboldt-Universität zu Berlin", logo: "/assets/images/universities/germany/humboldt-universitat-zu-berlin.webp" },
+      { flag: "🇦🇺", name: "University of Queensland", logo: "/assets/images/universities/australia/university-of-queensland.webp" },
+      { flag: "🇦🇺", name: "Monash University", logo: "/assets/images/universities/australia/monash-university.webp" },
+      { flag: "🇦🇺", name: "RMIT University", logo: "/assets/images/universities/australia/rmit-university.webp" },
+      { flag: "🇳🇿", name: "University of Auckland", logo: "/assets/images/universities/new-zealand/university-of-auckland.webp" },
+      { flag: "🇳🇿", name: "University of Otago", logo: "/assets/images/universities/new-zealand/university-of-otago.webp" },
+      { flag: "🇮🇳", name: "IISc Bangalore", logo: "/assets/images/universities/india/iisc-bangalore.webp" },
+      { flag: "🇮🇳", name: "University of Delhi", logo: "/assets/images/universities/india/university-of-delhi.webp" },
+      { flag: "🇮🇳", name: "Vellore Institute of Technology (VIT)", logo: "/assets/images/universities/india/vellore-institute-of-technology-vit.webp" },
+      { flag: "🇺🇸", name: "Colorado State University", logo: "/assets/images/universities/usa/colorado-state-university.webp" },
+      { flag: "🇺🇸", name: "Texas State University", logo: "/assets/images/universities/usa/texas-state-university.webp" },
+      { flag: "🇺🇸", name: "Washington University of Science and Technology", logo: "/assets/images/universities/usa/washington-university.webp" },
+      { flag: "🇬🇧", name: "University of Greenwich", logo: "/assets/images/universities/uk/university-of-greenwich.webp" },
+      { flag: "🇬🇧", name: "The University of Law", logo: "/assets/images/universities/uk/the-university-of-law.webp" },
+      { flag: "🇬🇧", name: "Coventry University", logo: "/assets/images/universities/uk/coventry-university.webp" },
+      { flag: "🇫🇮", name: "Haaga-Helia University of Applied Sciences", logo: "/assets/images/universities/finland/haaga-helia-university-of-applied-sciences.webp" }
+    ] %}
+    <ul class="academic-spotlight-grid mt-12 fade-up" style="animation-delay:90ms" data-spotlight-grid>
+      {% for u in spotlight %}
+      <li class="academic-spotlight-tile" style="--i: {{ loop.index0 }}">
+        <span class="academic-spotlight-flag" aria-hidden="true">{{ u.flag }}</span>
+        <img src="{{ u.logo }}" alt="{{ u.name }}" loading="lazy">
+      </li>
+      {% endfor %}
+    </ul>
+
+    <a href="/ventures/#record-education" class="mt-8 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline fade-up" style="animation-delay:140ms">
+      See the full network
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
 
 {# "Our Story" / "Building momentum." timeline — hidden 2026-09-01 per
    explicit request, same {% if false %} pattern already used elsewhere on
@@ -757,9 +827,23 @@ permalink: /
       </article>
       {% endif %}
 
-      <div class="grid grid-cols-1 gap-y-10">
+      {# self-start: without it, this column is a grid item in the outer
+         2-col row and gets force-stretched to match the tall featured
+         article's height (CSS Grid's `align-content: normal` computes to
+         `stretch`) -- content then sits at the top of that oversized box,
+         leaving a large dead gap between the two article rows. self-start
+         stops the stretch at the source instead of just hiding its
+         symptoms further down. #}
+      <div class="grid grid-cols-1 gap-y-10 self-start">
         {% for post in restPosts %}
-        <article class="group flex gap-5 fade-up" style="animation-delay:{{ loop.index0 * 90 + 90 }}ms">
+        {# items-start: without it, this flex row's default cross-axis
+           stretch made the aspect-square thumbnail stretch to match its
+           sibling column's height (itself force-stretched by the outer
+           2-col grid matching the tall featured article) -- a square photo
+           rendering as a tall narrow rectangle. items-start locks the
+           thumbnail to its own natural square size regardless of how tall
+           any ancestor gets. #}
+        <article class="group flex items-start gap-5 fade-up" style="animation-delay:{{ loop.index0 * 90 + 90 }}ms">
           <a href="/insights/{{ post.slug }}/" class="block relative rounded-lg overflow-hidden bg-navy-deep aspect-square w-28 md:w-32 shrink-0" tabindex="-1" aria-hidden="true">
             {# object-position biased right: all 3 source images carry a small
                Admizz logo watermark baked into the top/bottom-LEFT corner
@@ -774,7 +858,8 @@ permalink: /
             <h3 class="mt-1.5 font-display font-book text-h4 text-ink text-balance">
               <a href="/insights/{{ post.slug }}/" class="group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
             </h3>
-            <a href="/insights/{{ post.slug }}/" class="mt-2 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline">Read the piece</a>
+            <p class="mt-2 text-small text-ink-muted leading-relaxed">{{ post.deck }}</p>
+            <a href="/insights/{{ post.slug }}/" class="mt-3 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline">Read the piece</a>
           </div>
         </article>
         {% endfor %}
