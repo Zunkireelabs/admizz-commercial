@@ -908,20 +908,38 @@ permalink: /
 </section>
 {% endif %}
 
-{# ============================================================ CLOSE #}
+{# ============================================================ CLOSE
+   2026-09-01 v2: first pass full-bleed photo was broken two ways, fixed
+   here. (1) The overlay gradient direction was backwards (`to-t` puts the
+   SOLID color at the bottom and the lightest tint at the top — exactly
+   where the headline sits — so text had the LEAST contrast, not the
+   most). (2) admissions-counseling.jpg is a portrait 3:4 photo; stretched
+   full-bleed across this section's ultra-wide ~2.5:1 band via
+   object-cover, only a thin disconnected horizontal slice of it was ever
+   visible — no overlay fixes a crop that's fundamentally the wrong shape.
+   Fixed by confining the photo to a panel on the right (where a portrait
+   crop reads fine at a taller, narrower aspect) with solid navy behind
+   the text on the left — never competing with legibility — and a
+   left-to-right gradient handling the seam between them. #}
 <section class="relative overflow-hidden bg-navy-deep py-section">
+  <div class="absolute inset-y-0 right-0 w-full lg:w-[45%] [&_picture]:contents [&_picture]:block [&_picture]:h-full [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[50%_15%]">
+    {% image "src/assets/images/expertise/admissions-counseling.jpg", "A counselor and student in conversation", "(min-width: 1024px) 45vw, 100vw" %}
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-r from-navy-deep from-35% via-navy-deep/94 via-55% to-navy-deep/55"></div>
   {% include "partials/facet-field.njk" %}
-  <div class="shell relative text-center flex flex-col items-center">
-    <span class="eyebrow-on-navy fade-up">Get in touch</span>
-    <h2 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
-      Let's talk about <em class="italic text-navy-accent font-book">what's next.</em>
-    </h2>
-    <p class="mt-5 text-body-lg text-navy-on-muted max-w-[38ch] fade-up" style="animation-delay:120ms">
-      Whether you're a student weighing options, an institution exploring partnership, or an organization building workforce capability &mdash; tell us which, and we'll route it to the right team.
-    </p>
-    <div class="mt-10 flex flex-wrap items-center justify-center gap-4 fade-up" style="animation-delay:160ms">
-      <a href="/contact/" class="btn-primary">Get in touch</a>
-      <a href="mailto:{{ site.email }}" class="btn-ghost-on-navy">{{ site.email }}</a>
+  <div class="shell relative grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] items-center gap-10">
+    <div class="text-center lg:text-left">
+      <span class="eyebrow-on-navy fade-up">Get in touch</span>
+      <h2 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[16ch] mx-auto lg:mx-0 text-balance fade-up" style="animation-delay:80ms">
+        Let's talk about <em class="italic text-navy-accent font-book">what's next.</em>
+      </h2>
+      <p class="mt-5 text-body-lg text-navy-on-muted max-w-[38ch] mx-auto lg:mx-0 fade-up" style="animation-delay:120ms">
+        Whether you're a student weighing options, an institution exploring partnership, or an organization building workforce capability &mdash; tell us which, and we'll route it to the right team.
+      </p>
+    </div>
+    <div class="flex flex-col items-center lg:items-start gap-3 fade-up" style="animation-delay:160ms">
+      <a href="/contact/" class="btn-primary w-full lg:w-auto text-center">Get in touch</a>
+      <a href="mailto:{{ site.email }}" class="btn-ghost-on-navy w-full lg:w-auto text-center">{{ site.email }}</a>
     </div>
   </div>
 </section>

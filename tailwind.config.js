@@ -74,23 +74,37 @@ export default {
       crit: { DEFAULT: '#A8231B', bg: '#FBEDEC' },
     },
 
-    // Tight radii scaled to element size. Uniform rounded-2xl is the loudest
-    // template tell of 2026, so the scale tops out low and deliberately.
+    // Zero radius everywhere, site-wide (2026-09-01, explicit request —
+    // overrides the earlier "tight scaled radii" system below this
+    // comment used to describe). Every rounded-* utility resolves through
+    // this one scale, `full` included, so this single change flattens
+    // every card, photo, panel, button, dot, and pill across the entire
+    // site to sharp corners with no per-file edits needed.
     borderRadius: {
       none: '0',
-      sm: '2px',
-      DEFAULT: '3px',
-      md: '4px',
-      lg: '8px',
-      xl: '14px',
-      full: '9999px',
+      sm: '0',
+      DEFAULT: '0',
+      md: '0',
+      lg: '0',
+      xl: '0',
+      full: '0',
     },
 
     extend: {
+      // 2026-09-01 v2: Inter experiment reverted, replaced with a different
+      // single-font experiment -- Newsreader (already the site's display
+      // serif) applied to all 3 roles instead of just headlines. Newsreader
+      // is a variable optical-size serif specifically engineered to render
+      // correctly from tiny label text up through large display sizes,
+      // which is why it was picked as the "one font, whole site" candidate
+      // over Inter. Original per-role system, for reference/revert:
+      // display: ['Newsreader', 'Georgia', 'Times New Roman', 'serif'],
+      // sans: ['Archivo', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+      // mono: ['Chivo Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       fontFamily: {
         display: ['Newsreader', 'Georgia', 'Times New Roman', 'serif'],
-        sans: ['Archivo', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-        mono: ['Chivo Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        sans: ['Newsreader', 'Georgia', 'Times New Roman', 'serif'],
+        mono: ['Newsreader', 'Georgia', 'Times New Roman', 'serif'],
       },
 
       // Fluid scale. Every step keeps max <= 2.5x min so WCAG 1.4.4 holds under zoom.

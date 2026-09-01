@@ -36,7 +36,7 @@
   }
   ::-webkit-scrollbar-thumb {
     background-color: theme("colors.rule.strong");
-    border-radius: 3px;
+    border-radius: 0;
   }
 
   h1, h2, h3, h4 {
@@ -57,8 +57,9 @@
   :focus-visible {
     outline: 2px solid theme("colors.navy.DEFAULT");
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 0;
   }
+
 
   [x-cloak] {
     display: none !important;
@@ -274,6 +275,18 @@
       animation: none !important;
       transition: none !important;
     }
+  }
+
+  /* @tailwindcss/typography ships its own hardcoded radius for <pre>/<kbd>
+     inside .prose blog-post bodies (.3125rem / .375rem), independent of
+     this project's borderRadius scale in tailwind.config.js. Its own
+     styles are emitted in the components layer; this needs the utilities
+     layer (cascades after components at equal specificity) to actually
+     win, not @layer base — a first attempt there was silently overridden
+     by layer order regardless of where in the file it was written. */
+  .prose pre,
+  .prose kbd {
+    border-radius: 0;
   }
 }
 
@@ -544,7 +557,7 @@
   grid-row: span 2;
   width: 7px;
   height: 7px;
-  border-radius: 9999px;
+  border-radius: 0;
   background-color: theme("colors.navy.on-muted / 45%");
   transition: background-color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
 }
@@ -1292,7 +1305,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.7rem;
+  border-radius: 0;
   background-color: rgba(13, 18, 130, 0.1);
   color: theme("colors.navy.DEFAULT");
 }
@@ -1300,7 +1313,7 @@
 .contact-chip-lg {
   width: 3.5rem;
   height: 3.5rem;
-  border-radius: 1rem;
+  border-radius: 0;
 }
 .contact-chip-lg svg { width: 1.75rem; height: 1.75rem; }
 .contact-badge-text {
@@ -1371,7 +1384,7 @@
   padding: clamp(1.4rem, 3vw, 2.1rem);
   background-color: theme("colors.paper.DEFAULT");
   border: 1px solid theme("colors.rule.DEFAULT");
-  border-radius: 1rem;
+  border-radius: 0;
   box-shadow: theme("boxShadow.raised");
 }
 .contact-field + .contact-field { margin-top: 1.05rem; }
@@ -1411,7 +1424,7 @@
   width: 100%;
   padding: 0.72rem 0.9rem;
   border: 1px solid theme("colors.rule.strong");
-  border-radius: 0.65rem;
+  border-radius: 0;
   background-color: theme("colors.paper.raised");
   color: theme("colors.ink.DEFAULT");
   font-family: theme("fontFamily.sans");
@@ -1468,7 +1481,7 @@
   gap: 0.5rem;
   padding: 0.85rem 1.25rem;
   border: 1px solid transparent;
-  border-radius: 0.6rem;
+  border-radius: 0;
   background-color: theme("colors.navy.soft");
   color: theme("colors.white");
   font-family: theme("fontFamily.sans");
@@ -1529,7 +1542,7 @@
   align-items: start;
   padding: 1.15rem 1.25rem;
   border: 1px solid theme("colors.rule.DEFAULT");
-  border-radius: 0.9rem;
+  border-radius: 0;
   background-color: theme("colors.paper.raised");
   box-shadow: theme("boxShadow.raised");
   transition: border-color theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
@@ -1560,7 +1573,7 @@
   text-transform: uppercase;
   color: theme("colors.crit.DEFAULT");
   border: 1px solid rgba(168, 35, 27, 0.4);
-  border-radius: 3px;
+  border-radius: 0;
   padding: 0.05rem 0.3rem;
   vertical-align: middle;
 }
@@ -1582,7 +1595,7 @@
   .contact-reach-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); }
 }
 .contact-map {
-  border-radius: 1rem;
+  border-radius: 0;
   overflow: hidden;
   aspect-ratio: 3 / 2;
   background-color: theme("colors.paper.raised");
@@ -1606,7 +1619,7 @@
   text-align: center;
   padding: 1.25rem 1rem;
   border: 1px solid theme("colors.rule.DEFAULT");
-  border-radius: 0.9rem;
+  border-radius: 0;
   background-color: theme("colors.paper.raised");
   box-shadow: theme("boxShadow.raised");
 }
@@ -1826,7 +1839,7 @@
 .story-businesses-section {
   position: relative;
   z-index: 2;
-  border-radius: 1.75rem 1.75rem 0 0;
+  border-radius: 0;
   box-shadow: 0 -28px 56px -24px rgba(11, 15, 105, 0.22);
 }
 

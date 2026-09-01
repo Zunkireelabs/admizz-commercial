@@ -104,6 +104,12 @@ if (!prefersReducedMotion) {
           { marginLeft: 0, marginRight: 0, marginTop: 0 },
           { marginLeft: pillInset, marginRight: pillInset, marginTop: topPad, ease: 'none' },
           0)
+        // Deliberate exception to the sitewide zero-radius rule (main.css /
+        // tailwind.config.js): a floating pill bar with margins around it
+        // needs rounded ends to read as intentional rather than a mistake —
+        // a sharp-cornered rectangle floating mid-page looked broken, per
+        // direct feedback. Every other card/panel/button on the site stays
+        // sharp; only this one component is exempted.
         .fromTo(headerBar,
           { borderRadius: 0, boxShadow: '0 2px 4px rgba(16,25,43,0), 0 18px 40px -20px rgba(16,25,43,0)' },
           { borderRadius: 999, boxShadow: '0 2px 4px rgba(16,25,43,.05), 0 18px 40px -20px rgba(16,25,43,.24)', ease: 'none' },
