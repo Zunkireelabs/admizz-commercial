@@ -198,10 +198,122 @@ permalink: /
   </div>
 </section>
 
-{# ============================================================ 01 — THE SHIFT
-   New 2026-08-31 (homepage-narrative rebuild). Editorial problem statement,
-   the opening move of the new homepage narrative: the world Admizz operates
-   in, before Admizz itself.
+{# ============================================================ 01 — WHAT ADMIZZ IS
+   Positioning section — explains WHY the three businesses are one group,
+   not just that they are. Doesn't exist as its own section pre-rebuild;
+   was only implied in the hero subhead.
+
+   2026-08-31 v3: rebuilt against the same reference mockup — the three
+   venture "preview cards" now live INSIDE this section (photo, number,
+   stage, name, one-liner sourced from the venture's own existing
+   verticalLine field — nothing new written), plus a small vertical
+   pathway diagram on the right, echoing the bigger Ecosystem-pathway
+   section further down without duplicating it. This does NOT remove the
+   bigger Prepare/Study/Work sticky section below — open question, still
+   flagged, on whether that stays once this preview exists.
+
+   2026-09-02: moved to come right after the hero (was second, after "The
+   Shift") on explicit request — content and styling otherwise untouched,
+   this is a pure section-order swap. The id="what-admizz-is" anchor and
+   its own internal links are unaffected; "The Shift" section's own
+   "Explore how we help" link no longer points here (see that section,
+   now below, for why). #}
+<section id="what-admizz-is" class="bg-paper-sunk py-section-sm border-b border-rule">
+  <div class="shell">
+    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] gap-10 lg:gap-16">
+      <div class="fade-up">
+        <span class="eyebrow">What Admizz Is</span>
+        <h2 class="mt-4 font-display font-light text-h1 text-ink max-w-[12ch] text-balance">
+          One group. <em class="italic text-navy font-book">Three connected businesses.</em>
+        </h2>
+      </div>
+      <div class="fade-up" style="animation-delay:90ms">
+        <p class="text-body-lg text-ink-muted leading-relaxed max-w-measure">
+          Admizz Institute, Admizz Education and Admizz Workforce Solutions each answer to a different market &mdash; test preparation, international admissions, and workforce development are not the same business, and we don&rsquo;t run them as one.
+        </p>
+        <p class="mt-4 text-body text-ink-muted leading-relaxed max-w-measure">
+          What connects them is where they sit on the same line: a test score determines what a university application can achieve; a university decision shapes the career that follows it; a career runs on skills that keep changing after graduation. Most organizations serve one point on that line. Admizz was built to serve more than one of them, without pretending the three are interchangeable.
+        </p>
+        <a href="/ventures/" class="mt-6 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
+          Explore our businesses
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+
+    {# Preview row: 3 venture cards + a mini pathway diagram alongside.
+       All 3 photos are user-supplied, explicitly AI-generated images
+       (against this project's own "no AI-look imagery" rule in
+       docs/00-BRIEF.md §13 — overridden here on explicit instruction,
+       same pattern as the ecosystem.jpg exceptions elsewhere, NOT a
+       default for future sessions to repeat unprompted). #}
+    {% set previewImages = {
+      "institute": { file: "preview/institute-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
+      "education": { file: "preview/education-preview.jpg", alt: "Student walking outside a university building with a backpack" },
+      "workforce": { file: "preview/workforce-preview.jpg", alt: "Three colleagues talking in a modern office" }
+    } %}
+    {# 2026-09-02: cards used to sit in one shared .fade-up wrapper, so all
+       three photos/labels popped in together as a single flat block --
+       a design critique read this as "just content," no broadcast feel.
+       Each card now gets its own GSAP-driven reveal (data-venture-preview-
+       card, wired in main.js): index-staggered fade + a left-to-right
+       clip-path wipe on the photo, same hide-then-reveal idiom as the
+       hero/statement-band GSAP blocks elsewhere (visible by default in
+       plain CSS; GSAP hides then reveals only once it has actually
+       loaded). The mini pathway keeps its own simple .fade-up -- this
+       treatment is for the cards specifically. #}
+    <div class="mt-14 md:mt-16 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] gap-x-10 gap-y-10 items-start">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-10">
+        {% for v in ventures %}
+        {% set img = previewImages[v.id] %}
+        <div class="venture-preview-card" data-venture-preview-card>
+          <div class="flex items-baseline gap-2">
+            <span class="font-display font-light text-h3 tabular-nums text-ink-faint">{{ v.index }}</span>
+            <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ v.stage }}</span>
+          </div>
+          <h3 class="mt-1 font-display font-light text-h4 text-ink text-balance">{{ v.name }}</h3>
+          <a href="{{ v.href if v.href != '#' else '/ventures/' }}" class="venture-preview-photo mt-4 block relative overflow-hidden bg-navy-deep aspect-[3/2]">
+            <div class="absolute inset-0 [&_picture]:contents [&_picture]:block [&_picture]:h-full [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+              {% image "src/assets/images/" + img.file, img.alt, "(min-width: 1024px) 22vw, (min-width: 640px) 30vw, 80vw" %}
+            </div>
+          </a>
+          <p class="mt-4 text-small text-ink-muted leading-relaxed">{{ v.verticalLine }}</p>
+          <a href="/ventures/#record-{{ v.id }}" class="mt-3 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline">
+            Learn more
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+
+      {# Mini pathway — echoes the bigger Ecosystem-pathway section further
+         down (same 3 real stages, same gold-dot idiom) at a much smaller
+         scale, as a compact index rather than a duplicate of that section. #}
+      <div class="hidden lg:flex flex-col items-start gap-6 pl-8 border-l border-rule self-stretch justify-center fade-up" style="animation-delay:140ms">
+        {% for v in ventures %}
+        <div class="flex items-center gap-2.5">
+          <span class="w-1.5 h-1.5 bg-gold" aria-hidden="true"></span>
+          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">{{ v.stage }}</span>
+        </div>
+        {% if not loop.last %}<span class="w-px h-6 bg-rule ml-[3px]" aria-hidden="true"></span>{% endif %}
+        {% endfor %}
+        <span class="w-px h-6 bg-rule ml-[3px]" aria-hidden="true"></span>
+        <div class="flex items-center gap-2.5">
+          <span class="w-1.5 h-1.5 bg-navy-on-muted/50" aria-hidden="true"></span>
+          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">Opportunity</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ 02 — THE SHIFT
+   New 2026-08-31 (homepage-narrative rebuild). Originally the opening move
+   of the homepage narrative, right after the hero: the world Admizz
+   operates in, before Admizz itself. Moved to second position 2026-09-02
+   (explicit request) — "What Admizz Is" now comes first instead. Content
+   and styling below are otherwise unchanged; only the closing link's
+   target changed (see that link's own comment).
 
    2026-08-31 v3: rebuilt against a reference mockup (user-supplied
    screenshot, same copy already written here, richer layout) — added the
@@ -254,11 +366,23 @@ permalink: /
         Education is more global. Careers are less linear. The skills a job needs can shift <em class="italic text-navy font-book">faster</em> than a degree can be finished.
       </h2>
       <span class="block mt-5 w-10 h-px bg-gold" aria-hidden="true"></span>
-      <p class="mt-4 text-small text-ink-muted max-w-[36ch] fade-up" style="animation-delay:120ms">
+      {# Was text-small (13px) -- every sibling section-intro paragraph on
+         this page (hero, "What Admizz Is", etc.) uses text-body-lg for this
+         exact role; this one was the inconsistent outlier, which is why it
+         read as "not visible properly" next to the huge heading above it.
+         Matched to the sitewide convention instead of one-off darkening,
+         which would have made it inconsistent in the other direction (every
+         sibling keeps text-ink-muted, not full ink, at this larger size). #}
+      <p class="mt-4 text-body-lg text-ink-muted max-w-[36ch] fade-up" style="animation-delay:120ms">
         For most people, the constraint isn&rsquo;t access anymore &mdash; it&rsquo;s knowing what comes next, and having a real way to prepare for it.
         Admizz operates across the three places that question actually gets answered: preparation, education, and work.
       </p>
-      <a href="#what-admizz-is" class="mt-4 inline-flex items-center gap-2 text-small font-medium text-navy fade-up" style="animation-delay:170ms">
+      {# Was #what-admizz-is -- that section is now ABOVE this one (see the
+         2026-09-02 note on this section's own header comment), so the old
+         target would scroll backward up the page. Repointed to the
+         Ecosystem/ventures section further down instead, keeping this a
+         genuine "keep scrolling to learn more" link. #}
+      <a href="#ventures" class="mt-4 inline-flex items-center gap-2 text-small font-medium text-navy fade-up" style="animation-delay:170ms">
         Explore how we help
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -284,98 +408,6 @@ permalink: /
         </div>
       </div>
       {% endfor %}
-    </div>
-  </div>
-</section>
-
-{# ============================================================ 02 — WHAT ADMIZZ IS
-   Positioning section — explains WHY the three businesses are one group,
-   not just that they are. Doesn't exist as its own section pre-rebuild;
-   was only implied in the hero subhead.
-
-   2026-08-31 v3: rebuilt against the same reference mockup — the three
-   venture "preview cards" now live INSIDE this section (photo, number,
-   stage, name, one-liner sourced from the venture's own existing
-   verticalLine field — nothing new written), plus a small vertical
-   pathway diagram on the right, echoing the bigger Ecosystem-pathway
-   section further down without duplicating it. This does NOT remove the
-   bigger Prepare/Study/Work sticky section below — open question, still
-   flagged, on whether that stays once this preview exists. #}
-<section id="what-admizz-is" class="bg-paper-sunk py-section-sm border-b border-rule">
-  <div class="shell">
-    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] gap-10 lg:gap-16">
-      <div class="fade-up">
-        <span class="eyebrow">What Admizz Is</span>
-        <h2 class="mt-4 font-display font-light text-h1 text-ink max-w-[12ch] text-balance">
-          One group. <em class="italic text-navy font-book">Three connected businesses.</em>
-        </h2>
-      </div>
-      <div class="fade-up" style="animation-delay:90ms">
-        <p class="text-body-lg text-ink-muted leading-relaxed max-w-measure">
-          Admizz Institute, Admizz Education and Admizz Workforce Solutions each answer to a different market &mdash; test preparation, international admissions, and workforce development are not the same business, and we don&rsquo;t run them as one.
-        </p>
-        <p class="mt-4 text-body text-ink-muted leading-relaxed max-w-measure">
-          What connects them is where they sit on the same line: a test score determines what a university application can achieve; a university decision shapes the career that follows it; a career runs on skills that keep changing after graduation. Most organizations serve one point on that line. Admizz was built to serve more than one of them, without pretending the three are interchangeable.
-        </p>
-        <a href="/ventures/" class="mt-6 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
-          Explore our businesses
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-      </div>
-    </div>
-
-    {# Preview row: 3 venture cards + a mini pathway diagram alongside.
-       All 3 photos are user-supplied, explicitly AI-generated images
-       (against this project's own "no AI-look imagery" rule in
-       docs/00-BRIEF.md §13 — overridden here on explicit instruction,
-       same pattern as the ecosystem.jpg exceptions elsewhere, NOT a
-       default for future sessions to repeat unprompted). #}
-    {% set previewImages = {
-      "institute": { file: "preview/institute-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
-      "education": { file: "preview/education-preview.jpg", alt: "Student walking outside a university building with a backpack" },
-      "workforce": { file: "preview/workforce-preview.jpg", alt: "Three colleagues talking in a modern office" }
-    } %}
-    <div class="mt-14 md:mt-16 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] gap-x-10 gap-y-10 items-start fade-up" style="animation-delay:140ms">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-10">
-        {% for v in ventures %}
-        {% set img = previewImages[v.id] %}
-        <div class="venture-preview-card">
-          <div class="flex items-baseline gap-2">
-            <span class="font-display font-light text-h3 tabular-nums text-ink-faint">{{ v.index }}</span>
-            <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ v.stage }}</span>
-          </div>
-          <h3 class="mt-1 font-display font-light text-h4 text-ink text-balance">{{ v.name }}</h3>
-          <a href="{{ v.href if v.href != '#' else '/ventures/' }}" class="venture-preview-photo mt-4 block relative overflow-hidden bg-navy-deep aspect-[3/2]">
-            <div class="absolute inset-0 [&_picture]:contents [&_picture]:block [&_picture]:h-full [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
-              {% image "src/assets/images/" + img.file, img.alt, "(min-width: 1024px) 22vw, (min-width: 640px) 30vw, 80vw" %}
-            </div>
-          </a>
-          <p class="mt-4 text-small text-ink-muted leading-relaxed">{{ v.verticalLine }}</p>
-          <a href="/ventures/#record-{{ v.id }}" class="mt-3 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline">
-            Learn more
-            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-        {% endfor %}
-      </div>
-
-      {# Mini pathway — echoes the bigger Ecosystem-pathway section further
-         down (same 3 real stages, same gold-dot idiom) at a much smaller
-         scale, as a compact index rather than a duplicate of that section. #}
-      <div class="hidden lg:flex flex-col items-start gap-6 pl-8 border-l border-rule self-stretch justify-center">
-        {% for v in ventures %}
-        <div class="flex items-center gap-2.5">
-          <span class="w-1.5 h-1.5 bg-gold" aria-hidden="true"></span>
-          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">{{ v.stage }}</span>
-        </div>
-        {% if not loop.last %}<span class="w-px h-6 bg-rule ml-[3px]" aria-hidden="true"></span>{% endif %}
-        {% endfor %}
-        <span class="w-px h-6 bg-rule ml-[3px]" aria-hidden="true"></span>
-        <div class="flex items-center gap-2.5">
-          <span class="w-1.5 h-1.5 bg-navy-on-muted/50" aria-hidden="true"></span>
-          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">Opportunity</span>
-        </div>
-      </div>
     </div>
   </div>
 </section>

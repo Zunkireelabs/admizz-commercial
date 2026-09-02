@@ -80,31 +80,40 @@
       <div class="md:hidden mb-6 aspect-[4/3] overflow-hidden bg-navy-deep">
         {% image "src/assets/images/ecosystem/" + img.file, img.alt, "90vw" %}
       </div>
-      <span class="ecosystem-block-label eco-field font-mono text-label uppercase tracking-widest text-ink-faint">{{ v.index }} &mdash; {{ v.stage | upper }}</span>
+      {# 2026-09-02: was one flat .eco-field group, all 9 pieces sliding in
+         together on a uniform 70ms stagger -- read as everything arriving
+         in a hurry rather than a deliberate sequence. Now four data-eco-
+         group stages (wired in main.js): 0 = label+title (the "what is
+         this" beat), 1 = the supporting text, 2 = the exam chips (each
+         pops individually, not as one sliding block), 3 = the stat + CTA
+         (the payoff, arrives last). eco-field class kept for any other
+         selector that still targets it; the reveal itself now reads
+         data-eco-group. #}
+      <span class="ecosystem-block-label eco-field font-mono text-label uppercase tracking-widest text-ink-faint" data-eco-group="0">{{ v.index }} &mdash; {{ v.stage | upper }}</span>
       {# Two-tone name — "Admizz" one color, the venture-specific word(s) in
          the gold CTA color — same technique admizzeducation.com's own hero
          uses (its emphasized word breaks from the base heading color). All
          three names start "Admizz ", so splitting on the first space
          reliably separates the two parts without hardcoding per-venture. #}
-      <h3 class="ecosystem-block-title eco-field mt-4 font-display font-light text-display-2 max-w-[14ch] text-balance">
+      <h3 class="ecosystem-block-title eco-field mt-4 font-display font-light text-display-2 max-w-[14ch] text-balance" data-eco-group="0">
         <span class="text-ink">{{ v.name.split(' ')[0] }}</span>
         <span class="text-gold-text">{{ v.name.split(' ').slice(1).join(' ') }}</span>
       </h3>
-      <span class="eco-field mt-2 font-mono text-label uppercase tracking-widest text-navy-soft block">{{ v.vertical }}</span>
+      <span class="eco-field mt-2 font-mono text-label uppercase tracking-widest text-navy-soft block" data-eco-group="1">{{ v.vertical }}</span>
 
       {# Problem statement — one line naming what this business exists to
          close, before describing what it does. Own analytical framing, not
          a new claim about Admizz itself. #}
       {% if v.problem %}
-      <p class="eco-field mt-4 font-display font-light text-h4 text-ink text-balance">{{ v.problem }}</p>
+      <p class="eco-field mt-4 font-display font-light text-h4 text-ink text-balance" data-eco-group="1">{{ v.problem }}</p>
       {% endif %}
 
-      <p class="eco-field mt-4 text-body-lg text-ink-muted max-w-measure-tight">{{ v.description }}</p>
+      <p class="eco-field mt-4 text-body-lg text-ink-muted max-w-measure-tight" data-eco-group="1">{{ v.description }}</p>
       {% if v.verticalLine %}
-      <p class="eco-field mt-2 text-small text-ink-faint italic">{{ v.verticalLine }}</p>
+      <p class="eco-field mt-2 text-small text-ink-faint italic" data-eco-group="1">{{ v.verticalLine }}</p>
       {% endif %}
       {% if v.exams.length %}
-      <ul class="eco-field mt-5 flex flex-wrap gap-2">
+      <ul class="eco-field mt-5 flex flex-wrap gap-2" data-eco-group="2">
         {% for e in v.exams %}<li class="font-mono text-label uppercase tracking-wide text-ink-faint border border-rule px-2 py-1">{{ e }}</li>{% endfor %}
       </ul>
       {% endif %}
@@ -115,13 +124,13 @@
          inline, exactly the /ventures/ pattern. #}
       {% set mc = marketContext[v.id] %}
       {% if mc and mc.stats.length %}
-      <div class="eco-field mt-6 pt-5 border-t border-rule flex items-baseline gap-3">
+      <div class="eco-field mt-6 pt-5 border-t border-rule flex items-baseline gap-3" data-eco-group="3">
         <span class="font-display font-light text-h3 tabular-nums text-ink shrink-0">{{ mc.stats[0].value }}</span>
         <span class="text-small text-ink-muted leading-snug">{{ mc.stats[0].label }} <span class="font-mono text-label uppercase tracking-widest text-ink-faint">&mdash; {{ mc.stats[0].publisher }}</span></span>
       </div>
       {% endif %}
 
-      <a href="{{ v.href }}" class="eco-field mt-6 inline-flex items-center gap-2 text-small font-medium text-ink link-underline w-fit">
+      <a href="{{ v.href }}" class="eco-field mt-6 inline-flex items-center gap-2 text-small font-medium text-ink link-underline w-fit" data-eco-group="3">
         {{ v.cta }}
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>

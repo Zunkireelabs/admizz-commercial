@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  {# Scroll-restoration fix (2026-09-02): browsers auto-restore the previous
+     scroll position on refresh/back-forward, which meant the fixed header's
+     scroll -> floating-pill morph (main.js) could render fully "scrolled"
+     (rounded, narrower, no animation) the instant a page loaded, with no
+     actual scrolling by the visitor to trigger it -- confirmed by a direct
+     repro (scroll to 400px, reload, header was already 999px-radius 50ms
+     later). This has to run inline, first, synchronous -- before the
+     browser has a chance to restore scroll and before anything else in
+     <head> can delay it. Skipped when the URL has a hash (a #section
+     deep link) so that still scrolls to its target normally. #}
+  <script>
+    if (history.scrollRestoration) history.scrollRestoration = 'manual';
+    if (!location.hash) window.scrollTo(0, 0);
+  </script>
+
   <!-- Google Analytics -->
   {% if env.GA_MEASUREMENT_ID %}
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ env.GA_MEASUREMENT_ID }}"></script>

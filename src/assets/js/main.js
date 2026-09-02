@@ -81,6 +81,40 @@ if (!prefersReducedMotion) {
       }).to(statementLines, { opacity: 1, y: 0, stagger: 0.12 });
     }
 
+    // "What Admizz Is" venture preview cards — same hide-then-reveal idiom
+    // as the hero/statement-band above, added 2026-09-02 after a design
+    // critique: the three cards used to share one .fade-up wrapper, so all
+    // three photos popped in together as a single flat block. Each card
+    // now reveals on its own (index-staggered), and each photo does a
+    // left-to-right clip-path wipe instead of a plain fade -- reads as an
+    // editorial reveal rather than a generic "content appeared" fade.
+    // The card's fade/rise and its own photo's wipe share the same index
+    // in gsap.utils.toArray, so `stagger` on both tweens keeps each card's
+    // two effects in sync with each other while still offsetting card 1
+    // from card 2 from card 3.
+    const previewCards = gsap.utils.toArray('[data-venture-preview-card]');
+    if (previewCards.length) {
+      const previewPhotos = previewCards.map((card) => card.querySelector('.venture-preview-photo'));
+      gsap.set(previewCards, { opacity: 0, y: 18 });
+      gsap.set(previewPhotos, { clipPath: 'inset(0 100% 0 0)' });
+      gsap.timeline({
+        defaults: { ease: 'signature' },
+        scrollTrigger: {
+          trigger: previewCards[0].closest('section'),
+          start: 'top 65%',
+          // restart (not the default "play once") on BOTH onEnter and
+          // onEnterBack, per explicit request -- this replays every time the
+          // section scrolls into view, not just the first. "restart" resets
+          // progress to 0 before playing, so nothing needs to happen on
+          // leave/leaveBack for this to work correctly scrolling away either
+          // direction.
+          toggleActions: 'restart none restart none',
+        },
+      })
+        .to(previewCards, { opacity: 1, y: 0, duration: 0.6, stagger: 0.12 })
+        .to(previewPhotos, { clipPath: 'inset(0 0% 0 0)', duration: 0.7, stagger: 0.12 }, '<');
+    }
+
     // Header shape morph — simple full-width bar at the top, floating pill
     // once scroll starts (see header.njk comment for the margin-not-width
     // mechanism). Values are read from the live DOM at setup time — the
@@ -191,12 +225,33 @@ if (!prefersReducedMotion) {
           if (ghostNum) ghostNum.textContent = block.dataset.index;
           if (ghostStage) ghostStage.textContent = block.dataset.stage;
           if (!initial) {
-            // Slides in from the side (x), not up (y) — a deliberate ask,
-            // and it also reads better here: this column sits beside a
-            // full-height photo, so a horizontal arrival feels connected to
-            // it in a way a vertical one didn't.
-            const fields = block.querySelectorAll('.eco-field');
-            gsap.fromTo(fields, { opacity: 0, x: 32 }, { opacity: 1, x: 0, stagger: 0.07, duration: 0.6, ease: 'signature' });
+            // 2026-09-02: was one flat .eco-field group on a uniform 70ms
+            // stagger -- 9 pieces of very different content (a label, a
+            // display-size headline, a stat number, a chip list) all
+            // sliding the same way, arriving within about a second, read as
+            // one hurried block rather than a deliberate reveal. Four
+            // explicit stages instead, each with its own motion suited to
+            // what it actually is, overlapping slightly (negative position
+            // offsets) so it reads as one continuous sequence, not four
+            // separate waits. Slides in from the side (x), not up (y) —
+            // still the deliberate original ask, kept for groups 0/1/3;
+            // this column sits beside a full-height photo, so a horizontal
+            // arrival feels connected to it in a way a vertical one didn't.
+            const group0 = block.querySelectorAll('[data-eco-group="0"]');
+            const group1 = block.querySelectorAll('[data-eco-group="1"]');
+            const chips = block.querySelectorAll('[data-eco-group="2"] li');
+            const group3 = block.querySelectorAll('[data-eco-group="3"]');
+            gsap.timeline({ defaults: { ease: 'signature' } })
+              // 0 — label + title: the "what is this" beat, fastest to land.
+              .fromTo(group0, { opacity: 0, x: 32 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.06 })
+              // 1 — supporting text, overlapping the tail of group 0.
+              .fromTo(group1, { opacity: 0, x: 32 }, { opacity: 1, x: 0, duration: 0.55, stagger: 0.08 }, '-=0.25')
+              // 2 — exam chips pop in individually (y, not x — they read as
+              // items being placed down, not text sliding in), not as one
+              // sliding block.
+              .fromTo(chips, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.35, stagger: 0.05 }, '-=0.15')
+              // 3 — stat + CTA: the payoff, arrives last.
+              .fromTo(group3, { opacity: 0, x: 32 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.08 }, '-=0.1');
           }
         }
       };
