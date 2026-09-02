@@ -73,7 +73,11 @@ eleventyComputed:
          rel=noopener since they leave the site. #}
       {% for v in ventures %}{% if v.name == post.venture %}
       {% if v.href == "#" %}
-      <p class="mt-8 text-small text-ink-faint">{{ v.hrefLabel }}</p>
+      {# Was just {{ v.hrefLabel }} alone ("No public site yet") with no
+         subject -- a design critique read it as an orphaned, unexplained
+         note. The contact page's version of this same fallback already
+         frames it with the venture name; matching that here. #}
+      <p class="mt-8 text-small text-ink-faint">{{ post.venture }} &mdash; {{ v.hrefLabel }}</p>
       {% else %}
       <a href="{{ v.href }}" class="mt-8 inline-flex items-center gap-2 text-small font-medium text-ink link-underline" target="_blank" rel="noopener noreferrer">
         Explore {{ post.venture }}

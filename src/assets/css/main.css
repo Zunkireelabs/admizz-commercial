@@ -985,6 +985,15 @@
   position: absolute;
   text-align: center;
   transform: translate(-50%, -50%);
+  transition: opacity theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+}
+.field-node:hover,
+.field-node:focus-visible {
+  opacity: 0.72;
+}
+.field-node:focus-visible {
+  outline: 1px solid theme("colors.navy.on");
+  outline-offset: 4px;
 }
 .field-node-1 { left: 50%;   top: 25.7%; }   /* (240,110) */
 .field-node-2 { left: 27.5%; top: 67.8%; }   /* (132,290) */
@@ -1247,7 +1256,10 @@
 .contact-hero {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #ECEEF9 0%, theme("colors.paper.DEFAULT") 70%);
+  /* Was a lavender-tinted gradient (#ECEEF9) unique to this page -- every
+     other page's ground is the warm, near-neutral paper token. Flat paper,
+     matching sitewide. */
+  background-color: theme("colors.paper.DEFAULT");
   padding-top: clamp(7rem, 10vw, 9rem);
   padding-bottom: clamp(3rem, 6vw, 5rem);
 }
@@ -1272,12 +1284,15 @@
 }
 .contact-hero-title {
   margin-top: 1rem;
-  font-family: theme("fontFamily.sans");
-  font-variation-settings: "wght" 780;
+  /* Was font-family.sans at weight 780 -- a near-black weight no other
+     headline on the site uses (every other h1/h2 is font-display at the
+     "light" 320 weight). Matching the sitewide display-heading treatment. */
+  font-family: theme("fontFamily.display");
+  font-variation-settings: "wght" 320;
   font-size: clamp(2.5rem, 1.6rem + 3.6vw, 3.85rem);
-  line-height: 1.04;
-  letter-spacing: -0.02em;
-  color: theme("colors.navy.deep");
+  line-height: 1.08;
+  letter-spacing: -0.013em;
+  color: theme("colors.ink.DEFAULT");
 }
 .contact-hero-title-accent { color: theme("colors.navy.DEFAULT"); }
 .contact-hero-sub {
@@ -1482,15 +1497,20 @@
   padding: 0.85rem 1.25rem;
   border: 1px solid transparent;
   border-radius: 0;
-  background-color: theme("colors.navy.soft");
-  color: theme("colors.white");
+  /* Was a bespoke solid-navy-fill/white-text button, the only primary CTA
+     on the site not using the sitewide gold treatment (.btn-primary is
+     bg-gold/text-navy-deep everywhere else -- hero, header, every other
+     page's main action). Matching that here instead of inventing a second
+     button language. */
+  background-color: theme("colors.gold.DEFAULT");
+  color: theme("colors.navy.deep");
   font-family: theme("fontFamily.sans");
   font-size: 0.9rem;
   font-variation-settings: "wght" 560;
-  transition: background-color theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+  transition: filter theme("transitionDuration.press") theme("transitionTimingFunction.signature");
 }
 .contact-send svg { width: 1.15rem; height: 1.15rem; }
-.contact-send:hover { background-color: theme("colors.navy.deep"); }
+.contact-send:hover { filter: brightness(0.95); }
 .contact-send:disabled { opacity: 0.6; }
 .contact-send-ghost {
   width: auto;
@@ -1565,18 +1585,6 @@
   color: theme("colors.ink.muted");
 }
 .contact-info-dim { color: theme("colors.ink.faint"); font-size: 0.8rem; }
-.contact-confirm-tag {
-  display: inline-block;
-  font-family: theme("fontFamily.mono");
-  font-size: 0.55rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: theme("colors.crit.DEFAULT");
-  border: 1px solid rgba(168, 35, 27, 0.4);
-  border-radius: 0;
-  padding: 0.05rem 0.3rem;
-  vertical-align: middle;
-}
 
 /* ---------- Lower band ---------- */
 .contact-reach {

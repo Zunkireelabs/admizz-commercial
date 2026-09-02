@@ -8,6 +8,25 @@
   x-effect="document.body.classList.toggle('overflow-hidden', open)"
   class="fixed inset-x-0 top-0 z-50"
 >
+  {# Scrim, added 2026-09-02: once the header shrinks into its floating pill
+     (margin-top on .header-frame below), the reserved band above/around the
+     pill — full header width, from y:0 to the pill's top edge, plus the
+     pill's own rounded-corner cutaways — has nothing painted in it. A design
+     critique caught real page content (e.g. /about/'s "Milestones that
+     shaped who we are." heading) scrolling up INTO that gap and appearing to
+     collide with/poke through the pill's rounded edge — jarring, reads as a
+     rendering bug even though nothing is actually broken. This full-width
+     fade sits behind the pill and softens that transition instead of a hard
+     collision. Paper-toned since by the time `scrolled` is true the header-
+     bar itself has already gone to its light/paper look on every page
+     (including navyHeader ones — see the :class binding below); hidden
+     entirely until then so it never washes out an unscrolled navy hero. #}
+  <div
+    class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-paper via-paper/70 to-transparent pointer-events-none transition-opacity duration-slow ease-signature -z-10"
+    :class="scrolled ? 'opacity-100' : 'opacity-0'"
+    aria-hidden="true"
+  ></div>
+
   {# header-frame/header-bar: a simple full-width bar by default (the correct
      no-JS/reduced-motion state too — see main.js), morphing into a floating
      pill once scroll starts. header-frame's shrink comes from GSAP tweening

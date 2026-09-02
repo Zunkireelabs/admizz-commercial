@@ -104,16 +104,22 @@ permalink: /ventures/
          Circle centres are 144 apart at r=108, which keeps both a usable own
          region and a real three-way intersection (~39x51px) for the mark to
          sit in. ---- #}
-    <div class="masthead-figure" aria-hidden="true" data-field-diagram>
-      <svg class="field-diagram" viewBox="0 0 480 428" fill="none" focusable="false">
+    {# Nodes were plain <div>s inside an aria-hidden wrapper -- purely
+       decorative despite sitting on real per-venture data, and a design
+       critique pointed out the content to jump to (each venture's own
+       record section below) already exists on this same page. Now real
+       links; only the connecting circles (genuinely decorative) stay
+       aria-hidden. #}
+    <div class="masthead-figure" data-field-diagram>
+      <svg class="field-diagram" viewBox="0 0 480 428" fill="none" focusable="false" aria-hidden="true">
         <circle class="field-circle" cx="240" cy="153" r="108" stroke="currentColor" stroke-width="1"/>
         <circle class="field-circle" cx="168" cy="278" r="108" stroke="currentColor" stroke-width="1"/>
         <circle class="field-circle" cx="312" cy="278" r="108" stroke="currentColor" stroke-width="1"/>
       </svg>
 
       {% for v in ventures %}
-      <div class="field-node field-node-{{ loop.index }}">
-        <span class="field-node-icon">
+      <a href="#record-{{ v.id }}" class="field-node field-node-{{ loop.index }}" aria-label="Jump to {{ v.name }}">
+        <span class="field-node-icon" aria-hidden="true">
           {% if v.id == "institute" %}
           <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
           {% elif v.id == "education" %}
@@ -124,7 +130,7 @@ permalink: /ventures/
         </span>
         <span class="mt-2 block font-mono text-label uppercase tracking-widest text-navy-on">{{ v.stage }}</span>
         <span class="field-node-vertical mt-1 block font-mono text-label uppercase tracking-wide text-navy-on-muted leading-relaxed">{{ v.vertical }}</span>
-      </div>
+      </a>
       {% endfor %}
 
       <span class="field-mark">
