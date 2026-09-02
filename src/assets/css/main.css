@@ -94,7 +94,7 @@
      site's labels are unaffected. */
   .eyebrow-pill {
     @apply inline-flex items-center gap-2 rounded-full border border-rule-strong bg-white/70 px-4 py-1.5;
-    @apply font-mono text-micro uppercase tracking-widest text-navy-soft;
+    @apply font-mono text-label uppercase tracking-widest text-navy-soft;
   }
 
   .eyebrow-on-navy {
@@ -181,10 +181,10 @@
     @apply border-b-0;
   }
   .data-label {
-    @apply font-mono text-micro uppercase tracking-widest text-ink-faint;
+    @apply font-mono text-label uppercase tracking-widest text-ink-faint;
   }
   .data-label-on-navy {
-    @apply font-mono text-micro uppercase tracking-widest text-navy-on-muted;
+    @apply font-mono text-label uppercase tracking-widest text-navy-on-muted;
   }
 
   /* Academic-network register — same visual family as .data-row (flat,
@@ -1193,7 +1193,7 @@
   @apply mt-1.5 text-small text-ink-muted leading-snug;
 }
 .market-stat-source {
-  @apply mt-2 inline-flex items-center gap-1 font-mono text-micro uppercase tracking-widest text-ink-faint;
+  @apply mt-2 inline-flex items-center gap-1 font-mono text-label uppercase tracking-widest text-ink-faint;
   @apply transition-colors duration-press ease-signature;
 }
 .market-stat-source:hover,
@@ -1201,7 +1201,7 @@
   @apply text-navy;
 }
 .market-stat-inline-source {
-  @apply ml-1.5 font-mono text-micro uppercase tracking-widest text-ink-faint whitespace-nowrap;
+  @apply ml-1.5 font-mono text-label uppercase tracking-widest text-ink-faint whitespace-nowrap;
   @apply transition-colors duration-press ease-signature;
 }
 .market-stat-inline-source:hover,
@@ -2016,8 +2016,10 @@
 }
 .insights-row-time {
   font-family: theme("fontFamily.mono");
-  font-size: 0.625rem;
-  letter-spacing: 0.1em;
+  /* Matches the site's .text-label token (11px) — was a hardcoded 0.625rem
+     (10px), below the legibility floor a design critique flagged. */
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   /* ink-muted, not ink-faint — fails AA at this size (CLAUDE.md §5). */
   color: theme("colors.ink.muted");

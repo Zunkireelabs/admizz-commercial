@@ -72,7 +72,7 @@ permalink: /insights/
         {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 900px) 50vw, 92vw" %}
       </a>
       <div class="insights-feature-body">
-        <span class="font-mono text-micro uppercase tracking-widest text-gold-text">Featured</span>
+        <span class="font-mono text-label uppercase tracking-widest text-gold-text">Featured</span>
         <h2 class="mt-3 font-display font-book text-h2 text-ink text-balance">
           <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
         </h2>
@@ -98,7 +98,7 @@ permalink: /insights/
         </a>
         <div class="insights-card-body">
           <span class="insights-card-num" aria-hidden="true">{{ "0" }}{{ loop.index }}</span>
-          <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
+          <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
           <h2 class="mt-2 font-display font-book text-h4 text-ink">
             <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
           </h2>

@@ -94,7 +94,7 @@ permalink: /
         </svg>
 
         <span class="eyebrow-pill" data-hero-in>
-          <span class="w-1.5 h-1.5 rounded-full bg-navy"></span>
+          <span class="w-1.5 h-1.5 bg-navy"></span>
           Shaping futures. Building possibilities.
         </span>
 
@@ -124,16 +124,22 @@ permalink: /
     {# Real trust badge — Admizz Education's ICEF accreditation, independently
        verified against ICEF's public API (docs/01-AUDIT.md §2), not a claim
        taken from marketing copy. Anchored to the shell so it aligns with the
-       curve below, positioned over the photo layer via z-index. #}
+       curve below, positioned over the photo layer via z-index.
+       Mobile fix: at the mobile min-h (320px) the CTA row sits near the
+       bottom of this same shell, and this badge's bottom-0 previously
+       landed right on top of it — clipping the primary "Explore our
+       ventures" button. Below md it now sits in normal flow, after the
+       CTAs; only at md+ (where the hero is tall enough for the badge to
+       float clear of the button row) does it switch to absolute. #}
     <a
       href="https://accreditations.icef.com/certificate?id=c8a7212a-a25c-469f-8a7b-2b2f047e8c0c"
       target="_blank"
       rel="noopener noreferrer"
       data-hero-in
       data-motion
-      class="badge-float absolute bottom-0 right-gutter z-10 flex items-center gap-3 rounded-2xl bg-white/95 backdrop-blur-sm shadow-xl border border-rule px-4 py-3 max-w-[240px] hover:shadow-2xl transition-shadow duration-press ease-signature"
+      class="badge-float mt-6 md:mt-0 md:absolute md:bottom-0 right-gutter z-10 flex items-center gap-3 bg-white/95 backdrop-blur-sm shadow-xl border border-rule px-4 py-3 max-w-[240px] hover:shadow-2xl transition-shadow duration-press ease-signature"
     >
-      <span class="shrink-0 w-9 h-9 rounded-full bg-navy/10 flex items-center justify-center text-navy">
+      <span class="shrink-0 w-9 h-9 bg-navy/10 flex items-center justify-center text-navy">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
           <path d="M9 1.5l6 2.25v4c0 4-2.6 6.9-6 8.75-3.4-1.85-6-4.75-6-8.75v-4L9 1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
           <path d="M6.5 9l1.8 1.8L11.5 7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -141,7 +147,7 @@ permalink: /
       </span>
       <span>
         <span class="block text-small font-medium text-ink">ICEF Certified Agency</span>
-        <span class="block text-micro text-ink-faint">Admizz Education &middot; Verified</span>
+        <span class="block text-label text-ink-faint">Admizz Education &middot; Verified</span>
       </span>
     </a>
   </div>
@@ -184,7 +190,7 @@ permalink: /
           </div>
           {% endfor %}
         </div>
-        <p class="mt-6 font-mono text-micro uppercase tracking-widest text-navy-on-muted/70 fade-up">
+        <p class="mt-6 font-mono text-label uppercase tracking-widest text-navy-on-muted/70 fade-up">
           Figures published by Admizz Education, as of 2026
         </p>
       </div>
@@ -234,15 +240,19 @@ permalink: /
 <section class="relative overflow-hidden bg-paper py-section-sm border-b border-rule">
   <div class="absolute right-8 top-1/2 -translate-y-1/2 w-[450px] h-[450px] hidden xl:block" aria-hidden="true">
     <div class="world-map-dots absolute inset-0 opacity-[0.42] pointer-events-none" data-globe-fallback></div>
-    <canvas class="globe-canvas absolute inset-0 w-full h-full rounded-full opacity-0" data-globe></canvas>
+    <canvas class="globe-canvas absolute inset-0 w-full h-full opacity-0" data-globe></canvas>
   </div>
 
   <div class="shell relative z-10 grid grid-cols-1 md:grid-cols-[minmax(0,26rem)_minmax(0,15.5rem)] gap-x-12 gap-y-8 md:items-center">
     <div>
       <span class="eyebrow fade-up">The Shift</span>
-      <p class="mt-3 fade-up font-display font-light text-[clamp(1.5rem,1.1rem+1.8vw,2.3rem)] leading-[1.15] text-ink max-w-[20ch] text-balance" style="animation-delay:60ms">
+      {# Was a <p> — this is the section's actual heading (h1 above, h3s
+         below in the "what's changing" breakdown), so it was skipping
+         straight from h1 to h3 with no h2 in between. Promoted to h2 with
+         no class changes, so the visual size/weight is unchanged. #}
+      <h2 class="mt-3 fade-up font-display font-light text-[clamp(1.5rem,1.1rem+1.8vw,2.3rem)] leading-[1.15] text-ink max-w-[20ch] text-balance" style="animation-delay:60ms">
         Education is more global. Careers are less linear. The skills a job needs can shift <em class="italic text-navy font-book">faster</em> than a degree can be finished.
-      </p>
+      </h2>
       <span class="block mt-5 w-10 h-px bg-gold" aria-hidden="true"></span>
       <p class="mt-4 text-small text-ink-muted max-w-[36ch] fade-up" style="animation-delay:120ms">
         For most people, the constraint isn&rsquo;t access anymore &mdash; it&rsquo;s knowing what comes next, and having a real way to prepare for it.
@@ -267,10 +277,10 @@ permalink: /
       ] %}
       {% for s in shifts %}
       <div class="flex gap-3 pt-4 border-t border-dotted border-ink-faint/50 first:pt-0 first:border-t-0">
-        <span class="font-mono text-micro tabular-nums text-navy-soft shrink-0">0{{ loop.index }}</span>
+        <span class="font-mono text-label tabular-nums text-navy-soft shrink-0">0{{ loop.index }}</span>
         <div>
           <h3 class="font-display font-book text-body text-ink">{{ s.title }}</h3>
-          <p class="mt-1 text-micro text-ink-muted leading-relaxed">{{ s.text }}</p>
+          <p class="mt-1 text-small text-ink-muted leading-relaxed">{{ s.text }}</p>
         </div>
       </div>
       {% endfor %}
@@ -332,10 +342,10 @@ permalink: /
         <div class="venture-preview-card">
           <div class="flex items-baseline gap-2">
             <span class="font-display font-light text-h3 tabular-nums text-ink-faint">{{ v.index }}</span>
-            <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ v.stage }}</span>
+            <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ v.stage }}</span>
           </div>
           <h3 class="mt-1 font-display font-light text-h4 text-ink text-balance">{{ v.name }}</h3>
-          <a href="{{ v.href if v.href != '#' else '/ventures/' }}" class="venture-preview-photo mt-4 block relative rounded-lg overflow-hidden bg-navy-deep aspect-[3/2]">
+          <a href="{{ v.href if v.href != '#' else '/ventures/' }}" class="venture-preview-photo mt-4 block relative overflow-hidden bg-navy-deep aspect-[3/2]">
             <div class="absolute inset-0 [&_picture]:contents [&_picture]:block [&_picture]:h-full [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
               {% image "src/assets/images/" + img.file, img.alt, "(min-width: 1024px) 22vw, (min-width: 640px) 30vw, 80vw" %}
             </div>
@@ -355,15 +365,15 @@ permalink: /
       <div class="hidden lg:flex flex-col items-start gap-6 pl-8 border-l border-rule self-stretch justify-center">
         {% for v in ventures %}
         <div class="flex items-center gap-2.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true"></span>
-          <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">{{ v.stage }}</span>
+          <span class="w-1.5 h-1.5 bg-gold" aria-hidden="true"></span>
+          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">{{ v.stage }}</span>
         </div>
         {% if not loop.last %}<span class="w-px h-6 bg-rule ml-[3px]" aria-hidden="true"></span>{% endif %}
         {% endfor %}
         <span class="w-px h-6 bg-rule ml-[3px]" aria-hidden="true"></span>
         <div class="flex items-center gap-2.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-navy-on-muted/50" aria-hidden="true"></span>
-          <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">Opportunity</span>
+          <span class="w-1.5 h-1.5 bg-navy-on-muted/50" aria-hidden="true"></span>
+          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">Opportunity</span>
         </div>
       </div>
     </div>
@@ -468,7 +478,7 @@ permalink: /
         </div>
         <div class="expertise-card-face expertise-card-face-panel">
           <div>
-            <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ e.venture }}</span>
+            <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ e.venture }}</span>
             <h3 class="mt-1.5 font-display font-light text-h4 text-ink text-balance">{{ e.name }}</h3>
             <p class="mt-3 text-small text-ink-muted leading-relaxed">{{ e.text }}</p>
           </div>
@@ -483,102 +493,35 @@ permalink: /
   </div>
 </section>
 
-{# ============================================================ 05 — THE ADMIZZ ECOSYSTEM
-   New 2026-08-31. The conceptual pathway (Potential -> Opportunity),
-   distinct from the "One Ecosystem" business pitch above despite the
-   similar name — GSAP/CSS only, no Three.js: a horizontal (desktop) /
-   vertical (mobile) node line with staggered fade-up reveal per node is
-   sufficient to carry this idea; a WebGL layer wasn't judged to add
-   anything a typographic diagram doesn't already say. Two real business
-   stages (Preparation/Education/Work map to the three ventures) sit beside
-   three narrative stages (Potential, Skills, Opportunity) that are NOT
-   claimed as Admizz services — they're the surrounding context the three
-   real businesses operate inside.
+{# ============================================================ 05 — VENTURES COVERFLOW
+   2026-09-02: removed the "Ecosystem pathway" diagram (Potential ->
+   Preparation -> Education -> Skills -> Work -> Opportunity) that used to
+   sit here, on user direction after a design critique flagged the same
+   three ventures being told four times in a row before the footer (preview
+   cards above -> the sticky "ecosystem-journey" record -> this pathway
+   diagram -> this coverflow). The pathway and the coverflow covered nearly
+   identical ground; this one survives because dropping the pathway (navy)
+   instead of the coverflow (paper) keeps the paper/navy section rhythm
+   intact — removing the coverflow instead would have put this section's
+   navy neighbors (the stat band above / "What We Believe" below) directly
+   back-to-back, the exact "too much blue" problem already fixed once
+   before (see the coverflow comment below). If this trade doesn't read
+   well in practice, the removed pathway markup is recoverable from git
+   history (redesign/homepage-narrative branch, commit before 2026-09-02).
 
-   2026-08-31 v2: applying the Taste Skill redesign checklist to the flat
-   repetition problem — grain texture instead of an empty flat navy block,
-   and the three REAL nodes now lift into raised panels (real depth via
-   negative margin + a soft, hue-matched shadow, radius 12px per CLAUDE.md's
-   "panels" tier) while the three narrative nodes stay flush/minimal — the
-   asymmetry IS the point: it visually separates "what Admizz operates" from
-   "the context around it" instead of six identical ticks in a row. Real
-   nodes link to their /ventures/ record instead of sitting inert. #}
-<section class="relative overflow-hidden bg-navy-deep py-section">
-  {% include "partials/grain-texture.njk" %}
-  <div class="shell relative z-10">
-    <div class="max-w-[46rem] fade-up">
-      <span class="eyebrow-on-navy">The Admizz Ecosystem</span>
-      <h2 class="mt-4 font-display font-light text-h1 text-navy-on max-w-[18ch] text-balance">
-        From potential <em class="italic text-navy-accent font-book">to opportunity.</em>
-      </h2>
-      <p class="mt-5 text-body-lg text-navy-on-muted max-w-measure">
-        Preparation, education and work aren't separate markets to us &mdash; they're three points on the same line a person actually walks. Admizz operates at three of them; the line runs further than that on both ends.
-      </p>
-    </div>
-
-    <div class="ecosystem-path mt-16 md:mt-20 fade-up" style="animation-delay:120ms">
-      {% set pathNodes = [
-        { label: "Potential", detail: "Where a person starts.", real: false },
-        { label: "Preparation", detail: "Admizz Institute", real: true, href: "/ventures/#record-institute" },
-        { label: "Education", detail: "Admizz Education", real: true, href: "/ventures/#record-education" },
-        { label: "Skills", detail: "What a career now runs on.", real: false },
-        { label: "Work", detail: "Admizz Workforce Solutions", real: true, href: "/ventures/#record-workforce" },
-        { label: "Opportunity", detail: "Where the line leads.", real: false }
-      ] %}
-      {# The 6 dots used to be drawn per-node, each with its own offset math
-         — real nodes shifted up via their panel's negative margin, narrative
-         nodes didn't, so the dots landed ~46px apart instead of on one line
-         (measured, not eyeballed — a real bug, not a rendering quirk).
-         Drawing all 6 from ONE shared overlay, positioned purely by column
-         index, makes correct alignment structural instead of something each
-         node has to individually get right. #}
-      <div class="ecosystem-path-line relative hidden md:block h-px bg-navy-on-muted/25 mb-8" aria-hidden="true">
-        {% for n in pathNodes %}
-        <span class="ecosystem-path-dot absolute -top-1 block w-2 h-2 rounded-full {{ 'bg-gold' if n.real else 'bg-navy-on-muted/40' }}" style="left:calc({{ loop.index0 }} / 6 * 100% + 1rem)"></span>
-        {% endfor %}
-      </div>
-      <div class="ecosystem-path-track grid grid-cols-2 md:grid-cols-6 gap-x-4 gap-y-10 md:gap-x-3">
-        {% for n in pathNodes %}
-        {% if n.real %}
-        <a href="{{ n.href }}" class="ecosystem-path-node ecosystem-path-node-real group relative fade-up" style="animation-delay:{{ 160 + loop.index0 * 70 }}ms">
-          <span class="md:hidden ecosystem-path-dot absolute left-4 -top-[27px] block w-2 h-2 rounded-full bg-gold" aria-hidden="true"></span>
-          <span class="font-mono text-micro uppercase tracking-widest text-navy-on">{{ n.label }}</span>
-          <span class="mt-1.5 block text-small text-navy-on-muted">{{ n.detail }}</span>
-          <span class="mt-3 inline-flex items-center gap-1 text-micro font-mono uppercase tracking-widest text-navy-accent opacity-0 group-hover:opacity-100">
-            <svg width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </a>
-        {% else %}
-        <div class="ecosystem-path-node relative pt-6 fade-up" style="animation-delay:{{ 160 + loop.index0 * 70 }}ms">
-          <span class="md:hidden ecosystem-path-dot absolute left-0 top-0 block w-2 h-2 rounded-full bg-navy-on-muted/40" aria-hidden="true"></span>
-          <span class="block font-mono text-micro uppercase tracking-widest text-navy-on-muted">{{ n.label }}</span>
-          <span class="mt-1.5 block text-small text-navy-on-muted/60">{{ n.detail }}</span>
-        </div>
-        {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-</section>
-
-{# ============================================================ 05b — VENTURES COVERFLOW
-   New 2026-08-31. Sits ALONGSIDE the Ecosystem pathway above, not replacing
-   it — explicit instruction. Adapted from a React/shadcn coverflow-carousel
-   component (drag-to-browse, 3D perspective tilt on off-center cards). This
-   site has no React — ported only the actual mechanics (pointer-drag
-   tracking, velocity-based flick, the per-card 3D transform math, a
-   requestAnimationFrame easing settle, keyboard arrow nav) into vanilla JS
-   (main.js, guarded by `[data-coverflow]`).
+   Original 2026-08-31 note on this section, still accurate: adapted from a
+   React/shadcn coverflow-carousel component (drag-to-browse, 3D
+   perspective tilt on off-center cards). This site has no React — ported
+   only the actual mechanics (pointer-drag tracking, velocity-based flick,
+   the per-card 3D transform math, a requestAnimationFrame easing settle,
+   keyboard arrow nav) into vanilla JS (main.js, guarded by
+   `[data-coverflow]`).
 
    Content: the same 3 real venture photos already used elsewhere on this
    page (institute/education/workforce-preview.jpg), captioned with each
    venture's real name/stage/verticalLine — NOT the source component's demo
    content, which used random stock photos captioned with entirely
-   fabricated "album" metadata (Producer, Length, Year). Paper ground,
-   deliberately — breaks up what would otherwise be four consecutive navy
-   sections in a row (stat band → globe → Ecosystem → this, if this stayed
-   navy too), a real "too much blue" problem flagged separately from the
-   dot/contrast fixes above.
+   fabricated "album" metadata (Producer, Length, Year).
 
    Only 3 real slides exist, fewer than this component pattern is usually
    built for — loop math still works correctly at any count, verified. #}
@@ -608,14 +551,14 @@ permalink: /
         {% endfor %}
       </div>
     </div>
-    <p class="coverflow-hint mt-4 text-center font-mono text-micro uppercase tracking-widest text-ink-faint" data-coverflow-hint aria-hidden="true">Drag or scroll to explore</p>
+    <p class="coverflow-hint mt-4 text-center font-mono text-label uppercase tracking-widest text-ink-faint" data-coverflow-hint aria-hidden="true">Drag or scroll to explore</p>
   </div>
 
   <div class="shell mt-4">
     <div class="text-center" data-coverflow-caption>
       {% for v in ventures %}
       <div class="coverflow-caption-item {{ '' if loop.index0 == 0 else 'hidden' }}" data-coverflow-caption-item data-index="{{ loop.index0 }}">
-        <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ v.stage }} &middot; {{ v.vertical }}</span>
+        <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ v.stage }} &middot; {{ v.vertical }}</span>
         <h3 class="mt-1.5 font-display font-book text-h4 text-ink">{{ v.name }}</h3>
         <p class="mt-1.5 text-small text-ink-muted max-w-[38ch] mx-auto">{{ v.verticalLine }}</p>
       </div>
@@ -808,17 +751,17 @@ permalink: /
     <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-x-10 gap-y-12">
       {% if featuredPost %}
       <article class="group fade-up">
-        <a href="/insights/{{ featuredPost.slug }}/" class="block relative rounded-lg overflow-hidden bg-navy-deep aspect-[16/10]" tabindex="-1" aria-hidden="true">
+        <a href="/insights/{{ featuredPost.slug }}/" class="block relative overflow-hidden bg-navy-deep aspect-[16/10]" tabindex="-1" aria-hidden="true">
           <div class="absolute inset-0 transition-transform duration-slow ease-signature group-hover:scale-105 [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[80%_50%]">
             {% image "src/assets/images/insights/" + featuredPost.image, featuredPost.imageAlt, "(min-width: 1024px) 56vw, 100vw" %}
           </div>
           <span class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-navy-deep/85 to-transparent" aria-hidden="true"></span>
-          <span class="absolute bottom-4 left-5 flex items-center gap-2 font-mono text-micro uppercase tracking-widest text-white">
+          <span class="absolute bottom-4 left-5 flex items-center gap-2 font-mono text-label uppercase tracking-widest text-white">
             <span class="w-4 h-px bg-gold" aria-hidden="true"></span>
             Featured
           </span>
         </a>
-        <span class="mt-5 block font-mono text-micro uppercase tracking-widest text-navy-soft">{{ featuredPost.venture }} &middot; {{ featuredPost.body | readingTime }} min read</span>
+        <span class="mt-5 block font-mono text-label uppercase tracking-widest text-navy-soft">{{ featuredPost.venture }} &middot; {{ featuredPost.body | readingTime }} min read</span>
         <h3 class="mt-2 font-display font-light text-h2 text-ink text-balance max-w-[20ch]">
           <a href="/insights/{{ featuredPost.slug }}/" class="group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ featuredPost.title }}</a>
         </h3>
@@ -844,7 +787,7 @@ permalink: /
            thumbnail to its own natural square size regardless of how tall
            any ancestor gets. #}
         <article class="group flex items-start gap-5 fade-up" style="animation-delay:{{ loop.index0 * 90 + 90 }}ms">
-          <a href="/insights/{{ post.slug }}/" class="block relative rounded-lg overflow-hidden bg-navy-deep aspect-square w-28 md:w-32 shrink-0" tabindex="-1" aria-hidden="true">
+          <a href="/insights/{{ post.slug }}/" class="block relative overflow-hidden bg-navy-deep aspect-square w-28 md:w-32 shrink-0" tabindex="-1" aria-hidden="true">
             {# object-position biased right: all 3 source images carry a small
                Admizz logo watermark baked into the top/bottom-LEFT corner
                (verified via metadata — all exactly 1600x900, logo ~0-280px
@@ -854,7 +797,7 @@ permalink: /
             </div>
           </a>
           <div class="min-w-0">
-            <span class="block font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }} &middot; {{ post.body | readingTime }} min read</span>
+            <span class="block font-mono text-label uppercase tracking-widest text-navy-soft">{{ post.venture }} &middot; {{ post.body | readingTime }} min read</span>
             <h3 class="mt-1.5 font-display font-book text-h4 text-ink text-balance">
               <a href="/insights/{{ post.slug }}/" class="group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
             </h3>
@@ -903,7 +846,7 @@ permalink: /
       <span class="statement-line inline-block">through innovation, collaboration,</span>
       <span class="statement-line inline-block">and a commitment to quality education.</span>
     </p>
-    <span class="statement-line inline-block mt-8 md:block font-mono text-micro uppercase tracking-widest text-navy-on-muted">&mdash; Admizz Group</span>
+    <span class="statement-line inline-block mt-8 md:block font-mono text-label uppercase tracking-widest text-navy-on-muted">&mdash; Admizz Group</span>
   </div>
 </section>
 {% endif %}

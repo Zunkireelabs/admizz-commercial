@@ -67,8 +67,8 @@ permalink: /ventures/
         <li>
           <a href="#record-{{ v.id }}" class="masthead-index-link">
             <span class="masthead-index-dot" aria-hidden="true"></span>
-            <span class="font-mono text-micro tabular-nums text-navy-on-muted">{{ v.index }}</span>
-            <span class="masthead-index-name font-mono text-micro uppercase tracking-widest">{{ v.name | replace("Admizz ", "") | replace(" Solutions", "") }}</span>
+            <span class="font-mono text-label tabular-nums text-navy-on-muted">{{ v.index }}</span>
+            <span class="masthead-index-name font-mono text-label uppercase tracking-widest">{{ v.name | replace("Admizz ", "") | replace(" Solutions", "") }}</span>
           </a>
         </li>
         {% endfor %}
@@ -122,8 +122,8 @@ permalink: /ventures/
           <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 16V9M8 16V4M13 16v-5M18 16V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
           {% endif %}
         </span>
-        <span class="mt-2 block font-mono text-micro uppercase tracking-widest text-navy-on">{{ v.stage }}</span>
-        <span class="field-node-vertical mt-1 block font-mono text-micro uppercase tracking-wide text-navy-on-muted leading-relaxed">{{ v.vertical }}</span>
+        <span class="mt-2 block font-mono text-label uppercase tracking-widest text-navy-on">{{ v.stage }}</span>
+        <span class="field-node-vertical mt-1 block font-mono text-label uppercase tracking-wide text-navy-on-muted leading-relaxed">{{ v.vertical }}</span>
       </div>
       {% endfor %}
 
@@ -202,8 +202,8 @@ permalink: /ventures/
     <article class="venture-record" id="record-{{ v.id }}" data-venture-record>
 
       <div class="venture-head">
-        <span class="font-mono text-micro uppercase tracking-widest text-ink-faint tabular-nums">Record {{ v.index }} / 03</span>
-        <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ v.vertical }}</span>
+        <span class="font-mono text-label uppercase tracking-widest text-ink-faint tabular-nums">Record {{ v.index }} / 03</span>
+        <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ v.vertical }}</span>
       </div>
 
       <div class="venture-grid">
@@ -310,7 +310,7 @@ permalink: /ventures/
                 <circle class="icef-ring" cx="22" cy="22" r="20" stroke="currentColor" stroke-width="1"/>
                 <path class="icef-check" d="M14.5 22.5l5 5 10-11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              <p class="font-mono text-micro uppercase tracking-widest text-gold-text">ICEF Accredited Agency</p>
+              <p class="font-mono text-label uppercase tracking-widest text-gold-text">ICEF Accredited Agency</p>
             </div>
             <p class="mt-3 text-small text-ink font-medium tabular-nums">IAS 6499</p>
             <p class="mt-0.5 text-small text-ink-muted tabular-nums">Valid 15 April 2026 &ndash; 15 April 2027</p>
@@ -348,7 +348,7 @@ permalink: /ventures/
             <dt class="data-label">Related reading</dt>
             <dd class="venture-ledger-value">
               <a href="/insights/{{ post.slug }}/" class="text-small text-ink link-underline">{{ post.title }}</a>
-              <span class="mt-1 block font-mono text-micro uppercase tracking-widest text-ink-faint">{{ post.body | readingTime }} min read</span>
+              <span class="mt-1 block font-mono text-label uppercase tracking-widest text-ink-faint">{{ post.body | readingTime }} min read</span>
             </dd>
           </div>
           {% endif %}{% endfor %}

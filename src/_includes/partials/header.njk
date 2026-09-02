@@ -48,13 +48,13 @@
 
       <a
         href="/contact/"
-        class="hidden md:inline-flex btn-primary rounded-full"
+        class="hidden md:inline-flex btn-primary"
       >Get in touch</a>
 
       <button
         type="button"
         @click="open = !open"
-        class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full"
+        class="md:hidden inline-flex items-center justify-center w-10 h-10"
         :class="(navyHeader && !scrolled && !open) ? 'text-navy-on' : 'text-ink'"
         :aria-expanded="open"
         aria-controls="mobile-nav"
@@ -81,7 +81,7 @@
     x-show="open"
     x-cloak
     x-collapse
-    class="md:hidden mx-gutter mt-3 rounded-3xl bg-paper border border-rule shadow-lg shadow-navy-deep/10 max-h-[calc(100dvh-6rem)] overflow-y-auto"
+    class="md:hidden mx-gutter mt-3 bg-paper border border-rule shadow-lg shadow-navy-deep/10 max-h-[calc(100dvh-6rem)] overflow-y-auto"
     aria-label="Mobile"
   >
     <div class="px-6 py-6 flex flex-col gap-1">
@@ -92,7 +92,7 @@
         class="py-3 text-h4 font-display font-book text-ink border-b border-rule last:border-b-0"
       >{{ item.label }}</a>
       {% endfor %}
-      <a href="/contact/" @click="open = false" class="btn-primary rounded-full mt-5 justify-center">Get in touch</a>
+      <a href="/contact/" @click="open = false" class="btn-primary mt-5 justify-center">Get in touch</a>
     </div>
   </nav>
 </header>

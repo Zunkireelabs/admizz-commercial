@@ -77,7 +77,7 @@
     {% for v in ventures %}
     {% set img = ecosystemImages[v.id] %}
     <article class="ecosystem-story-block min-h-[75vh] md:min-h-[82vh] flex flex-col justify-center py-10 md:py-0 md:pl-14 lg:pl-20 border-t border-rule first:border-t-0 md:border-t-0" data-block="{{ loop.index0 }}" data-index="{{ v.index }}" data-stage="{{ v.stage }}">
-      <div class="md:hidden mb-6 aspect-[4/3] overflow-hidden rounded-lg bg-navy-deep">
+      <div class="md:hidden mb-6 aspect-[4/3] overflow-hidden bg-navy-deep">
         {% image "src/assets/images/ecosystem/" + img.file, img.alt, "90vw" %}
       </div>
       <span class="ecosystem-block-label eco-field font-mono text-label uppercase tracking-widest text-ink-faint">{{ v.index }} &mdash; {{ v.stage | upper }}</span>
@@ -90,7 +90,7 @@
         <span class="text-ink">{{ v.name.split(' ')[0] }}</span>
         <span class="text-gold-text">{{ v.name.split(' ').slice(1).join(' ') }}</span>
       </h3>
-      <span class="eco-field mt-2 font-mono text-micro uppercase tracking-widest text-navy-soft block">{{ v.vertical }}</span>
+      <span class="eco-field mt-2 font-mono text-label uppercase tracking-widest text-navy-soft block">{{ v.vertical }}</span>
 
       {# Problem statement — one line naming what this business exists to
          close, before describing what it does. Own analytical framing, not
@@ -105,7 +105,7 @@
       {% endif %}
       {% if v.exams.length %}
       <ul class="eco-field mt-5 flex flex-wrap gap-2">
-        {% for e in v.exams %}<li class="font-mono text-micro uppercase tracking-wide text-ink-faint border border-rule rounded-sm px-2 py-1">{{ e }}</li>{% endfor %}
+        {% for e in v.exams %}<li class="font-mono text-label uppercase tracking-wide text-ink-faint border border-rule px-2 py-1">{{ e }}</li>{% endfor %}
       </ul>
       {% endif %}
 
@@ -117,7 +117,7 @@
       {% if mc and mc.stats.length %}
       <div class="eco-field mt-6 pt-5 border-t border-rule flex items-baseline gap-3">
         <span class="font-display font-light text-h3 tabular-nums text-ink shrink-0">{{ mc.stats[0].value }}</span>
-        <span class="text-small text-ink-muted leading-snug">{{ mc.stats[0].label }} <span class="font-mono text-micro uppercase tracking-widest text-ink-faint">&mdash; {{ mc.stats[0].publisher }}</span></span>
+        <span class="text-small text-ink-muted leading-snug">{{ mc.stats[0].label }} <span class="font-mono text-label uppercase tracking-widest text-ink-faint">&mdash; {{ mc.stats[0].publisher }}</span></span>
       </div>
       {% endif %}
 
