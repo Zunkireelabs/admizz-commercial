@@ -556,7 +556,17 @@ permalink: /
    fabricated "album" metadata (Producer, Length, Year).
 
    Only 3 real slides exist, fewer than this component pattern is usually
-   built for — loop math still works correctly at any count, verified. #}
+   built for — loop math still works correctly at any count, verified.
+
+   2026-09-02: hidden on explicit request, same "if false" wrapper pattern
+   already used elsewhere on this page (see "Our Story" section
+   history) to disable a section without deleting it. The paper/navy
+   rhythm concern in the note above no longer applies to hiding THIS
+   section specifically — the section directly above (Our Expertise) is
+   paper, and the section below (What We Believe) is navy, so removing
+   this one just leaves a normal paper-to-navy transition, not two navy
+   sections back to back. Re-enable by removing this wrapper. #}
+{% if false %}
 <section class="bg-paper pt-section-sm pb-10 md:pb-12 border-b border-rule">
   <div class="shell">
     <div class="max-w-[42rem] fade-up">
@@ -611,6 +621,7 @@ permalink: /
     </div>
   </div>
 </section>
+{% endif %}
 
 {# ============================================================ 06 — WHAT WE BELIEVE
    Revived and rewritten from the disabled "Statement band" (previously
