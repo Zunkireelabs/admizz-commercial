@@ -57,10 +57,20 @@
 
       <nav class="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2" aria-label="Primary">
         {% for item in navigation.main %}
+        {# navyHeader-unscrolled link color was text-navy-on-muted (#A9BDD1)
+           against the translucent glass bar over a navy hero -- ~6.7:1
+           composited contrast, passes AA but reads as genuinely hard to
+           read next to the crisp white logo/gold button beside it (flagged
+           directly: "I can't even read what's in there"). Matched to
+           text-navy-on (~11:1), the same brighter token the mobile menu
+           toggle icon already uses in this exact state (see the button
+           below) -- this was the one inconsistent element, not a deliberate
+           choice. Hover moves to the gold accent instead of white, since
+           off-white to pure white barely registers as a state change. #}
         <a
           href="{{ item.href }}"
           class="nav-link text-small font-medium transition-colors duration-press ease-signature"
-          :class="(navyHeader && !scrolled && !open) ? 'text-navy-on-muted hover:text-white' : 'text-ink-muted hover:text-navy-soft'"
+          :class="(navyHeader && !scrolled && !open) ? 'text-navy-on hover:text-navy-accent' : 'text-ink-muted hover:text-navy-soft'"
         >{{ item.label }}</a>
         {% endfor %}
       </nav>
