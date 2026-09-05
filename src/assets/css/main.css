@@ -126,6 +126,14 @@
   .btn-ghost {
     @apply btn border border-rule-strong text-ink hover:border-navy hover:text-navy;
   }
+  /* Small solid card-level CTA (2026-09-06, venture preview cards) — same
+     rounded-md radius as .btn-primary/.btn-ghost, NOT a pill (see the "no
+     pill shapes" rule above); smaller padding/type since it sits inside a
+     card next to a description, not as a page-level primary action. */
+  .btn-card {
+    @apply inline-flex items-center gap-1.5 rounded-md bg-navy px-3.5 py-2 text-label font-medium uppercase tracking-wide text-navy-on;
+    @apply transition-colors duration-press ease-signature hover:bg-navy-deep;
+  }
 
   .link-underline {
     @apply underline decoration-rule-strong decoration-1 underline-offset-4;

@@ -267,18 +267,21 @@ permalink: /
         {% for v in ventures %}
         {% set img = previewImages[v.id] %}
         <div class="venture-preview-card" data-venture-preview-card>
-          <div class="flex items-baseline gap-2">
-            <span class="font-display font-light text-h3 tabular-nums text-ink-faint">{{ v.index }}</span>
-            <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ v.stage }}</span>
-          </div>
-          <h3 class="mt-1 font-display font-light text-h4 text-ink text-balance">{{ v.name }}</h3>
-          <a href="{{ v.href if v.href != '#' else '/ventures/' }}" class="venture-preview-photo mt-4 block relative overflow-hidden bg-navy-deep aspect-[3/2]">
+          {# 2026-09-06: numbered service-card treatment (reference: SaleUnion) —
+             index + stage combined into one compact mono line ("01 / PREPARE",
+             was a large display numeral beside a separate mono label), photo
+             moved up to lead the card (was name -> photo; now photo -> name),
+             and the closing link upgraded from underlined text to a small
+             solid pill button. Same data, same links, same photos throughout. #}
+          <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ v.index }} / {{ v.stage }}</span>
+          <a href="{{ v.href if v.href != '#' else '/ventures/' }}" class="venture-preview-photo mt-3 block relative overflow-hidden bg-navy-deep aspect-[3/2]">
             <div class="absolute inset-0 [&_picture]:contents [&_picture]:block [&_picture]:h-full [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
               {% image "src/assets/images/" + img.file, img.alt, "(min-width: 1024px) 22vw, (min-width: 640px) 30vw, 80vw" %}
             </div>
           </a>
-          <p class="mt-4 text-small text-ink-muted leading-relaxed">{{ v.verticalLine }}</p>
-          <a href="/ventures/#record-{{ v.id }}" class="mt-3 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline">
+          <h3 class="mt-4 font-display font-light text-h4 text-ink text-balance">{{ v.name }}</h3>
+          <p class="mt-2 text-small text-ink-muted leading-relaxed">{{ v.verticalLine }}</p>
+          <a href="/ventures/#record-{{ v.id }}" class="btn-card mt-4">
             Learn more
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
