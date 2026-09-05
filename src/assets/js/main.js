@@ -194,6 +194,24 @@ if (!prefersReducedMotion) {
       });
     });
 
+    // Close section photo (homepage, "Let's talk about what's next") — same
+    // mechanism as the hero photo above, but a much stronger drift on
+    // purpose: at the hero's -6%/-inset-y-[2%] settings this was measured at
+    // ~7px of movement across the section's entire scroll range — real, but
+    // imperceptible. Reference (SaleUnion's closing CTA) has an obviously
+    // visible background-scrolls-independently-of-text effect, so this one
+    // is tuned much larger (-inset-y-[12%] overscan / yPercent -22) —
+    // verified to produce real, visible movement, not just a nonzero value.
+    gsap.utils.toArray('.close-photo-parallax').forEach((photo) => {
+      const section = photo.closest('section');
+      if (!section) return;
+      gsap.to(photo, {
+        yPercent: -22,
+        ease: 'none',
+        scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 1.2 },
+      });
+    });
+
     // Ecosystem story (homepage "One Ecosystem" section) — sticky photo
     // (plain CSS position:sticky, set in the markup, not GSAP pin) crossfades
     // as each text block scrolls to center. No pinning, no scroll-hijacking —

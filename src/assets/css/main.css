@@ -134,6 +134,13 @@
     @apply inline-flex items-center gap-1.5 rounded-md bg-navy px-3.5 py-2 text-label font-medium uppercase tracking-wide text-navy-on;
     @apply transition-colors duration-press ease-signature hover:bg-navy-deep;
   }
+  /* Same small card-CTA shape as .btn-card, for use directly on a photo/scrim
+     (Our Expertise cards) where a solid navy fill would disappear against an
+     already-dark background — outlined and lighter instead of filled. */
+  .btn-card-on-navy {
+    @apply inline-flex items-center gap-1.5 rounded-md border border-white/50 px-3.5 py-2 text-label font-medium uppercase tracking-wide text-white;
+    @apply transition-colors duration-press ease-signature group-hover:border-white group-hover:bg-white/10;
+  }
 
   .link-underline {
     @apply underline decoration-rule-strong decoration-1 underline-offset-4;
@@ -706,14 +713,14 @@
   transform: scale(1.3);
 }
 
-/* ---------- Expertise flip cards (homepage §04, Our Expertise) ----------
-   Two absolutely-stacked faces per card; hover/focus-within/`.is-open`
-   crossfades photo -> description panel. `.is-open` is the touch fallback
-   (see index.njk: only bound when matchMedia('hover: none') is true, so a
-   mouse click right after a hover doesn't leave the panel stuck open).
-   `:focus-within` (not `:focus-visible` on the card itself) so tabbing to
-   the inner "Learn more" link reveals the panel it belongs to — the link
-   stays in tab order at opacity:0 same as .fade-up content pre-reveal. */
+/* ---------- Expertise cards (homepage §04, Our Expertise) ----------
+   2026-09-06: was a two-face hover/tap flip (photo <-> a separate opaque
+   description panel, requiring Alpine touch-vs-hover detection) — replaced
+   with a single static face (reference: SaleUnion's case-study cards):
+   badge, heading, description and CTA all sit directly over the photo in
+   one deepened scrim, always visible, nothing gated behind an interaction.
+   The card is a plain <a> now; the only remaining motion is a subtle photo
+   zoom on hover via the `group`/`group-hover:scale-105` classes in index.njk. */
 .expertise-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -727,38 +734,27 @@
 }
 .expertise-card {
   position: relative;
+  display: block;
   aspect-ratio: 3 / 4;
   border-radius: theme("borderRadius.xl");
   overflow: hidden;
-  cursor: pointer;
   box-shadow: theme("boxShadow.raised");
   transition: transform theme("transitionDuration.reveal") theme("transitionTimingFunction.signature"),
     box-shadow theme("transitionDuration.reveal") theme("transitionTimingFunction.signature");
 }
 .expertise-card:hover,
-.expertise-card.is-open,
-.expertise-card:focus-within {
+.expertise-card:focus-visible {
   transform: translateY(-4px);
   box-shadow: theme("boxShadow.lift");
 }
-.expertise-card-face {
-  position: absolute;
-  inset: 0;
-  transition: opacity theme("transitionDuration.slow") theme("transitionTimingFunction.signature"),
-    transform theme("transitionDuration.slow") theme("transitionTimingFunction.signature");
-}
-.expertise-card-face-photo { z-index: 2; }
-.expertise-card:hover .expertise-card-face-photo,
-.expertise-card.is-open .expertise-card-face-photo,
-.expertise-card:focus-within .expertise-card-face-photo {
-  opacity: 0;
-  pointer-events: none;
-  transform: scale(1.04);
-}
+/* Deepened and extended further up the frame than the old name-only scrim
+   (was 62% stop) — the footer now also carries a 3-line description and a
+   button, so more of the photo needs to sit under the dark gradient for
+   that text to stay readable. */
 .expertise-card-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(3, 8, 30, 0.78), rgba(3, 8, 30, 0) 62%);
+  background: linear-gradient(to top, rgba(3, 8, 30, 0.92), rgba(3, 8, 30, 0.45) 55%, rgba(3, 8, 30, 0) 85%);
 }
 .expertise-card-badge {
   position: absolute;
@@ -780,23 +776,6 @@
   left: 1.25rem;
   right: 1.25rem;
   bottom: 1.25rem;
-}
-.expertise-card-face-panel {
-  z-index: 1;
-  opacity: 0;
-  pointer-events: none;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: theme("colors.paper.raised");
-  border: 1px solid theme("colors.rule.DEFAULT");
-}
-.expertise-card:hover .expertise-card-face-panel,
-.expertise-card.is-open .expertise-card-face-panel,
-.expertise-card:focus-within .expertise-card-face-panel {
-  opacity: 1;
-  pointer-events: auto;
 }
 
 /* ---------- World map dots (homepage §01, The Shift) ----------
