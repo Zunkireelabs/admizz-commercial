@@ -53,8 +53,14 @@ permalink: /ventures/
    Three zones: an index rail (real in-page navigation to each record), the
    statement and record strip, and the field diagram. Every value in the
    strip is read from site.json — nothing here claims scale, reach or
-   outcomes, none of which is verified anywhere in this repo. #}
-<section class="bg-navy-deep">
+   outcomes, none of which is verified anywhere in this repo.
+   2026-09-06: grain texture added (this page's own navy section had none)
+   and the field diagram enlarged — the silhouette test flagged this page
+   as reading noticeably sparser/thinner than the reference sites, and
+   this section had the most obvious room (a big plain navy field with a
+   small diagram floating in it) without adding anything invented. #}
+<section class="relative overflow-hidden bg-navy-deep">
+  {% include "partials/grain-texture.njk" %}
   <div class="masthead-grid">
 
     {# ---- Index rail: jumps to each record. Real navigation of real
@@ -255,7 +261,7 @@ permalink: /ventures/
              under an explicit exception, not this project's default. ---- #}
         <figure class="venture-plate">
           <div class="venture-plate-img">
-            {% image "src/assets/images/ecosystem/" + img.file, img.alt, "(min-width: 1100px) 22rem, (min-width: 700px) 40vw, 90vw" %}
+            {% image "src/assets/images/ecosystem/" + img.file, img.alt, "(min-width: 1100px) 23rem, (min-width: 700px) 40vw, 90vw" %}
           </div>
           <span class="venture-plate-numeral font-display font-light tabular-nums" aria-hidden="true">{{ v.index }}</span>
         </figure>

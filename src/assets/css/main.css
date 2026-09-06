@@ -1057,7 +1057,7 @@
 .masthead-figure {
   position: relative;
   width: 100%;
-  max-width: 24rem;
+  max-width: 30rem;
   margin-inline: auto;
   /* Matches the SVG viewBox exactly (480x428) so every percentage below maps
      1:1 onto the circle geometry — placements are derived from the circle
@@ -1184,7 +1184,7 @@
 }
 @media (min-width: 1100px) {
   .venture-grid {
-    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr) minmax(0, 19rem);
+    grid-template-columns: minmax(0, 23rem) minmax(0, 1fr) minmax(0, 19rem);
   }
   .venture-ledger {
     grid-column: auto;

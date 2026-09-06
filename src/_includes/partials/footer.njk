@@ -1,10 +1,16 @@
-<footer class="bg-navy-deep text-navy-on">
-  <div class="shell py-16 md:py-20">
+<footer class="relative overflow-hidden bg-navy-deep text-navy-on">
+  {% include "partials/grain-texture.njk" %}
+  <div class="shell relative py-16 md:py-20">
     <div class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr] gap-12 md:gap-8">
 
       <div>
-        <img src="/assets/images/brand/mark-white.png" alt="{{ site.name }}" width="150" height="45" class="h-9 w-auto mb-6">
+        <img src="/assets/images/brand/mark-white.png" alt="{{ site.name }}" width="150" height="45" class="h-10 w-auto mb-6">
         <p class="text-small text-navy-on-muted max-w-measure-tight leading-relaxed">{{ site.description }}</p>
+        {# Real data already used elsewhere on the site (ventures masthead's
+           record-strip, site.json) — not new content, just given a home
+           in the footer for a bit more substance than the logo+blurb it
+           had before. #}
+        <p class="mt-5 font-mono text-label uppercase tracking-widest text-navy-on-muted/70">Est. {{ site.founded }} &middot; {{ site.address }}</p>
       </div>
 
       <div>
