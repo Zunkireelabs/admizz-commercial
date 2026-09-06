@@ -3,10 +3,74 @@
 @tailwind utilities;
 
 /* =====================================================
+   Fonts — self-hosted (2026-09-06, replaces the Google Fonts CDN link that
+   lived in base.njk). Newsreader only: the site currently runs the
+   "single font, all 3 roles" experiment (tailwind.config.js), so Archivo
+   and Chivo Mono are NOT fetched at all anymore — shipping fonts nothing
+   resolves to would defeat the point of self-hosting. If that experiment
+   is ever reverted, re-adding Archivo/Chivo Mono here (they're easy to
+   regenerate — see the axis-instancing note below) is part of the revert,
+   not a pre-paid cost we carry in the meantime.
+
+   Axis-instanced from the full variable font (fontTools varLib.instancer)
+   down to wght 300-560 — covers every weight actually used sitewide
+   (grepped: 320 light, 380 body default, 460 book, 460 mono, 530 medium;
+   nothing above that anywhere in src/pages or src/_includes). The `opsz`
+   axis is left at its full 6-72 range on purpose: a first attempt at also
+   trimming opsz to our real ~17-96px render range made the file LARGER,
+   not smaller (fontTools has to keep more complex interpolation data when
+   an axis is narrowed but not pinned) — measured, not assumed, so it was
+   reverted. Verified the trim didn't drop any glyph the site needs: ₹
+   (U+20B9) and ā/ś survive in the latin-ext files. (ṛ does not survive —
+   confirmed this is a pre-existing gap in Google's own latin-ext subset,
+   not something this trim introduced.) ~13% smaller than the untrimmed
+   variable font — a real but modest saving, since keeping the font
+   genuinely variable (non-integer weights are a deliberate design-system
+   feature, see tailwind.config.js fontWeight) costs more than pinning to
+   flat static weights would have. */
+@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 300 560;
+  font-display: swap;
+  src: url("/assets/fonts/newsreader-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 300 560;
+  font-display: swap;
+  src: url("/assets/fonts/newsreader-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Newsreader";
+  font-style: italic;
+  font-weight: 300 560;
+  font-display: swap;
+  src: url("/assets/fonts/newsreader-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Newsreader";
+  font-style: italic;
+  font-weight: 300 560;
+  font-display: swap;
+  src: url("/assets/fonts/newsreader-italic-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* =====================================================
    Base
    ===================================================== */
 @layer base {
   html {
+    /* No synthetic bold/italic — every weight/style we actually use has a
+       real face declared above; synthesizing on top of a variable font
+       would double-apply and distort strokes. */
+    font-synthesis: none;
+
     /* Deliberately no `scroll-behavior: smooth` — it fights Lenis smooth-scroll. */
     /* Stops Safari/Chrome from reading a horizontal trackpad swipe as a
        back/forward navigation gesture — that gesture is what draws the
@@ -850,12 +914,23 @@
    Radius intentionally varied by size, per CLAUDE.md's radius scale (never
    one uniform value): the featured panel gets the larger "panels" tier
    (16px), the two smaller ones get the "cards" tier (8px) — a visible,
-   deliberate size/radius relationship, not an accident. */
+   deliberate size/radius relationship, not an accident.
+
+   2026-09-06: resting-state chrome lightened (reference: SaleUnion's plain,
+   near-border-less panels) — was a stronger, constant background tint/
+   border even at rest; dialed back to something quieter here, NOT to zero.
+   Fully transparent was tried first and reverted: on .belief-panel-stack-1/2
+   specifically, the tinted background is what makes the stacked-deck
+   cascade below actually read as overlapping CARDS rather than just
+   overlapping TEXT — remove it and the cascade transform still runs
+   (verified unchanged in computed styles) but becomes invisible as a
+   design, since there's no shape left for the eye to track. The stacked-
+   deck cascade, hover fan-out and hover lift are otherwise UNCHANGED. */
 .belief-panel {
   padding: 1.5rem 1.5rem 1.75rem;
   border-radius: theme("borderRadius.lg");
-  background-color: theme("colors.navy.soft / 14%");
-  border: 1px solid theme("colors.navy.on-muted / 14%");
+  background-color: theme("colors.navy.soft / 7%");
+  border: 1px solid theme("colors.navy.on-muted / 8%");
   box-shadow: 0 0 0 0 transparent;
   cursor: default;
   /* Transform/shadow use `enter` (480ms), not the slower `reveal` (620ms)
@@ -878,11 +953,25 @@
 .belief-panel-featured {
   padding: 2rem 2.25rem 2.5rem;
   border-radius: theme("borderRadius.xl");
-  box-shadow: 0 20px 40px -20px rgba(3, 8, 30, 0.6);
 }
 .belief-panel-featured:hover,
 .belief-panel-featured:focus-within {
   box-shadow: 0 34px 64px -16px rgba(3, 8, 30, 0.78);
+}
+
+/* Icon-in-circle badge (reference: SaleUnion's trust-pillar icons) — one
+   real, meaning-matched icon per belief (see index.njk comment), not
+   decorative filler. Sized/colored to sit quietly above the numeral, not
+   compete with the heading below it. */
+.belief-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: theme("borderRadius.full");
+  background-color: theme("colors.navy.accent / 15%");
+  color: theme("colors.navy.accent");
 }
 
 /* ---------- Beliefs stacked-deck idle state ----------
