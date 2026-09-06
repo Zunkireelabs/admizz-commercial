@@ -113,8 +113,22 @@
      clicked a link sees the browser's default visited-link purple/blue
      instead of the site's palette the next time they see that same link
      rendered anywhere. Caught on the homepage's featured insights link
-     after it had actually been visited once. */
-  a:visited {
+     after it had actually been visited once.
+
+     2026-09-06: excluded every .btn-* class from this rule after the same
+     failure mode showed up again, worse — `a:visited` (specificity 0,1,1)
+     was beating .btn-card's own `color: white` (specificity 0,1,0),
+     turning a visited button's text back into the page's dark ink color
+     the moment a real visitor had actually clicked it once. Reproduced and
+     confirmed by sampling pixel colors directly from a reported
+     screenshot (0.9K wide slice of "LEARN MORE" text): visited buttons
+     read rgb(18,25,42) -- this project's `ink` color, i.e. exactly what
+     `color: inherit` resolves to here -- while the one never-clicked
+     button in the same screenshot read the correct white. Buttons should
+     never change color based on visited state at all (that's a plain-
+     text-link convention, not a button one), so excluding them outright
+     is the correct fix, not just a higher-specificity patch. #}
+  a:visited:not(.btn-primary):not(.btn-ghost):not(.btn-ghost-on-navy):not(.btn-card):not(.btn-card-on-navy) {
     color: inherit;
   }
 
@@ -203,8 +217,15 @@
      correct throughout). `brightness` is a filter, composited without
      re-rasterizing the text underneath, so it doesn't have the same
      failure mode. Explicit antialiasing hints added as further insurance. */
+  /* 2026-09-06: text bumped from text-navy-on (near-white, #EAF0F6) to pure
+     white, and weight bumped from medium to semibold — reported multiple
+     times as hard to read against the navy fill despite computed styles,
+     source CSS, and a simulated slow-scroll mid-animation capture all
+     showing correct light text every time this was checked. No repro
+     found, but this adds real contrast/stroke-weight headroom against
+     whatever's happening in that environment, at no visual cost here. */
   .btn-card {
-    @apply inline-flex items-center gap-1.5 rounded-md bg-navy px-3.5 py-2 text-label font-medium uppercase tracking-wide text-navy-on;
+    @apply inline-flex items-center gap-1.5 rounded-md bg-navy px-3.5 py-2 text-label font-semibold uppercase tracking-wide text-white;
     @apply transition-[filter] duration-press ease-signature hover:brightness-125;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
