@@ -339,24 +339,60 @@ permalink: /
    made to this section since v5). The tightened scale (narrower headline
    column, smaller list type/spacing) from v5 stays.
 
-   v7: upgraded from the flat CSS dot-map to a real interactive globe
-   (cobe — a plain canvas/WebGL library, not React-dependent at its core,
-   so adapted directly into this site's existing vanilla-JS + Nunjucks
-   stack rather than pulling in React/Next.js/shadcn as the source
-   component's own setup instructions assumed). Explicit override of
-   CLAUDE.md's "no spinning globe" rule, on request — the flat dot-map
-   markup stays in the DOM as the permanent no-JS/reduced-motion state
-   (same progressive-enhancement pattern already used across this site,
-   e.g. ecosystem-story-photo): the canvas only takes over once cobe has
-   actually loaded and started, and never loads at all when
-   prefers-reduced-motion is set. Markers are real Admizz partner-country
-   capitals (from universities.json's own country list, universities.json
-   §groups), not invented cities. #}
+   v7: interactive globe (cobe) — superseded by v8, kept alive by moving
+   it to the Academic Network section further down this page instead of
+   deleting it (same markers, same JS hook, just relocated — see that
+   section for why it fits better there: it's literally partner-country
+   capitals, so it belongs next to the partner-network content, not here).
+
+   v8 (2026-09-06): globe replaced with a short muted looping video of two
+   people in conversation — reference: SaleUnion's "Our Impact" video
+   panel. Section restructured from 2 narrow text columns (with the globe
+   floating decoratively off to the side, xl+ only) into text-stack-left /
+   real-video-panel-right, matching that reference's actual proportions
+   instead of keeping the video as a small decorative extra. Video is
+   stock footage, cropped from a portrait source to this landscape frame
+   (verified across the whole clip that both people stay in frame, not
+   just the first frame) and stripped of audio — ambient only, autoplay +
+   loop + muted, no sound anywhere on this page. #}
 <section class="relative overflow-hidden bg-paper py-section-sm border-b border-rule">
-  <div class="absolute right-8 top-1/2 -translate-y-1/2 w-[450px] h-[450px] hidden xl:block" aria-hidden="true">
-    <div class="world-map-dots absolute inset-0 opacity-[0.42] pointer-events-none" data-globe-fallback></div>
-    <canvas class="globe-canvas absolute inset-0 w-full h-full opacity-0" data-globe></canvas>
+  {# 2026-09-06 correction: reverted to the ORIGINAL two-column layout
+     (text | "what's changing" list) with the media element positioned
+     exactly where the globe used to sit — same absolute slot, same size,
+     same xl:block-only visibility. An earlier pass restructured this into
+     a full-width video-panel layout, which was the wrong call: the actual
+     ask was "keep this section's presentation exactly as it is, just
+     swap the globe for the video" — not a layout rebuild. #}
+  {# Same right-side slot/size the globe occupied (450px square footprint,
+     xl:block only), but NOT forced into the globe's circular mask — a
+     landscape video of two people cropped into a circle would cut off
+     faces/chins unpredictably as object-cover centers within a square.
+     Kept as a real rectangle instead, vertically centered in that same
+     450px-tall footprint, which is what "same presentation" should
+     actually mean for video content rather than literal shape-matching. #}
+  <div class="absolute right-8 top-1/2 -translate-y-1/2 w-[450px] h-[450px] hidden xl:flex items-center" aria-hidden="true">
+    {# Video, muted + looping, no controls needed for a 2.7s ambient loop.
+       Cropped from a portrait source to 16:9, verified across the whole
+       clip (not just one frame) that both people stay fully in shot.
+       NOT the `autoplay` HTML attribute — that starts playback before any
+       JS (including the reduced-motion check every other animation on
+       this site respects) can run; this inline, synchronous script gates
+       playback on prefers-reduced-motion the same way main.js never even
+       loads cobe for those visitors. #}
+    <video
+      id="shift-video"
+      class="w-full aspect-video object-cover bg-navy-deep shadow-raised"
+      src="/assets/video/the-shift-team.mp4"
+      poster="/assets/images/homepage/the-shift-poster.jpg"
+      loop muted playsinline
+    ></video>
   </div>
+  <script>
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var __shiftVideo = document.getElementById('shift-video');
+      if (__shiftVideo) __shiftVideo.play();
+    }
+  </script>
 
   <div class="shell relative z-10 grid grid-cols-1 md:grid-cols-[minmax(0,26rem)_minmax(0,15.5rem)] gap-x-12 gap-y-8 md:items-center">
     <div>
@@ -704,9 +740,21 @@ permalink: /
    nothing here claims "best" or "top". Picked for name recognition only,
    at least one per country so no country is invisible, all pulled
    directly from universities.json (nothing invented). Full real list of
-   104 stays one click away via the link below, not hidden. #}
-<section class="bg-paper py-section-sm md:py-section border-t border-rule">
-  <div class="shell">
+   104 stays one click away via the link below, not hidden.
+
+   2026-09-06: the interactive globe (cobe) that used to live in "The
+   Shift" section moved here — same markup, same JS hook (main.js selects
+   by [data-globe]/[data-globe-fallback], not by position, so relocating
+   it needed no JS changes). This is genuinely a better home for it: the
+   globe's markers are real Admizz partner-country capitals, so it now
+   sits directly beside the section that's actually about the partner
+   network, instead of floating decoratively beside unrelated copy. #}
+<section class="relative overflow-hidden bg-paper py-section-sm md:py-section border-t border-rule">
+  <div class="absolute right-8 top-24 w-[380px] h-[380px] hidden xl:block" aria-hidden="true">
+    <div class="world-map-dots absolute inset-0 opacity-[0.42] pointer-events-none" data-globe-fallback></div>
+    <canvas class="globe-canvas absolute inset-0 w-full h-full opacity-0" data-globe></canvas>
+  </div>
+  <div class="shell relative z-10">
     <div class="max-w-[42rem] fade-up">
       <span class="eyebrow">Global Network</span>
       <h2 class="mt-3 font-display font-light text-h2 text-ink">{{ universities.totalCount }} partner institutions, {{ universities.groups.length }} countries.</h2>
