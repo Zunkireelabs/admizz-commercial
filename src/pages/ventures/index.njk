@@ -143,22 +143,28 @@ permalink: /ventures/
        the body column first; measured at 1440px that column is only 445px of
        content, so four items could never fit and it broke to a lopsided 2x2.
        Spanning the whole grid is both correct and stronger. #}
+    {# 2026-09-06: values enlarged to font-display for real stat-tile
+       presence (was text-small font-medium, easy to skim past) — same
+       numeral-forward grammar the homepage's hero stat band already uses,
+       just applied here too so the two navy data bands on the site feel
+       like one system. Data itself is unchanged, still read straight from
+       site.json. #}
     <dl class="record-strip fade-up" style="animation-delay:200ms">
         <div class="record-strip-item">
           <dt class="data-label-on-navy">Established</dt>
-          <dd class="mt-1.5 text-small text-navy-on font-medium tabular-nums">{{ site.founded }}</dd>
+          <dd class="mt-2 font-display font-light text-h4 text-navy-on tabular-nums">{{ site.founded }}</dd>
         </div>
         <div class="record-strip-item">
           <dt class="data-label-on-navy">Headquarters</dt>
-          <dd class="mt-1.5 text-small text-navy-on font-medium">{{ site.address }}</dd>
+          <dd class="mt-2 font-display font-light text-h4 text-navy-on text-balance">{{ site.address }}</dd>
         </div>
         <div class="record-strip-item">
           <dt class="data-label-on-navy">Businesses</dt>
-          <dd class="mt-1.5 text-small text-navy-on font-medium tabular-nums">03</dd>
+          <dd class="mt-2 font-display font-light text-h4 text-navy-on tabular-nums">03</dd>
         </div>
         <div class="record-strip-item">
           <dt class="data-label-on-navy">Purpose</dt>
-          <dd class="mt-1.5 text-small text-navy-on font-medium">Expand access to opportunity</dd>
+          <dd class="mt-2 font-display font-light text-h4 text-navy-on text-balance">Expand access to opportunity</dd>
         </div>
       </dl>
   </div>
@@ -180,15 +186,33 @@ permalink: /ventures/
       </p>
     </div>
 
+    {# 2026-09-06: numbered service-card treatment (same device as the
+       homepage's venture preview cards) — photo added per item, reusing
+       the same real preview photos already used elsewhere on the site
+       (src/assets/images/preview/), not new sourcing. Was a plain
+       index+tick+heading row with no photo and no way to act on it; now
+       each item is a real link down to its full record below. #}
+    {% set positionImages = {
+      "institute": { file: "preview/institute-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
+      "education": { file: "preview/education-preview.jpg", alt: "Student walking outside a university building with a backpack" },
+      "workforce": { file: "preview/workforce-preview.jpg", alt: "Three colleagues talking in a modern office" }
+    } %}
     <ol class="position-row">
       {% for v in ventures %}
+      {% set img = positionImages[v.id] %}
       <li class="position-item fade-up" style="animation-delay:{{ loop.index0 * 90 + 80 }}ms">
-        <div class="position-head">
-          <span class="font-mono text-small text-navy-soft font-medium tabular-nums">{{ v.index }}</span>
-          <span class="position-tick" aria-hidden="true"></span>
-        </div>
+        <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ v.index }} / {{ v.stage }}</span>
+        <a href="#record-{{ v.id }}" class="position-photo mt-3 block relative overflow-hidden bg-navy-deep aspect-[3/2]">
+          <div class="absolute inset-0 [&_picture]:contents [&_picture]:block [&_picture]:h-full [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+            {% image "src/assets/images/" + img.file, img.alt, "(min-width: 1024px) 22vw, (min-width: 640px) 30vw, 80vw" %}
+          </div>
+        </a>
         <h3 class="mt-4 font-display font-book text-h3 text-ink">{{ v.stage }}</h3>
         <p class="mt-2 text-small text-ink-muted leading-relaxed">{{ v.verticalLine }}</p>
+        <a href="#record-{{ v.id }}" class="btn-card mt-4">
+          View record
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
       </li>
       {% endfor %}
     </ol>
@@ -201,6 +225,15 @@ permalink: /ventures/
    worse spec sheet — and what varies between them is the DATA: Institute
    carries five examinations and no public site, Education carries the
    group's only accreditation, Workforce carries neither. #}
+{# Icon per venture — the exact same three glyphs already drawn for the
+   masthead's field-diagram nodes above (pen/tool, globe, bars), reused here
+   rather than a second icon set invented for this section. Ties the
+   masthead and the record together as one system. #}
+{% set ventureIcons = {
+  "institute": '<path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>',
+  "education": '<circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 10h15M10 2.5c4 4.5 4 10.5 0 15-4-4.5-4-10.5 0-15z" stroke="currentColor" stroke-width="1.3"/>',
+  "workforce": '<path d="M3 16V9M8 16V4M13 16v-5M18 16V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>'
+} %}
 <section class="bg-paper">
   <div class="shell">
     {% for v in ventures %}
@@ -229,7 +262,16 @@ permalink: /ventures/
 
         {# ---- Entry ---- #}
         <div class="venture-entry">
-          <h2 class="font-display font-light text-h1 text-ink text-balance" data-venture-name>{{ v.name }}</h2>
+          {# Icon badge — paper-safe treatment (bg-navy/10, text-navy), the
+             same convention already used for the ICEF badge icon on the
+             homepage hero. NOT the gold-tinted .belief-icon used on the
+             homepage's navy "What We Believe" panels — gold fails contrast
+             on a light ground (design system hard rule), so that variant
+             would be wrong here. #}
+          <span class="venture-entry-icon">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">{{ ventureIcons[v.id] | safe }}</svg>
+          </span>
+          <h2 class="mt-4 font-display font-light text-h1 text-ink text-balance" data-venture-name>{{ v.name }}</h2>
           <p class="mt-4 text-body-lg text-ink leading-snug font-book">{{ v.verticalLine }}</p>
           <p class="mt-4 text-body text-ink-muted leading-relaxed">{{ v.description }}</p>
 
@@ -378,8 +420,14 @@ permalink: /ventures/
 
 {# ============================================================ CLOSE
    Deliberately not /about/'s centered navy close — a left-weighted band on
-   the sunk paper ground, so two inner pages don't end on the same note. #}
-<section class="bg-paper-sunk border-t border-rule py-section-sm">
+   the sunk paper ground, so two inner pages don't end on the same note.
+   2026-09-06: added the same secondary "email us directly" ghost link the
+   homepage's close section has (was a single button only) — real data
+   (site.email), not new content, just parity with the homepage's CTA
+   pattern. Section padding bumped from py-section-sm to py-section to
+   give this closing band more room to breathe, matching how much more
+   deliberate the rest of this page's spacing reads after tonight's pass. #}
+<section class="bg-paper-sunk border-t border-rule py-section">
   <div class="shell grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-end gap-8">
     <div class="fade-up">
       <span class="eyebrow">Enquiries</span>
@@ -390,6 +438,9 @@ permalink: /ventures/
         Tell us which of the three you need and we&rsquo;ll route it to the right team.
       </p>
     </div>
-    <a href="/contact/" class="btn-primary shrink-0 fade-up" style="animation-delay:80ms">Get in touch</a>
+    <div class="flex flex-col items-start gap-3 fade-up" style="animation-delay:80ms">
+      <a href="/contact/" class="btn-primary shrink-0">Get in touch</a>
+      <a href="mailto:{{ site.email }}" class="text-small font-medium text-ink link-underline">{{ site.email }}</a>
+    </div>
   </div>
 </section>

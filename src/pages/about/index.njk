@@ -101,9 +101,19 @@ permalink: /about/
       Different focus areas, a shared conviction that access to opportunity shouldn&rsquo;t depend on where someone starts.
     </p>
 
+    {# 2026-09-06: ascending-tone staggered treatment (reference: Scalient's
+       3-step process cards, light-to-accent intensity) — was a flat,
+       identical 3-column grid (the same "sameness" pattern already flagged
+       and fixed elsewhere on the site, e.g. Beliefs). Card 1 stays the
+       plain paper-raised tier; card 2 steps up to a stronger border/shadow;
+       card 3 (Work — the group's newest, most active-growth venture) is
+       the boldest, inverted to navy. A real index numeral (v.index, already
+       in ventures.json) is added per card — nothing new invented, and it's
+       the same numbering device used on /ventures/. #}
     <div class="story-venture-grid mt-10">
       {% for v in ventures %}
-      <article class="story-venture-card" data-story-venture-card>
+      <article class="story-venture-card story-venture-card-{{ loop.index }}" data-story-venture-card>
+        <span class="story-venture-num" aria-hidden="true">{{ v.index }}</span>
         <span class="story-venture-icon story-venture-icon-{{ v.id }}" aria-hidden="true">
           {% if v.id == "institute" %}
           <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
@@ -113,9 +123,9 @@ permalink: /about/
           <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 16V9M8 16V4M13 16v-5M18 16V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           {% endif %}
         </span>
-        <h3 class="mt-4 font-display font-book text-h4 text-ink">{{ v.name }}</h3>
-        <p class="mt-1 font-mono text-label uppercase tracking-widest text-navy-soft">{{ v.vertical }}</p>
-        <p class="mt-3 text-small text-ink-muted leading-relaxed">{{ v.verticalLine }}</p>
+        <h3 class="mt-4 font-display font-book text-h4">{{ v.name }}</h3>
+        <p class="story-venture-vertical mt-1 font-mono text-label uppercase tracking-widest">{{ v.vertical }}</p>
+        <p class="story-venture-text mt-3 text-small leading-relaxed">{{ v.verticalLine }}</p>
         <a href="/ventures/#record-{{ v.id }}" class="story-venture-link">
           Learn more
           <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>

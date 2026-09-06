@@ -194,9 +194,20 @@
      rounded-md radius as .btn-primary/.btn-ghost, NOT a pill (see the "no
      pill shapes" rule above); smaller padding/type since it sits inside a
      card next to a description, not as a page-level primary action. */
+  /* 2026-09-06: hover switched from a background-color transition to
+     `brightness` (same technique .btn-primary already uses) — a
+     background-color change repaints the layer small uppercase text sits
+     on, and on this variable font that occasionally shows as a smeared/
+     doubled-looking glyph mid-transition (a real Chromium variable-font
+     antialiasing quirk, not a color bug — computed styles were verified
+     correct throughout). `brightness` is a filter, composited without
+     re-rasterizing the text underneath, so it doesn't have the same
+     failure mode. Explicit antialiasing hints added as further insurance. */
   .btn-card {
     @apply inline-flex items-center gap-1.5 rounded-md bg-navy px-3.5 py-2 text-label font-medium uppercase tracking-wide text-navy-on;
-    @apply transition-colors duration-press ease-signature hover:bg-navy-deep;
+    @apply transition-[filter] duration-press ease-signature hover:brightness-125;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
   /* Same small card-CTA shape as .btn-card, for use directly on a photo/scrim
      (Our Expertise cards) where a solid navy fill would disappear against an
@@ -204,6 +215,8 @@
   .btn-card-on-navy {
     @apply inline-flex items-center gap-1.5 rounded-md border border-white/50 px-3.5 py-2 text-label font-medium uppercase tracking-wide text-white;
     @apply transition-colors duration-press ease-signature group-hover:border-white group-hover:bg-white/10;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   .link-underline {
@@ -973,6 +986,19 @@
   background-color: theme("colors.navy.accent / 15%");
   color: theme("colors.navy.accent");
 }
+/* Same badge shape, paper-safe palette (ventures records) — bg-navy/10 +
+   text-navy, matching the homepage hero's ICEF badge icon convention.
+   NOT .belief-icon's gold tint: gold fails contrast on a light ground. */
+.venture-entry-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: theme("borderRadius.full");
+  background-color: theme("colors.navy.DEFAULT / 10%");
+  color: theme("colors.navy.DEFAULT");
+}
 
 /* ---------- Beliefs stacked-deck idle state ----------
    02/03 never actually move in the grid — grid-column/row placement is
@@ -1124,21 +1150,6 @@
     gap: clamp(1.5rem, 3vw, 3rem);
   }
 }
-.position-head {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-/* The connector between positions. Reads as "these sit alongside each
-   other", not "this leads to that" — no arrowheads, deliberately. */
-.position-tick {
-  flex: 1;
-  height: 1px;
-  background-color: theme("colors.rule.strong");
-}
-.position-item:last-child .position-tick {
-  background: linear-gradient(to right, theme("colors.rule.strong"), transparent);
-}
 
 /* ---------- The records ---------- */
 .venture-record {
@@ -1223,6 +1234,17 @@
   letter-spacing: -0.02em;
 }
 
+/* 2026-09-06: wrapped in a real panel (bg-paper-raised, hairline border,
+   rounded-lg) — was a bare list of rows floating directly on the page
+   background with nothing framing it as "one cohesive record." Internal
+   row dividers below are unchanged; the panel just gives the whole group
+   a defined edge, the same light-lift treatment as .market-stat above. */
+.venture-ledger {
+  padding: 0.4rem 1.25rem;
+  border-radius: theme("borderRadius.lg");
+  background-color: theme("colors.paper.raised");
+  border: 1px solid theme("colors.rule.DEFAULT");
+}
 .venture-ledger-row {
   display: grid;
   grid-template-columns: 1fr;
@@ -1230,8 +1252,8 @@
   padding: 0.8rem 0;
   border-top: 1px solid theme("colors.rule.DEFAULT");
 }
-.venture-ledger-row:last-child {
-  border-bottom: 1px solid theme("colors.rule.DEFAULT");
+.venture-ledger-row:first-child {
+  border-top: 0;
 }
 @media (min-width: 700px) and (max-width: 1099.98px) {
   .venture-ledger-row {
@@ -1261,13 +1283,24 @@
 .market-stat-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.5rem;
+  gap: 1rem;
   margin: 1.25rem 0;
 }
 @media (min-width: 480px) {
   .market-stat-row {
     grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
   }
+}
+/* 2026-09-06: given real tile presence — was borderless/bg-less, the
+   numbers sat directly on the page background with nothing to separate
+   one stat from the next. A light lift (bg-paper-raised, hairline border)
+   is enough to read as "a stat block" without becoming a heavy SaaS card —
+   no shadow, same restraint the rest of this page already uses elsewhere. */
+.market-stat {
+  padding: 1rem 1.125rem 1.125rem;
+  border-radius: theme("borderRadius.lg");
+  background-color: theme("colors.paper.raised");
+  border: 1px solid theme("colors.rule.DEFAULT");
 }
 .market-stat-value {
   font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.1rem);
@@ -1873,19 +1906,70 @@
 @media (min-width: 700px) {
   .story-venture-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
 }
+/* 2026-09-06: ascending-tone staggered treatment (reference: Scalient's
+   3-step process cards) — three tiers of visual weight instead of one flat
+   repeated style. Tier 1 (Prepare) is the plain baseline; tier 2 (Study)
+   steps up with a stronger border and an always-on shadow; tier 3 (Work)
+   is the boldest, inverted to navy. Same card, same content shape, just
+   not visually identical three times in a row. */
 .story-venture-card {
   padding: 1.5rem;
   border: 1px solid theme("colors.rule.DEFAULT");
   border-radius: theme("borderRadius.lg");
   background-color: theme("colors.paper.raised");
   transition: border-color theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
-    box-shadow theme("transitionDuration.press") theme("transitionTimingFunction.signature");
+    box-shadow theme("transitionDuration.press") theme("transitionTimingFunction.signature"),
+    transform theme("transitionDuration.press") theme("transitionTimingFunction.signature");
 }
 .story-venture-card:hover {
   border-color: theme("colors.navy.on-muted");
   box-shadow: theme("boxShadow.raised");
 }
+.story-venture-num {
+  display: block;
+  font-family: theme("fontFamily.mono");
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: theme("colors.ink.faint");
+}
+.story-venture-vertical { color: theme("colors.navy.soft"); }
+.story-venture-text { color: theme("colors.ink.muted"); }
+.story-venture-card h3 { color: theme("colors.ink.DEFAULT"); }
+
+.story-venture-card-2 {
+  border-color: theme("colors.rule.strong");
+  box-shadow: theme("boxShadow.raised");
+}
+.story-venture-card-2:hover { box-shadow: theme("boxShadow.lift"); }
+
+.story-venture-card-3 {
+  border-color: transparent;
+  background-color: theme("colors.navy.deep");
+  box-shadow: theme("boxShadow.lift");
+}
+.story-venture-card-3:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 34px 64px -16px rgba(3, 8, 30, 0.78);
+}
+.story-venture-card-3 .story-venture-num { color: theme("colors.navy.on-muted"); }
+.story-venture-card-3 .story-venture-vertical { color: theme("colors.navy.accent"); }
+.story-venture-card-3 .story-venture-text { color: theme("colors.navy.on-muted"); }
+.story-venture-card-3 h3 { color: theme("colors.navy.on"); }
+.story-venture-card-3 .story-venture-icon {
+  background-color: theme("colors.white / 12%");
+  color: theme("colors.navy.on");
+}
+.story-venture-card-3 .story-venture-link {
+  color: theme("colors.navy.on");
+  border-bottom-color: theme("colors.navy.on-muted / 50%");
+}
+.story-venture-card-3 .story-venture-link:hover {
+  color: theme("colors.white");
+  border-bottom-color: theme("colors.white");
+}
+
 .story-venture-icon {
+  margin-top: 0.75rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
