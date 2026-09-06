@@ -99,23 +99,26 @@
         <span class="text-ink">{{ v.name.split(' ')[0] }}</span>
         <span class="text-gold-text">{{ v.name.split(' ').slice(1).join(' ') }}</span>
       </h3>
-      <span class="eco-field mt-2 font-mono text-label uppercase tracking-widest text-navy-soft block" data-eco-group="1">{{ v.vertical }}</span>
 
-      {# Problem statement — one line naming what this business exists to
-         close, before describing what it does. Own analytical framing, not
-         a new claim about Admizz itself. #}
+      {# 2026-09-06: trimmed from 9 rendered pieces down to ~5 (label+title,
+         one line, the pull-quote, exams as plain text, stat+CTA) — density
+         was the actual complaint, not the sticky-photo mechanic or cards
+         (a card treatment was already tried and rejected here, see header
+         comment). Full detail (the plain `description` paragraph, the
+         standalone `vertical` line) still lives on /ventures/ via "See the
+         full record" below -- nothing is deleted from the site, just not
+         duplicated on the homepage. `problem` stays: it's the punchier,
+         single-line hook; `verticalLine` is promoted from a small italic
+         footnote to the section's actual pull-quote, since it was the one
+         line worth making bigger, not smaller. #}
       {% if v.problem %}
       <p class="eco-field mt-4 font-display font-light text-h4 text-ink text-balance" data-eco-group="1">{{ v.problem }}</p>
       {% endif %}
-
-      <p class="eco-field mt-4 text-body-lg text-ink-muted max-w-measure-tight" data-eco-group="1">{{ v.description }}</p>
       {% if v.verticalLine %}
-      <p class="eco-field mt-2 text-small text-ink-faint italic" data-eco-group="1">{{ v.verticalLine }}</p>
+      <p class="eco-field mt-4 font-display font-light italic text-h3 text-navy-soft max-w-[20ch] text-balance" data-eco-group="1">&ldquo;{{ v.verticalLine }}&rdquo;</p>
       {% endif %}
       {% if v.exams.length %}
-      <ul class="eco-field mt-5 flex flex-wrap gap-2" data-eco-group="2">
-        {% for e in v.exams %}<li class="font-mono text-label uppercase tracking-wide text-ink-faint border border-rule px-2 py-1">{{ e }}</li>{% endfor %}
-      </ul>
+      <p class="eco-field mt-5 font-mono text-label uppercase tracking-wide text-ink-faint" data-eco-group="2">{{ v.exams | join(' &middot; ') | safe }}</p>
       {% endif %}
 
       {# Evidence — the same verified sector stat already built and sourced
