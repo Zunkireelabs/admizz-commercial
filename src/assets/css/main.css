@@ -1276,6 +1276,23 @@
   background-color: theme("colors.navy.deep");
   aspect-ratio: 4 / 5;
 }
+@media (min-width: 1100px) {
+  .venture-plate {
+    /* Same problem the ledger had, same fix (see .venture-ledger's sticky
+       rule above) -- the plate is a fixed aspect-ratio (4/5) photo, so on
+       any record where the entry column (middle, e.g. Institute's
+       exam-coverage grid) runs taller than that photo, the plate column
+       just ends and leaves bare paper below it for the rest of the row's
+       height. This override MUST come after the base .venture-plate rule
+       above (not inside the earlier @media block next to .venture-ledger,
+       even though both match the same viewport) -- same selector, same
+       specificity, so source order decides, and the base rule's
+       `position: relative` would win if this appeared first in the file. */
+    position: sticky;
+    top: 112px;
+    align-self: start;
+  }
+}
 .venture-plate-img {
   position: absolute;
   inset: 0;
