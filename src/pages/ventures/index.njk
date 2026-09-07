@@ -424,29 +424,7 @@ permalink: /ventures/
   </div>
 </section>
 
-{# ============================================================ CLOSE
-   Deliberately not /about/'s centered navy close — a left-weighted band on
-   the sunk paper ground, so two inner pages don't end on the same note.
-   2026-09-06: added the same secondary "email us directly" ghost link the
-   homepage's close section has (was a single button only) — real data
-   (site.email), not new content, just parity with the homepage's CTA
-   pattern. Section padding bumped from py-section-sm to py-section to
-   give this closing band more room to breathe, matching how much more
-   deliberate the rest of this page's spacing reads after tonight's pass. #}
-<section class="bg-paper-sunk border-t border-rule py-section">
-  <div class="shell grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-end gap-8">
-    <div class="fade-up">
-      <span class="eyebrow">Enquiries</span>
-      <p class="mt-4 font-display font-light text-h2 text-ink max-w-[24ch] text-balance">
-        Partnership, press or admissions &mdash; <em class="italic text-navy font-book">start here.</em>
-      </p>
-      <p class="mt-4 text-body text-ink-muted max-w-measure-tight leading-relaxed">
-        Tell us which of the three you need and we&rsquo;ll route it to the right team.
-      </p>
-    </div>
-    <div class="flex flex-col items-start gap-3 fade-up" style="animation-delay:80ms">
-      <a href="/contact/" class="btn-primary shrink-0">Get in touch</a>
-      <a href="mailto:{{ site.email }}" class="text-small font-medium text-ink link-underline">{{ site.email }}</a>
-    </div>
-  </div>
-</section>
+{# CLOSE — shared with the homepage/About/Insights (partials/cta-close.njk),
+   swapped from this page's own "Enquiries" band (2026-09-07) so every
+   page ends on the same contact CTA. #}
+{% include "partials/cta-close.njk" %}

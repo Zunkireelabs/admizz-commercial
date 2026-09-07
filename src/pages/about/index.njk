@@ -162,15 +162,7 @@ permalink: /about/
   </div>
 </section>
 
-{# ============================================================ CLOSE #}
-<section class="relative overflow-hidden bg-navy-deep py-section">
-  {% include "partials/facet-field.njk" %}
-  <div class="shell relative grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-end gap-8">
-    <div class="fade-up">
-      <p class="font-display font-light text-display-2 text-navy-on max-w-[20ch] text-balance">
-        The story continues. <em class="italic text-navy-accent font-book">We&rsquo;re just getting started.</em>
-      </p>
-    </div>
-    <a href="/ventures/" class="btn-primary shrink-0 fade-up" style="animation-delay:80ms">Explore our ventures</a>
-  </div>
-</section>
+{# CLOSE — shared with the homepage/Ventures/Insights (partials/cta-close.njk),
+   swapped from this page's own "The story continues" / ventures-link
+   band (2026-09-07) so every page ends on the same contact CTA. #}
+{% include "partials/cta-close.njk" %}

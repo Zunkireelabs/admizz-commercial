@@ -1,0 +1,54 @@
+{# ============================================================ CTA CLOSE
+   Extracted from the homepage's own closing section (2026-09-07) so every
+   page ends on the same strong "Let's talk about what's next" band before
+   the footer, instead of each page carrying its own bespoke (and uneven —
+   About/Insights had no real contact CTA at all) closer. Included on the
+   homepage, About, Ventures, Insights and individual Insights posts.
+   Deliberately NOT included on /contact/ — a "Get in touch" CTA pointing
+   at /contact/ ON /contact/ itself is circular; that page's form already
+   is its CTA.
+
+   2026-09-01 v2: first pass full-bleed photo was broken two ways — the
+   overlay gradient direction was backwards, AND admissions-counseling.jpg's
+   portrait 3:4 crop went nearly unrecognizable stretched across this
+   section's ultra-wide band. Fixed at the time by confining the photo to a
+   narrower right-hand panel instead.
+
+   2026-09-06 v5: v4 matched the layout logic (centered, one column) but
+   still used a heavier overlay and kept the facet-field texture, neither
+   of which the reference actually has — a closer crop of the live
+   SaleUnion site shows almost NO dark wash at all (their photo sits at
+   close to full natural exposure) and zero texture on top of the photo.
+   Can't copy "zero overlay" literally though: their heading is set BOLD,
+   ours is font-light by sitewide convention (base.njk/type system, not
+   specific to this section) — a thin stroke needs more contrast support
+   than a thick one, so this keeps a light top-down wash (much reduced
+   from v4) rather than none. facet-field is dropped on THIS section only
+   (still present on the hero) to get the reference's clean-photo feel —
+   a deliberate one-off exception to the "bookend pair" pattern, not a
+   removal of the motif itself. #}
+<section class="relative overflow-hidden bg-navy-deep py-section">
+  {# Overscanned (-3% top/bottom) wrapper, same technique as .hero-photo-parallax
+     and .facet-field — GSAP drifts this within the section's own static,
+     overflow-hidden bounds so scrolling never exposes a gap. The section
+     itself provides the fixed-size clipping layer here (unlike the hero,
+     which needed its own inner overflow-hidden div, since this photo already
+     spans the whole section rather than a sub-region of it). #}
+  <div class="close-photo-parallax absolute -inset-y-[12%] inset-x-0 [&_picture]:contents [&_picture]:block [&_picture]:h-full [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[50%_15%] [&_img]:grayscale">
+    {% image "src/assets/images/expertise/admissions-counseling.jpg", "A counselor and student in conversation", "100vw" %}
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-b from-navy-deep/55 from-0% via-navy-deep/18 via-42% to-transparent to-75%"></div>
+  <div class="shell relative text-center max-w-2xl mx-auto">
+    <span class="eyebrow-on-navy fade-up">Get in touch</span>
+    <h2 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[16ch] mx-auto text-balance fade-up" style="animation-delay:80ms">
+      Let's talk about <em class="italic text-navy-accent font-book">what's next.</em>
+    </h2>
+    <p class="mt-5 text-body-lg text-navy-on-muted max-w-[38ch] mx-auto fade-up" style="animation-delay:120ms">
+      Whether you're a student weighing options, an institution exploring partnership, or an organization building workforce capability &mdash; tell us which, and we'll route it to the right team.
+    </p>
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 fade-up" style="animation-delay:160ms">
+      <a href="/contact/" class="btn-primary w-full sm:w-auto text-center">Get in touch</a>
+      <a href="mailto:{{ site.email }}" class="btn-ghost-on-navy w-full sm:w-auto text-center">{{ site.email }}</a>
+    </div>
+  </div>
+</section>

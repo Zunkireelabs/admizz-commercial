@@ -114,12 +114,8 @@ permalink: /insights/
   </div>
 </section>
 
-<section class="bg-paper-sunk border-t border-rule py-section-sm">
-  <div class="shell text-center fade-up">
-    <p class="font-display font-light italic text-h3 text-ink-muted">That&rsquo;s everything, for now.</p>
-    <a href="/ventures/" class="mt-4 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
-      More from the group
-      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-  </div>
-</section>
+{# CLOSE — shared with the homepage/About/Ventures (partials/cta-close.njk),
+   swapped from this page's own weak "That's everything, for now" +
+   ventures-link band (2026-09-07) so every page ends on the same
+   contact CTA. #}
+{% include "partials/cta-close.njk" %}
