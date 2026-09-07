@@ -1,20 +1,48 @@
 <footer class="relative overflow-hidden bg-navy-deep text-navy-on">
+  {# Global-landmarks skyline (Eiffel Tower, Big Ben, Colosseum, Statue of
+     Liberty, etc.) — the real asset admizzeducation.com's own footer
+     already ships (public/images/footer-skyline.webp in that repo, both
+     sites under the same Admizz Group), pulled in on explicit instruction
+     rather than the earlier world-map-dots placeholder. Purely decorative
+     ("global reach"), not a business claim, so this is a styling asset,
+     not content subject to the never-invent-facts rule. Bottom-anchored,
+     full-bleed, low opacity, matching the source site's own treatment. #}
+  <img src="/assets/images/brand/footer-skyline.webp" alt="" aria-hidden="true" width="2880" height="500" loading="lazy" class="absolute bottom-0 left-0 w-full h-auto opacity-[0.35] pointer-events-none select-none">
   {% include "partials/grain-texture.njk" %}
-  <div class="shell relative py-16 md:py-20">
-    <div class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr] gap-12 md:gap-8">
+  <div class="shell relative py-12 md:py-14">
+    {# Badge sits beside the grid (flex), not inside it as a 5th track --
+       an earlier version made it a grid column, which squeezed the 4 real
+       link columns narrow enough that "Admizz Workforce Solutions"
+       wrapped mid-word. Keeping the grid's own 1.3fr/1fr/1fr/1fr
+       proportions untouched and letting the badge take its natural width
+       alongside fixes that without shrinking real content to make room
+       for a decoration. #}
+    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10">
+    <div class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr_1fr] gap-10 md:gap-8 flex-1">
 
       <div>
-        <img src="/assets/images/brand/mark-white.png" alt="{{ site.name }}" width="150" height="45" class="h-10 w-auto mb-6">
+        <img src="/assets/images/brand/mark-white.png" alt="{{ site.name }}" width="150" height="45" class="h-10 w-auto mb-5">
         <p class="text-small text-navy-on-muted max-w-measure-tight leading-relaxed">{{ site.description }}</p>
-        {# Real data already used elsewhere on the site (ventures masthead's
-           record-strip, site.json) — not new content, just given a home
-           in the footer for a bit more substance than the logo+blurb it
-           had before. #}
-        <p class="mt-5 font-mono text-label uppercase tracking-widest text-navy-on-muted/70">Est. {{ site.founded }} &middot; {{ site.address }}</p>
+        {# Address dropped from this line -- it's the first item in "Get in
+           Touch" now, so stating it here too was the same fact twice in
+           one footer. "Est." alone still gives the brand block its own
+           bit of real, sourced substance (site.json). #}
+        <p class="mt-4 font-mono text-label uppercase tracking-widest text-navy-on-muted/70">Est. {{ site.founded }}</p>
       </div>
 
+      {# Column headers upgraded from the small-caps mono eyebrow to a
+         heavier, larger display weight (reference: admizzeducation.com's
+         footer) -- kept as a one-off treatment scoped to this partial
+         rather than changing the shared .eyebrow-on-navy class used
+         elsewhere sitewide. A size/weight bump alone read too close to
+         the links below it (same serif family, small gap) -- added a
+         short gold rule under each header, the same "gold as a divider
+         mark" device already used sitewide (e.g. The Shift section's
+         w-10 h-px bg-gold), so the title is anchored by a marker instead
+         of relying on font contrast alone. #}
       <div>
-        <span class="eyebrow-on-navy mb-4">Our Ventures</span>
+        <span class="block font-display font-bold text-h4 text-navy-on">Our Ventures</span>
+        <span class="block mt-2 mb-4 w-8 h-px bg-gold" aria-hidden="true"></span>
         <ul class="flex flex-col gap-3">
           {% for v in ventures %}
           <li>
@@ -24,8 +52,25 @@
         </ul>
       </div>
 
+      {# Same 3 destinations navigation.json feeds the header with, minus
+         Our Ventures (its own column already, immediately to the left). #}
       <div>
-        <span class="eyebrow-on-navy mb-4">Get in Touch</span>
+        <span class="block font-display font-bold text-h4 text-navy-on">Company</span>
+        <span class="block mt-2 mb-4 w-8 h-px bg-gold" aria-hidden="true"></span>
+        <ul class="flex flex-col gap-3">
+          {% for item in navigation.main %}
+          {% if item.label != "Our Ventures" %}
+          <li>
+            <a href="{{ item.href }}" class="text-small text-navy-on-muted hover:text-navy-accent transition-colors duration-press ease-signature">{{ item.label }}</a>
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div>
+        <span class="block font-display font-bold text-h4 text-navy-on">Get in Touch</span>
+        <span class="block mt-2 mb-4 w-8 h-px bg-gold" aria-hidden="true"></span>
         <ul class="flex flex-col gap-3 text-small text-navy-on-muted">
           <li>{{ site.address }}</li>
           <li><a href="{{ site.phoneHref }}" class="hover:text-navy-accent transition-colors duration-press ease-signature">{{ site.phone }}</a></li>
@@ -35,13 +80,34 @@
 
     </div>
 
-    <div class="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      {# ICEF's own official live badge widget, not a hand-built replica.
+         Account #6499 is the exact same accreditation already verified
+         against ICEF's public API (docs/01-AUDIT.md §2) and linked from
+         the hero — this renders ICEF's real, self-updating seal instead
+         of us reproducing their mark by hand. The loader script lives
+         once in base.njk (site-wide, lazyOnload-equivalent), matching
+         admizzeducation.com's own integration exactly. Falls back to
+         nothing (no layout shift) if the 3rd-party script fails to load —
+         it renders into this span itself, no placeholder needed. #}
+      <div class="shrink-0 lg:self-start" data-icef-badge>
+        <span id="iasBadge" data-account-id="6499"></span>
+      </div>
+
+    </div>
+
+    {# Bottom bar no longer restates the columns above (it used to repeat
+       "Our Ventures" as a link right below its own full column). Legal
+       links (privacy/terms) aren't real pages yet, so this isn't a place
+       to invent placeholders -- "Back to top" is a genuine, working
+       utility instead: a plain hash link to <main id="main-content">
+       (base.njk), so it works identically whether Lenis is driving smooth
+       scroll or a reduced-motion visitor gets a native jump. #}
+    <div class="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
       <p class="text-label text-navy-on-muted/80 uppercase tracking-wide">&copy; {% year %} {{ site.legalName }}. All rights reserved.</p>
-      <nav class="flex gap-6" aria-label="Legal">
-        <a href="/ventures/" class="text-label text-navy-on-muted/80 uppercase tracking-wide hover:text-navy-accent transition-colors duration-press ease-signature">Our Ventures</a>
-        <a href="/about/" class="text-label text-navy-on-muted/80 uppercase tracking-wide hover:text-navy-accent transition-colors duration-press ease-signature">Our Story</a>
-        <a href="/contact/" class="text-label text-navy-on-muted/80 uppercase tracking-wide hover:text-navy-accent transition-colors duration-press ease-signature">Contact</a>
-      </nav>
+      <a href="#main-content" class="group flex items-center gap-2 text-label text-navy-on-muted/80 uppercase tracking-wide hover:text-navy-accent transition-colors duration-press ease-signature">
+        Back to top
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="-rotate-90 transition-transform duration-press ease-signature group-hover:-translate-y-0.5"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
     </div>
   </div>
 </footer>

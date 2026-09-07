@@ -130,5 +130,11 @@
   <!-- Main JS + CSS (bundled via Vite) -->
   <script type="module" src="/assets/js/main.js"></script>
 
+  {# ICEF's official badge-widget loader — renders into the #iasBadge span
+     in footer.njk. Deferred (not blocking, loaded last) same as
+     admizzeducation.com's own "lazyOnload" integration of this exact
+     script for the same account (#6499). #}
+  <script src="https://www-cdn.icef.com/scripts/iasbadgeid.js" defer crossorigin="anonymous"></script>
+
 </body>
 </html>
