@@ -1246,6 +1246,20 @@
        records with no market-signal stats. self-start lets the card size
        to its own content instead. */
     align-self: start;
+    /* 2026-09-07: self-start alone traded one problem for another --
+       Institute's entry column (exam-coverage grid + how-it-works) runs
+       to 1416px while the ledger is 244px, so the card now just ends
+       early and leaves a ~1170px blank void beside the rest of the
+       scroll (same shape of issue at every record, just smaller: 226px
+       on Education, 614px on Workforce -- entry length will always vary
+       per venture). Sticky, same technique as the homepage's ecosystem
+       sticky photo (top-[112px], header clearance), keeps the card in
+       view for as long as its row actually has height for it to travel
+       in, instead of abandoning it after a fixed 244px. Grid's own
+       implicit row height (set by the tallest column, .venture-entry)
+       is what gives it room to stick within -- no extra wrapper needed. */
+    position: sticky;
+    top: 112px;
   }
 }
 

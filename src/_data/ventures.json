@@ -9,6 +9,17 @@
     "description": "We equip students with expert-led test prep for IELTS, PTE, SAT, GRE, GMAT and other international exams, ensuring confidence and high scores. Our strategic preparation methods help students gain admission to prestigious institutions worldwide.",
     "verticalLine": "Preparing students for success in language and competitive tests for global opportunities.",
     "exams": ["IELTS", "PTE", "SAT", "GRE", "GMAT"],
+    "examDetails": [
+      { "code": "IELTS", "name": "IELTS", "coverage": "Listening, Reading, Writing and Speaking — full four-skill preparation.", "icon": "<path d=\"M3.5 4.5h13a1 1 0 011 1v7a1 1 0 01-1 1H8.5l-3.5 3v-3h-1.5a1 1 0 01-1-1v-7a1 1 0 011-1z\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/>" },
+      { "code": "PTE", "name": "PTE Academic", "coverage": "Speaking, Writing, Reading and Listening — the complete computer-delivered format.", "icon": "<rect x=\"2.5\" y=\"3.5\" width=\"15\" height=\"10\" rx=\"1\" stroke=\"currentColor\" stroke-width=\"1.3\"/><path d=\"M7 17h6M10 13.5v3.5\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>" },
+      { "code": "SAT", "name": "SAT", "coverage": "Reading and Writing, plus Math — complete coverage for the digital SAT.", "icon": "<path d=\"M10 6c-1.6-1.1-4.2-1.6-6.5-1.1v10.6c2.3-0.5 4.9 0 6.5 1.1 1.6-1.1 4.2-1.6 6.5-1.1V4.9C14.2 4.4 11.6 4.9 10 6z\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M10 6v10.6\" stroke=\"currentColor\" stroke-width=\"1.3\"/>" },
+      { "code": "GRE", "name": "GRE", "coverage": "Verbal Reasoning, Quantitative Reasoning and Analytical Writing.", "icon": "<circle cx=\"10\" cy=\"10\" r=\"7\" stroke=\"currentColor\" stroke-width=\"1.3\"/><circle cx=\"10\" cy=\"10\" r=\"3.5\" stroke=\"currentColor\" stroke-width=\"1.3\"/><circle cx=\"10\" cy=\"10\" r=\"0.75\" fill=\"currentColor\"/>" },
+      { "code": "GMAT", "name": "GMAT", "coverage": "Quantitative Reasoning, Verbal Reasoning, Data Insights and Analytical Writing.", "icon": "<rect x=\"2.5\" y=\"6.5\" width=\"15\" height=\"9.5\" rx=\"1\" stroke=\"currentColor\" stroke-width=\"1.3\"/><path d=\"M7 6.5v-2a1 1 0 011-1h4a1 1 0 011 1v2\" stroke=\"currentColor\" stroke-width=\"1.3\"/><path d=\"M2.5 11h15\" stroke=\"currentColor\" stroke-width=\"1.3\"/>" }
+    ],
+    "deliveryModel": [
+      { "title": "Full prep", "text": "Every section of the exam is covered — not a partial crash course." },
+      { "title": "Your format", "text": "Learn online or in-person, whichever fits how you study best." }
+    ],
     "href": "#",
     "hrefLabel": "No public site yet",
     "cta": "Prepare With Admizz",

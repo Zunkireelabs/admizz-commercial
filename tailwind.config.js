@@ -141,7 +141,18 @@ export default {
       },
 
       maxWidth: {
-        shell: '1240px',
+        // 1240 -> 1400 (fixed px) still left large empty side margins on
+        // wide monitors -- a flat pixel guess can't work for every screen
+        // size. min() scales the column WITH the actual viewport instead:
+        // fills 95% of the screen up to a 2200px ceiling, so even a very
+        // large/wide browser window (measured at ~2450px CSS width) sees
+        // only a modest, deliberate margin rather than empty space. Still
+        // a real ceiling, not true edge-to-edge, so paragraph text never
+        // stretches into unreadable mile-long lines on an ultrawide
+        // display -- body copy is separately capped by .measure/
+        // .measure-tight regardless, only the outer layout (cards, grids,
+        // the ledger sidebar) gets the extra room.
+        shell: 'min(95vw, 2200px)',
         measure: '68ch',
         'measure-tight': '54ch',
       },

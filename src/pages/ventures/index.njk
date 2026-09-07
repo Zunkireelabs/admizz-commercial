@@ -328,7 +328,106 @@ permalink: /ventures/
           </div>
           {% endif %}
 
-          {% if v.exams.length %}
+          {# Exam coverage + delivery model (Admizz Institute only) —
+             2026-09-07 v2: rebuilt on reference (marke-agency.webflow.io's
+             services grid: eyebrow + bold intro, icon-badge cards; and
+             copora-wbs.webflow.io's step-strip for "how we work") after
+             the first pass (plain label-in-a-box cards, flat 2-col text)
+             read as underdesigned next to the rest of this site's card
+             language. Adapted, not copied: icon badges reuse THIS site's
+             own navy/10-circle convention (.venture-entry-icon, the hero
+             ICEF badge) rather than Marke's bright pastel chips, which
+             would break the established navy/gold/paper palette. Per-exam
+             coverage text describes each exam's own real, public section
+             structure (verifiable against each test's own official
+             format) — not a claim about Admizz's results or scale.
+             Delivery model is exactly the two facts confirmed for this
+             build: full prep (every section, not partial) and both
+             online/in-person format. Deliberately no invented numbers
+             (pass rates, class sizes, student counts) — see
+             docs/01-AUDIT.md §9 item 6, still an open content gap. #}
+          {# 2026-09-07 v3: both the exam-coverage grid and "how it works"
+             collapsed behind one click-to-expand trigger instead of always
+             rendering inline -- explicit request, this record was reading
+             as too tall/heavy by default. Reuses the exact accordion
+             mechanism already on this page (academic-network.njk's
+             country rows: Alpine open/close, x-collapse, chevron rotate)
+             rather than a new interaction pattern. Card design underneath
+             is UNCHANGED from the previous pass -- only how it's revealed
+             changed, not what it looks like once open. #}
+          {% if v.examDetails %}
+          <div class="mt-8" x-data="{ open: false }">
+            <span class="eyebrow-pill">
+              <span class="w-1.5 h-1.5 bg-navy" aria-hidden="true"></span>
+              {{ v.vertical }}
+            </span>
+            <h3 class="mt-3 font-display font-light text-h3 text-ink max-w-[26ch] text-balance">What full prep actually covers.</h3>
+
+            <button
+              type="button"
+              class="academic-network-row mt-6"
+              @click="open = !open"
+              :aria-expanded="open ? 'true' : 'false'"
+              aria-controls="institute-prep-panel"
+            >
+              <span class="font-mono text-small uppercase tracking-widest text-ink">Exam coverage &amp; how it works</span>
+              <span class="flex items-center gap-4">
+                <span class="font-mono text-small text-ink-faint">{{ v.examDetails.length }} exams</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"
+                  class="academic-network-chevron text-ink-faint transition-transform duration-press ease-signature"
+                  :class="open ? 'rotate-180' : ''">
+                  <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </button>
+
+            <div id="institute-prep-panel" x-show="open" x-collapse x-cloak>
+              {# 3 columns at lg+, not 2 -- 5 exam cards in a 2-col grid left
+                 GMAT alone in a third row with a full empty column beside it
+                 (the same orphan-whitespace pattern already fixed elsewhere
+                 on this page). 3 columns gives a clean 3+2 split with no
+                 leftover gap. Stays 2-col at sm (this card's own column is
+                 narrower there, would be cramped at 3).
+                 items-start: CSS Grid's default stretch was forcing every
+                 card in a row to match its tallest sibling's height -- "PTE
+                 Academic" wraps to 2 lines and has the longest coverage
+                 text, so IELTS and SAT were stretching ~130-170px past
+                 their own content and sitting on dead white space. #}
+              <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
+                {% for exam in v.examDetails %}
+                <div class="p-5 rounded-lg bg-paper-raised border border-rule transition-shadow duration-press ease-signature hover:shadow-raised">
+                  <span class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-navy text-white">
+                    <svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true">{{ exam.icon | safe }}</svg>
+                  </span>
+                  <h4 class="mt-3 font-display font-semibold text-h4 text-ink">{{ exam.name }}</h4>
+                  <p class="mt-1.5 text-small text-ink-muted leading-relaxed">{{ exam.coverage }}</p>
+                </div>
+                {% endfor %}
+              </div>
+
+              {# "How it works" -- a numbered step-strip (reference: Copora's
+                 horizontal process tabs), not the plain 2-col text block this
+                 used to be. Only 2 real confirmed facts exist, so this isn't
+                 a literal 4-tab clone -- same typographic device (numeral,
+                 divider rule between items) without inventing steps that
+                 aren't real. #}
+              {% if v.deliveryModel %}
+              <div class="mt-8 pt-6 border-t border-rule">
+                <p class="data-label">How it works</p>
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 divide-y divide-rule sm:divide-y-0 sm:divide-x">
+                  {% for item in v.deliveryModel %}
+                  <div class="py-4 sm:py-0 first:pt-0 sm:pl-6 sm:first:pl-0">
+                    <span class="font-mono text-label tabular-nums text-navy-soft">0{{ loop.index }}</span>
+                    <h4 class="mt-2 font-display font-semibold text-h4 text-ink">{{ item.title }}</h4>
+                    <p class="mt-1.5 text-small text-ink-muted leading-relaxed">{{ item.text }}</p>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% elif v.exams.length %}
           <p class="mt-6 font-mono text-small text-ink tracking-wide">
             {% for e in v.exams %}{{ e }}{% if not loop.last %} <span class="text-ink-faint" aria-hidden="true">/</span> {% endif %}{% endfor %}
           </p>

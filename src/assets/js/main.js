@@ -131,7 +131,16 @@ if (!prefersReducedMotion) {
       // zero margin (i.e. already inside the header's own gutter padding) —
       // reading this directly sidesteps clientWidth vs. content-box confusion.
       const availableWidth = headerFrame.getBoundingClientRect().width;
-      const pillInset = Math.max(0, (availableWidth - 1152) / 2);
+      // Was a hardcoded pixel constant (1152, then 1312) that had to be
+      // manually kept in sync with .shell's max-width in tailwind.config.js
+      // every time that changed -- missed once already when the shell went
+      // 1240 -> 1400, and .shell is now viewport-relative (min(94vw,1800px))
+      // so no single constant could ever be correct for every screen size
+      // anyway. Reading a real .shell element's live rendered width instead
+      // means this is correct automatically, on any screen, permanently.
+      const referenceShell = document.querySelector('.shell');
+      const shellWidth = referenceShell ? referenceShell.getBoundingClientRect().width : 1312;
+      const pillInset = Math.max(0, (availableWidth - shellWidth) / 2);
 
       gsap.timeline({ scrollTrigger: { start: 0, end: 140, scrub: 0.3 } })
         .fromTo(headerFrame,
