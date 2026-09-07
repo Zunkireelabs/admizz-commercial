@@ -1009,8 +1009,29 @@ if (coverflow) {
 // <li>) the first time the grid scrolls into view. Not gated behind
 // prefers-reduced-motion since it's a one-time short reveal, same class of
 // motion as .fade-up elsewhere on this site (which also isn't gated).
+//
+// Same "armed" safe pattern as .fade-up above: tiles render fully visible
+// in plain CSS (main.css), and only get .spotlight-armed added here, right
+// before this observer starts watching — so a no-JS visitor, a crawler, or
+// a screenshot tool that never fires the observer still sees every logo,
+// not a grid stuck at opacity:0 forever.
 const spotlightGrid = document.querySelector('[data-spotlight-grid]');
 if (spotlightGrid) {
+  // Left/right-converging direction: each tile's --dx is set from where its
+  // own center actually sits relative to the GRID's center, measured live —
+  // not a static odd/even column guess baked in at build time, because the
+  // grid's `auto-fill` column count changes per breakpoint (2-3 columns on
+  // mobile, up to 8 on desktop), so only a runtime measurement gives the
+  // correct half at every width.
+  const gridRect = spotlightGrid.getBoundingClientRect();
+  const gridCenterX = gridRect.left + gridRect.width / 2;
+  spotlightGrid.querySelectorAll('.academic-spotlight-tile').forEach((tile) => {
+    const tileRect = tile.getBoundingClientRect();
+    const tileCenterX = tileRect.left + tileRect.width / 2;
+    const dx = tileCenterX < gridCenterX ? '-28px' : '28px';
+    tile.style.setProperty('--dx', dx);
+    tile.classList.add('spotlight-armed');
+  });
   new IntersectionObserver(
     (entries, observer) => {
       entries.forEach((entry) => {

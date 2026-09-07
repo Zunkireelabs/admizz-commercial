@@ -340,27 +340,57 @@
   .academic-spotlight-tile {
     @apply relative flex items-center justify-center;
     @apply p-3 rounded-md bg-paper-raised;
-    @apply transition-all duration-press ease-signature;
     aspect-ratio: 1 / 1;
-    /* Popped in all at once the instant the trigger fired, before this —
-       staggering per tile via `--i` (set inline per <li>) makes the reveal
-       read as a quick cascade instead of a flat instant dump, matching the
-       "index-staggered, never simultaneous" motion rule used everywhere
-       else on this site. */
+  }
+  /* .academic-network-tile keeps the old always-hidden-until-.is-open
+     rule -- safe here because it lives inside an Alpine x-collapse panel
+     that is itself entirely JS-driven (nothing to see with JS off, open
+     or not), unlike the homepage spotlight grid below. */
+  .academic-network-tile {
+    @apply transition-all duration-press ease-signature;
     opacity: 0;
     transform: translateY(6px);
   }
-  .academic-network-grid.is-open .academic-network-tile,
-  .academic-spotlight-grid.is-visible .academic-spotlight-tile {
+  .academic-network-grid.is-open .academic-network-tile {
     opacity: 1;
     transform: translateY(0);
     transition-delay: calc(var(--i, 0) * 35ms);
+  }
+  /* Spotlight tiles are real page content visible without any JS, so they
+     follow the same "armed" safe pattern as .fade-up above: the bare
+     class renders fully visible; main.js adds .spotlight-armed right
+     before it starts observing the grid, and only THEN does this hidden
+     pre-reveal state apply. A no-JS visitor, a screenshot tool, or a
+     crawler that never fires the IntersectionObserver still sees every
+     logo, not a permanently blank grid.
+     Duration/stagger widened from the old shared rule's duration-press
+     (100ms, this site's hover/press token) to an actual entrance timing
+     (450ms) with a 45ms-per-tile stagger -- at the old values the whole
+     24-tile grid finished popping in under a second with each tile
+     essentially snapping rather than fading.
+     --dx is set per-tile by main.js (left-half tiles get a negative value,
+     right-half a positive one, measured against the GRID's own center,
+     not a static odd/even column guess -- the grid's auto-fill column
+     count changes per breakpoint, so only a runtime measurement is
+     correct at every width). The result: the wall assembles INWARD from
+     both sides toward the center as it scrolls into view, not one
+     uniform "everything drifts up" reveal. */
+  .academic-spotlight-tile.spotlight-armed {
+    opacity: 0;
+    transform: translateY(10px) translateX(var(--dx, 0px));
+    transition: opacity 450ms theme("transitionTimingFunction.signature"),
+      transform 450ms theme("transitionTimingFunction.signature");
+    transition-delay: calc(var(--i, 0) * 45ms);
+  }
+  .academic-spotlight-grid.is-visible .academic-spotlight-tile.spotlight-armed {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
   }
   .academic-network-tile:hover,
   .academic-network-tile:focus-within,
   .academic-spotlight-tile:hover,
   .academic-spotlight-tile:focus-within {
-    @apply shadow-raised;
+    @apply shadow-raised transition-transform duration-press ease-signature;
     transform: translateY(-3px);
   }
   .academic-network-tile-flag,
