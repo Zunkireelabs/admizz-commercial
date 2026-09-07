@@ -74,20 +74,22 @@ export default {
       crit: { DEFAULT: '#A8231B', bg: '#FBEDEC' },
     },
 
-    // Zero radius everywhere, site-wide (2026-09-01, explicit request —
-    // overrides the earlier "tight scaled radii" system below this
-    // comment used to describe). Every rounded-* utility resolves through
-    // this one scale, `full` included, so this single change flattens
-    // every card, photo, panel, button, dot, and pill across the entire
-    // site to sharp corners with no per-file edits needed.
+    // Restored graduated scale (2026-09-07) — the 2026-09-01 zero-radius
+    // sweep flattened every rounded-* utility to 0 sitewide, which drifted
+    // from this project's own documented design system (CLAUDE.md §5:
+    // "Radii scale to element size: 4px chips/inputs · 8px cards ·
+    // 12-16px panels. Never uniform rounded-2xl.") — uniform zero is the
+    // same anti-pattern at the opposite extreme, not a fix of it. These
+    // are the exact values used before that sweep (git history,
+    // 893fcc4^), not newly invented ones.
     borderRadius: {
       none: '0',
-      sm: '0',
-      DEFAULT: '0',
-      md: '0',
-      lg: '0',
-      xl: '0',
-      full: '0',
+      sm: '2px',
+      DEFAULT: '3px',
+      md: '4px',
+      lg: '8px',
+      xl: '14px',
+      full: '9999px',
     },
 
     extend: {

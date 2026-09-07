@@ -1239,6 +1239,13 @@
   }
   .venture-ledger {
     grid-column: auto;
+    /* Grid's default align-items:stretch was forcing this card to match
+       .venture-entry's height (the tallest column, thanks to the market-
+       signal block) -- measured at 798px tall with content ending at
+       ~247px, i.e. 552px of dead space below "Related reading" on
+       records with no market-signal stats. self-start lets the card size
+       to its own content instead. */
+    align-self: start;
   }
 }
 
