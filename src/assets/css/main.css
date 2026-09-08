@@ -2305,6 +2305,54 @@
   color: theme("colors.ink.DEFAULT");
 }
 
+/* =====================================================
+   Legal + methodology pages (/privacy/, /terms/, /cookies/, /sources/)
+   -----------------------------------------------------
+   Long-form structured prose (h2/h3/ul), which none of the site's other
+   typography classes cover -- .insights-article-prose is bare <p> tags
+   only (post.bodyParagraphs has no headings), and .prose-body is just a
+   max-width/color reset. Reuses the same Newsreader/Archivo pairing and
+   ink/navy tokens rather than Tailwind typography's default gray theme
+   (@tailwindcss/typography is installed but its default palette doesn't
+   match this site's design system, so this is a small hand-rolled set
+   instead of reaching for the plugin's `.prose` class here).
+   ===================================================== */
+.legal-prose {
+  max-width: theme("maxWidth.measure");
+  color: theme("colors.ink.muted");
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.legal-prose h2 {
+  @apply font-display font-book text-h3 text-ink;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+.legal-prose h2:first-child { margin-top: 0; }
+.legal-prose h3 {
+  @apply font-display font-book text-h4 text-ink;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+.legal-prose p { margin-top: 1rem; }
+.legal-prose p:first-child { margin-top: 0; }
+.legal-prose ul, .legal-prose ol {
+  margin-top: 1rem;
+  padding-left: 1.25rem;
+}
+.legal-prose ul { list-style: disc; }
+.legal-prose ol { list-style: decimal; }
+.legal-prose li + li { margin-top: 0.5rem; }
+.legal-prose li::marker { color: theme("colors.ink.faint"); }
+.legal-prose a {
+  @apply link-underline text-ink;
+}
+.legal-prose strong { @apply text-ink font-medium; }
+.legal-prose .legal-meta {
+  @apply font-mono text-label uppercase tracking-widest text-ink-faint;
+  margin-bottom: 2rem;
+}
+
 /* ---------- /insights/<slug>/ masthead mark ---------- */
 .insights-hero { position: relative; overflow: hidden; }
 .insights-hero-mark {

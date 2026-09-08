@@ -5,6 +5,7 @@ pagination:
   data: insights
   size: 1
   alias: post
+  addAllPagesToCollections: true
 permalink: "/insights/{{ post.slug }}/"
 eleventyComputed:
   title: "{{ post.title }} — Admizz Group"
@@ -75,11 +76,29 @@ eleventyComputed:
         {% imageEager "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 768px) 60vw, 100vw" %}
       </div>
 
+      {# | safe (2026-09-08): the new research-tagged articles (source:
+         "research") cite sources inline as real <a> links, matching the
+         exact pattern already used in marketContext.json's `analysis`
+         field (also rendered `| safe`) -- authored content, not visitor
+         input, so this isn't an XSS risk the way escaping user text would
+         be. The 3 original marketing-tagged posts have no markup in their
+         paragraphs, so this is a no-op for them. #}
       <div class="insights-article-prose">
         {% for para in post.bodyParagraphs %}
-        <p>{{ para }}</p>
+        <p>{{ para | safe }}</p>
         {% endfor %}
       </div>
+
+      {% if post.citations %}
+      <div class="mt-8 pt-6 border-t border-rule">
+        <p class="font-mono text-label uppercase tracking-widest text-ink-faint">Sources</p>
+        <ul class="mt-3 flex flex-col gap-1.5">
+          {% for c in post.citations %}
+          <li><a href="{{ c.href }}" target="_blank" rel="noopener noreferrer" class="text-small link-underline text-ink-muted">{{ c.label }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
 
       {# hrefLabel-style fix, same pattern as /ventures/ and /contact/: where
          there's no real URL (Institute — ventureHref is "#"), render a

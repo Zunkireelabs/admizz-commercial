@@ -55,7 +55,13 @@ permalink: /insights/
   </div>
 </section>
 
-<section class="bg-paper pb-section" x-data="{ active: 'all' }">
+<section class="bg-paper pb-section" x-data="{
+    active: 'all',
+    posts: {{ insights | pluck(["venture", "featured"]) | json }},
+    get gridCount() {
+      return this.posts.filter(p => !p.featured && (this.active === 'all' || this.active === p.venture)).length;
+    }
+  }">
   <div class="shell">
     {# Real filter — every option is a venture that actually has a post
        behind it; "All" plus the 3 real values, nothing invented. #}
@@ -85,12 +91,20 @@ permalink: /insights/
     </article>
     {% endif %}{% endfor %}
 
-    {# Hidden outright when neither of the 2 grid posts matches the active
-       filter (i.e. filtered to the featured post's own venture) — so no
-       empty bordered strip is left behind either. #}
-    <div class="insights-grid mt-4"
-      :class="active === 'all' ? '' : 'is-narrowed'"
-      x-show="active === 'all' || active === 'Admizz Institute' || active === 'Admizz Workforce Solutions'">
+    {# 2026-09-08: was a hardcoded x-show enumerating the exact 2 ventures
+       that happened to have a non-featured post at the time (Institute,
+       Workforce), plus `.is-narrowed` driven by "any filter is active"
+       (assumed that always meant exactly 1 result). Both broke the moment
+       a venture could have more than one grid post — true as soon as more
+       posts existed per venture. NOT switched to auto-fit — that was
+       already tried (see the CSS comment on .insights-grid) and rejected:
+       auto-fit also collapses to 1 column on an ordinary narrow window,
+       not only when a filter reduces the count, and this grid's fixed
+       aspect-ratio photos render oversized in that state. Fixed instead by
+       computing the real visible count in Alpine (gridCount, below) from
+       the actual insights data, so `.is-narrowed` and the empty-state
+       x-show both track reality for any number of posts per venture. #}
+    <div class="insights-grid mt-4" :class="gridCount === 1 ? 'is-narrowed' : ''" x-show="gridCount > 0">
       {% for post in insights %}{% if not post.featured %}
       <article class="insights-card fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms" x-show="active === 'all' || active === '{{ post.venture }}'">
         <a href="/insights/{{ post.slug }}/" class="insights-card-photo">

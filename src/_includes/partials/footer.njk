@@ -97,17 +97,25 @@
 
     {# Bottom bar no longer restates the columns above (it used to repeat
        "Our Ventures" as a link right below its own full column). Legal
-       links (privacy/terms) aren't real pages yet, so this isn't a place
-       to invent placeholders -- "Back to top" is a genuine, working
-       utility instead: a plain hash link to <main id="main-content">
-       (base.njk), so it works identically whether Lenis is driving smooth
-       scroll or a reduced-motion visitor gets a native jump. #}
-    <div class="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+       links (2026-09-08: privacy/terms/cookies/sources are now real pages
+       -- this comment used to say they weren't and to not invent
+       placeholders for them; that's why they land here and not earlier).
+       "Back to top" is a genuine, working utility: a plain hash link to
+       <main id="main-content"> (base.njk), so it works identically whether
+       Lenis is driving smooth scroll or a reduced-motion visitor gets a
+       native jump. #}
+    <div class="mt-10 pt-6 border-t border-white/10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
       <p class="text-label text-navy-on-muted/80 uppercase tracking-wide">&copy; {% year %} {{ site.legalName }}. All rights reserved.</p>
-      <a href="#main-content" class="group flex items-center gap-2 text-label text-navy-on-muted/80 uppercase tracking-wide hover:text-navy-accent transition-colors duration-press ease-signature">
-        Back to top
-        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="-rotate-90 transition-transform duration-press ease-signature group-hover:-translate-y-0.5"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+        <a href="/privacy/" class="text-label text-navy-on-muted/80 uppercase tracking-wide hover:text-navy-accent transition-colors duration-press ease-signature">Privacy</a>
+        <a href="/terms/" class="text-label text-navy-on-muted/80 uppercase tracking-wide hover:text-navy-accent transition-colors duration-press ease-signature">Terms</a>
+        <a href="/cookies/" class="text-label text-navy-on-muted/80 uppercase tracking-wide hover:text-navy-accent transition-colors duration-press ease-signature">Cookies</a>
+        <a href="/sources/" class="text-label text-navy-on-muted/80 uppercase tracking-wide hover:text-navy-accent transition-colors duration-press ease-signature">Sources</a>
+        <a href="#main-content" class="group flex items-center gap-2 text-label text-navy-on-muted/80 uppercase tracking-wide hover:text-navy-accent transition-colors duration-press ease-signature">
+          Back to top
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="-rotate-90 transition-transform duration-press ease-signature group-hover:-translate-y-0.5"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
     </div>
   </div>
 </footer>
