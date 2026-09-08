@@ -5,66 +5,151 @@ description: Every third-party statistic and Admizz-published figure cited on th
 permalink: /sources/
 ---
 
-{# New page (2026-09-08). Model: the credibility move consulting sites like
-   bcg.com make by showing evidence density -- but going one step further
-   and indexing it explicitly, which they don't. Every href here already
-   exists in the site's own data files (marketContext.json, stats.json,
-   timeline.json, universities.json, offices.json) or is hardcoded in
-   ventures/index.njk (the ICEF badge) -- this page adds NO new facts,
-   it only indexes what's already published elsewhere on the site, plus
-   an honest distinction between "independently verifiable third-party
-   research" and "Admizz's own published figures, not independently
-   audited" (the same distinction CLAUDE.md's non-negotiable #1 and
-   marketContext.json's _note already draw -- this page just makes it
-   visible to a visitor, not only to whoever reads the source code). #}
+{# /sources/ — rebuilt 2026-09-08 v2.
+
+   v1 was a hand-written <ul><li> list, left-aligned inside the 95vw shell
+   (measured: 645px of content, 1,149px of empty page beside it). Two
+   problems beyond the layout: the figures that are the entire point of
+   the page were buried mid-sentence inside list items, and the three very
+   different kinds of proof it carries all looked identical.
+
+   Now assembled from src/_data/citations.js, which reads marketContext /
+   universities / destinations directly — so this page and the counts on
+   it cannot drift from what the site actually cites, and a new citation
+   only has to be added in one place.
+
+   The tiers stay structurally separate because that separation is the
+   page's argument: independently verifiable research, the one verified
+   credential, and Admizz's own published figures — the last clearly
+   marked as self-reported rather than quietly mixed in with the rest. #}
 
 <section class="bg-paper py-section-sm">
   <div class="shell">
-    <span class="eyebrow">Methodology</span>
-    <h1 class="mt-3 font-display font-light text-display-2 text-ink max-w-[22ch] text-balance">Where our numbers come from.</h1>
-    <p class="mt-5 text-body-lg text-ink-muted max-w-measure">
-      Every statistic on this site is sourced. Third-party research is independently verifiable at the link given — we read the primary source directly before publishing a figure, not a search summary or a secondhand citation. Admizz's own published figures are marked as such below: real, but self-reported, not independently audited.
-    </p>
+    <div class="page-canvas">
+      <span class="eyebrow" data-hero-in>Methodology</span>
+      <h1 class="mt-3 font-display font-light text-display-2 text-ink max-w-[22ch] text-balance" data-hero-in>Where our numbers come from.</h1>
+      <p class="mt-5 text-body-lg text-ink-muted max-w-measure" data-hero-in>
+        Every statistic on this site is sourced. Third-party research is independently verifiable at the link given &mdash; we read the primary source directly before publishing a figure, never a search summary or a secondhand citation.
+      </p>
+
+      <div class="bento mt-12 md:mt-16">
+        <div class="bento-item fade-up">
+          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">Citations on this site</span>
+          <div>
+            <p class="bento-num font-display font-light tabular-nums text-ink">{{ citations.counts.total }}</p>
+            <p class="mt-3 text-small text-ink-muted">Every figure below is traceable to a named source.</p>
+          </div>
+        </div>
+        <div class="bento-item bento-item-navy fade-up" style="animation-delay:80ms">
+          <span class="font-mono text-label uppercase tracking-widest text-navy-accent">Independently verifiable</span>
+          <div>
+            <p class="bento-num font-display font-light tabular-nums text-navy-on">{{ citations.counts.independent }}</p>
+            <p class="mt-3 text-small text-navy-on-muted">Third-party research and government data, each linked to its primary source.</p>
+          </div>
+        </div>
+        <div class="bento-item bento-item-tint fade-up" style="animation-delay:160ms">
+          <span class="font-mono text-label uppercase tracking-widest text-gold-text">Publishers</span>
+          <div>
+            <p class="bento-num font-display font-light tabular-nums text-ink">{{ citations.counts.publishers }}</p>
+            <p class="mt-3 text-small text-ink-muted">Pearson, College Board, IIE, NAFSA, federal statistics agencies and others.</p>
+          </div>
+        </div>
+        <div class="bento-item fade-up" style="animation-delay:240ms">
+          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">Fabricated</span>
+          <div>
+            <p class="bento-num font-display font-light tabular-nums text-ink">0</p>
+            <p class="mt-3 text-small text-ink-muted">Where a figure doesn&rsquo;t exist yet, this site says so rather than filling the gap.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
+{# ---------- Tier 1: independent research ---------- #}
 <section class="bg-paper pb-section">
   <div class="shell">
-    <div class="legal-prose">
+    <div class="page-canvas">
 
-      <h2>Independent third-party research</h2>
-      <p>Sector and market data cited on <a href="/ventures/">/ventures/</a>, describing the industries our ventures operate in — not claims about Admizz itself.</p>
-      <ul>
-        {% for id, mc in marketContext %}
-        {% if mc.stats %}
-        {% if mc.intro %}
-        <li><a href="{{ mc.intro.href }}" target="_blank" rel="noopener noreferrer">{{ mc.intro.publisher }}</a> — {{ mc.intro.text }}</li>
-        {% endif %}
-        {% for stat in mc.stats %}
-        <li><a href="{{ stat.href }}" target="_blank" rel="noopener noreferrer">{{ stat.publisher }}</a> — {{ stat.value }}, {{ stat.label }}</li>
-        {% endfor %}
-        {% endif %}
-        {% endfor %}
-        <li><a href="https://www.holoniq.com/notes/196b-international-education-market-set-to-reach-433b-by-2030" target="_blank" rel="noopener noreferrer">HolonIQ, 2024</a> — global international-education market projection, $196B → $433B by 2030.</li>
-        <li><a href="https://www.bls.gov/news.release/disabl.nr0.htm" target="_blank" rel="noopener noreferrer">US Bureau of Labor Statistics</a> — employment and unemployment rates for people with a disability.</li>
-      </ul>
+      <div class="source-tier fade-up">
+        <div class="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 class="font-display font-book text-h3 text-ink">Independent third-party research</h2>
+          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">{{ citations.counts.independent }} citations &middot; {{ citations.counts.publishers }} publishers</span>
+        </div>
+        <p class="mt-2 text-body text-ink-muted max-w-measure">
+          Sector and market data describing the industries our ventures operate in &mdash; not claims about Admizz itself. Cited on <a href="/ventures/" class="link-underline text-ink">/ventures/</a> and across our research articles.
+        </p>
 
-      <h2>Accreditation</h2>
-      <p>Admizz Education holds ICEF Accredited Agency status, IAS 6499 — verifiable directly through ICEF's own agency directory, not self-reported.</p>
-      <ul>
-        <li><a href="https://www.icef.com/" target="_blank" rel="noopener noreferrer">ICEF</a> — Agency Identification System, IAS 6499. This accreditation is held by Admizz Education specifically and does not extend to Admizz Institute or Admizz Workforce Solutions.</li>
-      </ul>
+        <div class="mt-8">
+          {% for c in citations.independent %}
+          <div class="source-row">
+            <p class="source-figure font-display font-light text-ink">
+              {% if c.value %}{{ c.value }}{% else %}<span class="source-figure-none font-sans">Context</span>{% endif %}
+            </p>
+            <div>
+              <p class="text-body text-ink leading-relaxed">{{ c.label }}</p>
+              <p class="mt-1.5 font-mono text-label uppercase tracking-widest text-ink-faint">{{ c.venture }}</p>
+            </div>
+            <a href="{{ c.href }}" target="_blank" rel="noopener noreferrer" class="source-publisher text-small font-medium text-ink link-underline">
+              {{ c.publisher }}
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="shrink-0"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
 
-      <h2>Admizz's own published figures</h2>
-      <p>The following are figures Admizz Education has published on its own site (admizzeducation.com) — real and attributed, but self-reported rather than independently audited. We cite them as Admizz's own stated results, not as verified third-party fact, matching the "Figures published by Admizz Education, as of 2026" attribution shown wherever they appear on this site.</p>
-      <ul>
-        <li>Enrollment, partner-university, visa approval-rate, and scholarship figures (homepage "At a Glance" section) — published by Admizz Education.</li>
-        <li>The 104-university academic network, grouped by country (homepage academic network register) — names and logos published by Admizz Education.</li>
-        <li>Founding and milestone dates (2015, 2020, 2021) shown in the Our Story timeline — a mix of facts written directly for this site and facts published by Admizz Education.</li>
-      </ul>
+      {# ---------- Tier 2: accreditation ---------- #}
+      <div class="source-tier mt-6 fade-up">
+        <h2 class="font-display font-book text-h3 text-ink">Accreditation</h2>
+        <p class="mt-2 text-body text-ink-muted max-w-measure">
+          Verifiable directly through ICEF&rsquo;s own agency directory &mdash; not self-reported.
+        </p>
+        <div class="mt-8">
+          {% for c in citations.accreditation %}
+          <div class="source-row">
+            <p class="source-figure font-display font-light text-ink">{{ c.value }}</p>
+            <div>
+              <p class="text-body text-ink leading-relaxed">{{ c.label }}</p>
+              <p class="mt-1.5 font-mono text-label uppercase tracking-widest text-ink-faint">{{ c.venture }}</p>
+            </div>
+            <a href="{{ c.href }}" target="_blank" rel="noopener noreferrer" class="source-publisher text-small font-medium text-ink link-underline">
+              Verify with {{ c.publisher }}
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="shrink-0"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
 
-      <h2>What we don't do</h2>
-      <p>We don't cite a figure we haven't read at its primary source, and we don't publish a statistic we can't attribute. Where real information doesn't yet exist for something this site could otherwise show — a metric, a case study, a named team member — we say so plainly rather than filling the gap with an invented number. If you find a citation on this site that's gone stale or broken, we'd want to know: <a href="mailto:{{ site.email }}">{{ site.email }}</a>.</p>
+      {# ---------- Tier 3: self-reported ---------- #}
+      <div class="source-tier source-tier-flag mt-6 fade-up">
+        <h2 class="font-display font-book text-h3 text-ink">Admizz&rsquo;s own published figures</h2>
+        <p class="mt-2 text-body text-ink-muted max-w-measure">
+          Real and attributed, but self-reported rather than independently audited. We cite them as Admizz Education&rsquo;s own stated results &mdash; never as third-party fact &mdash; and label them that way wherever they appear.
+        </p>
+        <div class="mt-8">
+          {% for c in citations.selfReported %}
+          <div class="source-row">
+            <p class="source-figure font-display font-light text-ink">
+              {% if c.value %}{{ c.value }}{% else %}<span class="source-figure-none font-sans">Various</span>{% endif %}
+            </p>
+            <div>
+              <p class="text-body text-ink leading-relaxed">{{ c.label }}</p>
+              <p class="mt-1.5 font-mono text-label uppercase tracking-widest text-ink-faint">{{ c.venture }}</p>
+            </div>
+            <span class="text-small text-ink-muted">{{ c.publisher }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="mt-14 max-w-measure fade-up">
+        <h2 class="font-display font-book text-h3 text-ink">What we don&rsquo;t do</h2>
+        <p class="mt-3 text-body text-ink-muted leading-relaxed">
+          We don&rsquo;t cite a figure we haven&rsquo;t read at its primary source, and we don&rsquo;t publish a statistic we can&rsquo;t attribute. Where real information doesn&rsquo;t yet exist for something this site could otherwise show &mdash; a metric, a case study, a named team member &mdash; we say so plainly rather than filling the gap with an invented number. If you find a citation here that&rsquo;s gone stale or broken, we&rsquo;d want to know: <a href="mailto:{{ site.email }}" class="link-underline text-ink">{{ site.email }}</a>.
+        </p>
+      </div>
 
     </div>
   </div>

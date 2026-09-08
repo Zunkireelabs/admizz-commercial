@@ -42,7 +42,21 @@
       }
     ],
     "source": "research",
-    "imageSource": "distinct crop of the same licensed source file this venture's other article uses (sharp, 2026-09-08) -- the two posts per venture were rendering the IDENTICAL photo, visible side by side in the /insights/ grid. Same licence, no new asset sourced; same technique already used for institute-plate.jpg on /ventures/."
+    "imageSource": "distinct crop of the same licensed source file this venture's other article uses (sharp, 2026-09-08) -- the two posts per venture were rendering the IDENTICAL photo, visible side by side in the /insights/ grid. Same licence, no new asset sourced; same technique already used for institute-plate.jpg on /ventures/.",
+    "keyFigures": [
+      {
+        "value": "90%",
+        "label": "growth in PTE Academic tests taken globally, 2022 vs 2021",
+        "publisher": "Pearson",
+        "href": "https://in.pearson.com/our-story/news-room/2023/08/pearson-test-of-english--pte--volume-grows-by-76--globally-in-h1.html"
+      },
+      {
+        "value": "1.97M",
+        "label": "students in the US Class of 2024 took the SAT at least once",
+        "publisher": "College Board",
+        "href": "https://newsroom.collegeboard.org/sat-participation-continues-grow-sat-suite-successfully-completes-its-transition-digital-testing"
+      }
+    ]
   },
   {
     "slug": "closing-the-employment-gap-vocational-rehabilitation",
@@ -70,7 +84,27 @@
       }
     ],
     "source": "research",
-    "imageSource": "distinct crop of the same licensed source file this venture's other article uses (sharp, 2026-09-08) -- the two posts per venture were rendering the IDENTICAL photo, visible side by side in the /insights/ grid. Same licence, no new asset sourced; same technique already used for institute-plate.jpg on /ventures/."
+    "imageSource": "distinct crop of the same licensed source file this venture's other article uses (sharp, 2026-09-08) -- the two posts per venture were rendering the IDENTICAL photo, visible side by side in the /insights/ grid. Same licence, no new asset sourced; same technique already used for institute-plate.jpg on /ventures/.",
+    "keyFigures": [
+      {
+        "value": "872,460",
+        "label": "people received vocational rehabilitation services nationally, 2023/24",
+        "publisher": "CRD, 2025 Compendium",
+        "href": "https://researchondisability.org/annual-disability-statistics-collection/2025-compendium-table-contents/section-14-vocational-rehabilitation-compendium-2025"
+      },
+      {
+        "value": "55.9%",
+        "label": "of program exiters had a job within two quarters of leaving",
+        "publisher": "CRD, 2025 Compendium",
+        "href": "https://researchondisability.org/annual-disability-statistics-collection/2025-compendium-table-contents/section-14-vocational-rehabilitation-compendium-2025"
+      },
+      {
+        "value": "22.8%",
+        "label": "employment rate for people with a disability, nationally",
+        "publisher": "US Bureau of Labor Statistics",
+        "href": "https://www.bls.gov/news.release/disabl.nr0.htm"
+      }
+    ]
   },
   {
     "slug": "the-real-numbers-behind-global-student-mobility",
@@ -102,7 +136,27 @@
       }
     ],
     "source": "research",
-    "imageSource": "distinct crop of the same licensed source file this venture's other article uses (sharp, 2026-09-08) -- the two posts per venture were rendering the IDENTICAL photo, visible side by side in the /insights/ grid. Same licence, no new asset sourced; same technique already used for institute-plate.jpg on /ventures/."
+    "imageSource": "distinct crop of the same licensed source file this venture's other article uses (sharp, 2026-09-08) -- the two posts per venture were rendering the IDENTICAL photo, visible side by side in the /insights/ grid. Same licence, no new asset sourced; same technique already used for institute-plate.jpg on /ventures/.",
+    "keyFigures": [
+      {
+        "value": "1.18M",
+        "label": "international students in the US, 2024/25 — up 5% on the year before",
+        "publisher": "IIE, Open Doors 2025",
+        "href": "https://www.iie.org/news/open-doors-2025-press-release/"
+      },
+      {
+        "value": "$42.9B",
+        "label": "contributed to the US economy, supporting 355,000+ jobs",
+        "publisher": "NAFSA & JB International",
+        "href": "https://www.nafsa.org/about/about-nafsa/international-students-contributed-43-billion-us-economy-2024-2025-fall-2025"
+      },
+      {
+        "value": "$433B",
+        "label": "projected size of the global international-education market by 2030",
+        "publisher": "HolonIQ",
+        "href": "https://www.holoniq.com/notes/196b-international-education-market-set-to-reach-433b-by-2030"
+      }
+    ]
   },
   {
     "slug": "empowering-careers-through-lifelong-learning",

@@ -2067,6 +2067,11 @@
   max-width: 78rem;
   margin-inline: auto;
 }
+/* Narrower cap for long-form reading layouts (an article column plus its
+   rail). At the full 78rem the text column stayed at its own 68ch measure
+   and the slack showed up as a gap between the prose and the rail —
+   measured 347px even after the page was centred. */
+.page-canvas-reading { max-width: 64rem; }
 
 /* ---------- Bento (mixed-size fact/feature cards) ----------
    Reference device: cards of deliberately different sizes with numbers
@@ -2144,6 +2149,90 @@
   font-size: theme("fontSize.label");
   text-transform: uppercase;
   letter-spacing: 0.1em;
+}
+
+/* ---------- Source register (/sources/) ----------
+   Was a plain <ul><li> list: the most credibility-carrying page on the
+   site rendered in the least designed format there is, with the figures
+   that are its entire point (827,000 / 1.97M / $42.9B / 872,460) buried
+   mid-sentence inside list items. Each citation is now a row that leads
+   with its figure and names its publisher, and the three tiers of proof
+   are visually distinct because that distinction IS the page's argument. */
+.source-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem 1.5rem;
+  padding-block: 1.35rem;
+  border-top: 1px solid theme("colors.rule.DEFAULT");
+}
+@media (min-width: 760px) {
+  .source-row {
+    grid-template-columns: minmax(0, 9rem) minmax(0, 1fr) minmax(0, 12rem);
+    align-items: baseline;
+  }
+}
+.source-figure {
+  font-size: clamp(1.5rem, 2.2vw, 2.1rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  font-variant-numeric: tabular-nums;
+}
+/* Rows whose citation is a statement rather than a number keep the same
+   grid so the columns still line up down the page. */
+.source-figure-none { color: theme("colors.ink.faint"); font-size: 1rem; }
+.source-publisher { display: inline-flex; align-items: center; gap: 0.4rem; }
+.source-tier {
+  border-radius: theme("borderRadius.xl");
+  border: 1px solid theme("colors.rule.DEFAULT");
+  background-color: theme("colors.paper.raised");
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+}
+.source-tier-flag {
+  background-color: theme("colors.gold.sunk / 40%");
+  border-color: theme("colors.gold.text / 20%");
+}
+
+/* ---------- Article key figures ----------
+   Research articles cite real third-party data and every figure sat as
+   plain grey body text. These pull the numbers the piece exists to make
+   into the reading flow at display scale, each still carrying its own
+   publisher link — the same "stat with its provenance directly under it"
+   pattern already proven on /ventures/ (.market-stat), not a new idiom. */
+.article-figures {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.875rem;
+  margin-block: clamp(2rem, 4vw, 2.75rem);
+}
+@media (min-width: 620px) {
+  .article-figures { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+}
+.article-figure {
+  padding: 1.125rem 1.25rem 1.25rem;
+  border-radius: theme("borderRadius.lg");
+  background-color: theme("colors.paper.raised");
+  border: 1px solid theme("colors.rule.DEFAULT");
+}
+.article-figure-value {
+  font-size: clamp(1.75rem, 2.6vw, 2.4rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+/* ---------- Reading progress ----------
+   A 2px bar, not a widget. Scaled by JS on scroll; with no JS it simply
+   never grows, and nothing else depends on it. */
+.read-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 60;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background-color: theme("colors.gold.DEFAULT");
+  pointer-events: none;
 }
 
 /* ---------- Partner logo wall ----------
@@ -2658,10 +2747,14 @@
   font-size: 1.0625rem;
   line-height: 1.75;
 }
-.insights-article-prose p + p {
+/* Direct children only (2026-09-08): the key-figure cards render INSIDE
+   this container, so an unscoped `p + p` was applying the article's
+   1.5rem paragraph rhythm to the label inside each card, and
+   `p:first-child` was setting card values at lead-paragraph size. */
+.insights-article-prose > p + p {
   margin-top: 1.5rem;
 }
-.insights-article-prose p:first-child {
+.insights-article-prose > p:first-child {
   font-size: 1.1875rem;
   line-height: 1.65;
   color: theme("colors.ink.DEFAULT");

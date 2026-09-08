@@ -16,6 +16,35 @@ if (document.readyState === 'loading') {
 }
 
 // ---------------------------------------------------------------------------
+// Reading progress (/insights/<slug>/ only — the element exists nowhere else)
+//
+// Deliberately outside the reduced-motion-gated GSAP block below: this isn't
+// motion for its own sake, it's a position indicator, and a reader who has
+// asked for reduced motion still benefits from knowing where they are. It's
+// a transform on a 2px bar (compositor-only, no layout), updated inside
+// requestAnimationFrame so a fast scroll can't queue up work.
+// ---------------------------------------------------------------------------
+const readProgress = document.querySelector('[data-read-progress]');
+if (readProgress) {
+  let ticking = false;
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    readProgress.style.transform = `scaleX(${ratio})`;
+    ticking = false;
+  };
+  const onScroll = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
+}
+
+// ---------------------------------------------------------------------------
 // Motion layer
 //
 // Lenis, GSAP and ScrollTrigger are only ever imported when the user has NOT
