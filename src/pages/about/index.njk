@@ -149,7 +149,7 @@ permalink: /about/
    The dotted-line/dot markup and its GSAP scrub are gone with it; the
    arrival animation is the same index-staggered .fade-up used elsewhere,
    so nothing here depends on JS to become visible. #}
-<section id="journey" class="story-journey-section bg-paper-sunk py-section border-t border-rule" data-stack-outgoing>
+<section id="journey" class="story-journey-section bg-paper-sunk py-section border-t border-rule">
   <div class="shell">
     <div class="page-canvas">
       <span class="eyebrow fade-up">The Journey</span>
@@ -159,7 +159,7 @@ permalink: /about/
 
       <div class="mt-12 md:mt-16">
         {% for t in timeline %}
-        <article class="journey-row">
+        <article class="journey-row" style="--stack-index: {{ loop.index0 }}">
           <div class="journey-copy fade-up" style="animation-delay:{{ loop.index0 * 60 }}ms">
             <p class="journey-year font-display font-light tabular-nums">{{ t.year }}</p>
             <h3 class="mt-4 font-display font-book text-h2 text-ink text-balance max-w-[16ch]">{{ t.label }}</h3>

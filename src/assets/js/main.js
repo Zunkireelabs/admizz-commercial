@@ -615,38 +615,18 @@ if (!prefersReducedMotion) {
     }
 
     // -----------------------------------------------------------------
-    // /about/ — Journey → Three Businesses card-stack handoff.
+    // /about/ — the Journey → Three Businesses section pin is GONE
+    // (2026-09-08). It froze the whole Journey section as a single card
+    // while the next section slid over it, which meant the four milestone
+    // rows inside it could not stack against each other — a pinned
+    // ancestor leaves position:sticky children nothing to scroll within.
     //
-    // The incoming section is already visually a "card" in pure CSS
-    // (rounded top + shadow, main.css) — that part needs no JS and holds
-    // even with motion off. What GSAP adds is timing: pin the outgoing
-    // section briefly once its bottom reaches the viewport bottom, so the
-    // next section's rounded edge visibly slides up and over it instead of
-    // an instant cut. pinSpacing:false — the incoming section is already
-    // next in normal flow, so no extra gap should open up while pinned.
+    // The milestones now stack on each other in pure CSS instead (see
+    // .journey-row in main.css): a stronger use of the same idea, since
+    // the stacking now carries meaning (2015 → today) rather than just
+    // transitioning between two sections. No JS involved, so it survives
+    // reduced-motion and no-JS untouched.
     // -----------------------------------------------------------------
-    const stackOutgoing = document.querySelector('[data-stack-outgoing]');
-    if (stackOutgoing) {
-      // The outgoing section itself shrinks and dims WHILE pinned — not
-      // just sitting static underneath — so the handoff reads as one card
-      // being tucked away behind the next, not a coincidental overlap.
-      gsap.set(stackOutgoing, { transformOrigin: 'top center' });
-      ScrollTrigger.create({
-        trigger: stackOutgoing,
-        start: 'bottom bottom',
-        end: '+=400',
-        pin: true,
-        pinSpacing: false,
-        scrub: true,
-        onUpdate: (self) => {
-          gsap.set(stackOutgoing, {
-            scale: 1 - self.progress * 0.06,
-            opacity: 1 - self.progress * 0.4,
-          });
-        },
-        onLeaveBack: () => gsap.set(stackOutgoing, { scale: 1, opacity: 1 }),
-      });
-    }
   });
 }
 

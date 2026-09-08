@@ -2327,20 +2327,57 @@
    large display heading, supporting copy, and a substantial visual panel
    opposite — alternating sides so the page has rhythm instead of one
    long left-aligned column. */
+/* Sticky card stack (2026-09-08). Each milestone pins under the header and
+   the next one rides up and covers it — a dealt-deck effect, so the
+   stacking itself carries the meaning (2015 -> today) rather than being a
+   transition between two unrelated sections.
+
+   This replaced the GSAP section-level pin that used to freeze the whole
+   Journey section while the next section slid over it. The two are
+   mutually exclusive: a pinned ancestor has stopped scrolling, so
+   position:sticky children inside it have nothing left to stick against.
+   The pin is gone (see main.js) — one strong effect beats two fighting.
+
+   Pure CSS, deliberately: no JS to load, nothing to desync from Lenis, and
+   with scripting off or reduced-motion set it degrades to an ordinary
+   stack of cards rather than breaking.
+
+   --stack-index is set per card in the template; each card pins ~14px
+   lower than the one before so a sliver of the previous stays visible and
+   the pile reads as a deck rather than a rendering glitch. */
 .journey-row {
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(1.75rem, 3.5vw, 3.25rem);
   align-items: center;
-  padding-block: clamp(2.25rem, 4vw, 3.5rem);
-  border-top: 1px solid theme("colors.rule.DEFAULT");
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border-radius: theme("borderRadius.xl");
+  background-color: theme("colors.paper.raised");
+  border: 1px solid theme("colors.rule.DEFAULT");
 }
-.journey-row:first-child { border-top: 0; }
+.journey-row + .journey-row { margin-top: clamp(1.25rem, 2.5vw, 2rem); }
+
 @media (min-width: 900px) {
-  .journey-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  /* Even rows mirror: copy moves to column 2, plate to column 1. */
-  .journey-row:nth-child(even) .journey-copy { order: 2; }
+  .journey-row {
+    grid-template-columns: minmax(0, 27rem) minmax(0, 1fr);
+    /* Sticky only from here up. Below 900px the layout is a single column
+       and each card is taller than most viewports, so pinning them would
+       trap the reader mid-card instead of stacking anything. */
+    position: sticky;
+    top: calc(7rem + (var(--stack-index, 0) * 14px));
+    box-shadow: theme("boxShadow.raised");
+  }
+  /* The last card carries the deepest shadow: by the time it lands the
+     pile beneath it is at its tallest. */
+  .journey-row:last-child { box-shadow: theme("boxShadow.lift"); }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Sticky isn't animation, but pinning content under a reader who asked
+     for less movement is the same class of surprise. Plain stacked cards. */
+  .journey-row { position: static; }
+}
+
 .journey-year {
   font-size: clamp(2.5rem, 5vw, 4rem);
   line-height: 0.95;
