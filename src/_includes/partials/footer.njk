@@ -65,6 +65,13 @@
           </li>
           {% endif %}
           {% endfor %}
+          {# Press isn't in navigation.main -- that array also drives the
+             header's primary nav, and a press/media-kit page doesn't
+             belong at that level of prominence. Footer-only link, same
+             treatment as the other Company items. #}
+          <li>
+            <a href="/press/" class="text-small text-navy-on-muted hover:text-navy-accent transition-colors duration-press ease-signature">Press</a>
+          </li>
         </ul>
       </div>
 
