@@ -59,66 +59,73 @@ permalink: /about/
     </div>
   </div></div>
 
-  {# Proof bento (2026-09-08 v2) — this page previously carried NO evidence
-     at all: no number, no credential, nothing a partner could check. v1 was
-     a flat 4-across strip of small cells; rebuilt against the SaleUnion
-     reference, whose equivalent moment sets its numbers at display scale
-     across mixed-size cards rather than as a uniform row.
-     Deliberately only hard, independently verifiable facts:
-       · 2015 founding year — site.json, from admizz.com itself
-       · 3 businesses — the three ventures this site documents
-       · 9 destinations — destinations.json, real country list
-       · ICEF IAS 6499 — the one independently verified credential in the
-         whole project (docs/01-AUDIT.md §2), verifiable at ICEF's own
-         directory, and scoped correctly: it is held by Admizz Education,
-         which the card states rather than implying group-wide coverage.
-     The admizzeducation-sourced figures (2,000+ students, 95% visa rate)
-     are deliberately NOT here — status:draft self-reported numbers that
-     need their own provenance caption, and already carry one on the
-     homepage. #}
+  {# Proof block (2026-09-08 v3) — v2 was four equal cards with the numbers
+     at display scale, and the client's read was right: "3" and "9" rendered
+     fist-sized are underwhelming, not impressive, and four identical boxes
+     isn't a composition. Rebuilt around the strongest REAL asset this
+     project has — 103 actual partner university marks harvested from
+     admizzeducation.com — which had never appeared on this page at all.
+
+     Attribution matters here: universities.json is source:admizzeducation,
+     status:draft — Admizz's own published partner list, not independently
+     audited — so the caption says so, exactly as the homepage does. The
+     ICEF card beside it is the opposite kind of claim: independently
+     verifiable, with the real verify route attached. Keeping them adjacent
+     but distinct is the honest presentation. #}
   <div class="shell">
     <div class="page-canvas">
       <div class="bento mt-14 md:mt-20">
-        <div class="bento-item fade-up">
-          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">Founded</span>
-          <div>
-            <p class="bento-num font-display font-light tabular-nums text-ink">{{ site.founded }}</p>
-            <p class="mt-3 text-small text-ink-muted">Denver, Colorado &mdash; still the group&rsquo;s headquarters.</p>
-          </div>
-        </div>
 
-        <div class="bento-item bento-item-tint fade-up" style="animation-delay:80ms">
-          <span class="font-mono text-label uppercase tracking-widest text-gold-text">Businesses</span>
+        <div class="bento-item bento-wide fade-up" style="grid-row: span 1;">
           <div>
-            <p class="bento-num font-display font-light tabular-nums text-ink">{{ ventures | length }}</p>
-            <p class="mt-3 text-small text-ink-muted">Preparation, education and work &mdash; run as one group.</p>
-          </div>
-        </div>
-
-        <div class="bento-item bento-item-navy fade-up" style="animation-delay:160ms">
-          <span class="font-mono text-label uppercase tracking-widest text-navy-accent">Destinations</span>
-          <div>
-            <p class="bento-num font-display font-light tabular-nums text-navy-on">{{ destinations.countries | length }}</p>
-            <p class="mt-3 text-small text-navy-on-muted">Study countries served across our university network.</p>
-          </div>
-        </div>
-
-        {# The credential card carries the real verify route, same as
-           /ventures/ — a claim a partner can check in one click is worth
-           more than the same claim stated louder. #}
-        <div class="bento-item fade-up" style="animation-delay:240ms">
-          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">Accreditation</span>
-          <div>
-            <p class="bento-num bento-num-word font-display font-light text-ink">ICEF</p>
-            <p class="mt-3 text-small text-ink-muted">
-              Agency <span class="tabular-nums">IAS&nbsp;6499</span>, held by Admizz Education.
+            <span class="font-mono text-label uppercase tracking-widest text-ink-faint">The network</span>
+            <p class="mt-3 font-display font-light text-h2 text-ink text-balance max-w-[20ch]">
+              <span class="tabular-nums">{{ universities.totalCount }}</span> partner institutions across
+              <span class="tabular-nums">{{ destinations.countries | length }}</span> countries.
             </p>
-            <a href="https://www.icef.com/" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline">
+          </div>
+
+          {# Two marks per country group, across the first five groups — a
+             representative spread rather than a hand-picked "best" set,
+             and it stays correct if the harvested data changes. #}
+          <div class="logo-wall">
+            {% for g in universities.groups | head(5) %}
+              {% for uni in g.universities | head(2) %}
+              <span class="logo-tile" title="{{ uni.name }}">
+                <img src="{{ uni.logo }}" alt="{{ uni.name }}" width="120" height="72" loading="lazy" decoding="async">
+              </span>
+              {% endfor %}
+            {% endfor %}
+          </div>
+
+          <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+            <a href="/ventures/#record-education" class="text-small font-medium text-ink link-underline">See the full network &rarr;</a>
+            <span class="font-mono text-label uppercase tracking-widest text-ink-faint">Published by Admizz Education, as of 2026</span>
+          </div>
+        </div>
+
+        <div class="bento-item bento-item-navy fade-up" style="animation-delay:90ms">
+          <span class="font-mono text-label uppercase tracking-widest text-navy-accent">Accreditation</span>
+          <div>
+            <p class="bento-num bento-num-word font-display font-light text-navy-on">ICEF</p>
+            <p class="mt-3 text-small text-navy-on-muted">
+              Agency <span class="tabular-nums">IAS&nbsp;6499</span>, held by Admizz Education &mdash; verifiable at ICEF directly, not self-reported.
+            </p>
+            <a href="https://www.icef.com/" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center gap-1.5 text-small font-medium text-navy-on link-underline">
               Verify with ICEF
               <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
           </div>
         </div>
+
+        <div class="bento-item bento-item-tint fade-up" style="animation-delay:170ms">
+          <span class="font-mono text-label uppercase tracking-widest text-gold-text">Operating since</span>
+          <div>
+            <p class="bento-num font-display font-light tabular-nums text-ink">{{ site.founded }}</p>
+            <p class="mt-3 text-small text-ink-muted">Founded in Denver, Colorado &mdash; still the group&rsquo;s headquarters, now behind three businesses.</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -166,10 +173,62 @@ permalink: /about/
             {% endif %}
           </div>
 
+          {# Plate: a photo where a meaningful one exists, a DESIGNED DATA
+             PANEL where it doesn't. timeline-2020.jpg was a stock sunset
+             sky and timeline-today.jpg an abstract glass facade — neither
+             said anything about its milestone, and no real Admizz
+             photography exists for them. Rather than swap in more
+             meaningless stock, those two rows now carry the actual data
+             the milestone is about (the real destination list; the real
+             venture list), which is also the device the reference uses:
+             its right-hand panels are designed information, not photos.
+             Replace with real photography if the client supplies it —
+             the photo branch below already handles it. #}
+          {% if t.year == "2020" %}
+          <div class="data-panel data-panel-navy fade-up" style="animation-delay:{{ loop.index0 * 60 + 90 }}ms">
+            <span class="font-mono text-label uppercase tracking-widest text-navy-accent">Where we place students</span>
+            {# Anchors the panel's top — without it the label floated alone
+               above a large void, since the list is bottom-aligned. #}
+            <p class="mt-4 font-display font-light text-navy-on">
+              <span class="bento-num tabular-nums">{{ destinations.countries | length }}</span>
+              <span class="ml-2 text-h4 text-navy-on-muted">study destinations</span>
+            </p>
+            <div class="data-panel-grid">
+              {% for c in destinations.countries %}
+              <span class="data-panel-row">
+                <span aria-hidden="true">{{ c.flag }}</span>
+                <span class="text-small text-navy-on">{{ c.name }}</span>
+              </span>
+              {% endfor %}
+            </div>
+          </div>
+
+          {% elif t.year == "Today" %}
+          <div class="data-panel fade-up" style="animation-delay:{{ loop.index0 * 60 + 90 }}ms">
+            <span class="font-mono text-label uppercase tracking-widest text-ink-faint">The group today</span>
+            <p class="mt-4 font-display font-light text-ink">
+              <span class="bento-num tabular-nums">{{ ventures | length }}</span>
+              <span class="ml-2 text-h4 text-ink-muted">connected businesses</span>
+            </p>
+            <div class="data-panel-list">
+              {% for v in ventures %}
+              <span class="data-panel-item">
+                <span class="font-mono text-small tabular-nums text-navy-soft">{{ v.index }}</span>
+                <span>
+                  <span class="block font-display font-book text-h4 text-ink">{{ v.name }}</span>
+                  <span class="block mt-0.5 font-mono text-label uppercase tracking-widest text-ink-faint">{{ v.vertical }}</span>
+                </span>
+              </span>
+              {% endfor %}
+            </div>
+          </div>
+
+          {% else %}
           <div class="journey-plate fade-up" style="animation-delay:{{ loop.index0 * 60 + 90 }}ms">
             <span class="journey-plate-badge bento-tag" aria-hidden="true">{{ "0" }}{{ loop.index }} / {{ t.year }}</span>
             {% image "src/assets/images/story/" + t.image, t.imageAlt, "(min-width: 900px) 38vw, 92vw" %}
           </div>
+          {% endif %}
         </article>
         {% endfor %}
       </div>

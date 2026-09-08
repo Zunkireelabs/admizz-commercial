@@ -2146,6 +2146,93 @@
   letter-spacing: 0.1em;
 }
 
+/* ---------- Partner logo wall ----------
+   The strongest real asset in the whole project: 103 actual partner
+   university marks, harvested from admizzeducation.com. The audit itself
+   notes this is the single strongest trust element the reference sites
+   use — and it wasn't on /about/ at all, which was carrying four
+   equal-sized number cards instead ("3" and "9" set at display scale
+   read as underwhelming rather than impressive). Logos are mixed aspect
+   ratios and mixed grounds, so each sits contained in its own tile;
+   desaturated at rest so 10 different brand palettes don't fight the
+   page, resolving on hover. */
+.logo-wall {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+@media (min-width: 520px) { .logo-wall { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .logo-wall { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.logo-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0.5rem;
+  aspect-ratio: 5 / 3;
+  border-radius: theme("borderRadius.lg");
+  background-color: theme("colors.white");
+  border: 1px solid theme("colors.rule.DEFAULT");
+}
+.logo-tile img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: grayscale(1);
+  opacity: 0.72;
+  transition: filter theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
+    opacity theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+}
+.logo-tile:hover img { filter: grayscale(0); opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .logo-tile img { transition: none; } }
+
+/* ---------- Data panels ----------
+   The reference pairs each claim with a DESIGNED panel (a chart, a
+   diagram), not a photograph. Two timeline milestones had no meaningful
+   photo available — a stock sunset sky for "Going Global" and an
+   abstract glass facade for "Today" — so they get real data panels
+   instead: the actual destination list and the actual venture list,
+   both read from _data. Better than shuffling stock, and it's real
+   information rather than decoration. */
+.data-panel {
+  border-radius: theme("borderRadius.xl");
+  border: 1px solid theme("colors.rule.DEFAULT");
+  background-color: theme("colors.paper.raised");
+  padding: clamp(1.5rem, 2.5vw, 2rem);
+  aspect-ratio: 4 / 3;
+  display: flex;
+  flex-direction: column;
+}
+.data-panel-navy {
+  background-color: theme("colors.navy.deep");
+  border-color: transparent;
+  color: theme("colors.navy.on");
+}
+.data-panel-grid {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem 1.25rem;
+}
+@media (min-width: 520px) { .data-panel-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.data-panel-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  padding-block: 0.45rem;
+  border-top: 1px solid theme("colors.navy.on-muted / 22%");
+}
+.data-panel:not(.data-panel-navy) .data-panel-row { border-top-color: theme("colors.rule.DEFAULT"); }
+.data-panel-list { margin-top: auto; display: flex; flex-direction: column; }
+.data-panel-item {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding-block: 0.9rem;
+  border-top: 1px solid theme("colors.rule.DEFAULT");
+}
+.data-panel-item:first-child { border-top: 0; }
+
 /* ---------- Journey: alternating claim + visual rows ----------
    Replaces the vertical dotted list. Reference device: a mono eyebrow, a
    large display heading, supporting copy, and a substantial visual panel
