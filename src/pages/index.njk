@@ -856,9 +856,21 @@ permalink: /
        written, unused until now. Featured post gets a wider 16:9 plate and
        runs the width of its column; the other two stack in a narrower,
        smaller-image column beside it — genuine editorial hierarchy, not
-       three identical tiles. #}
+       three identical tiles.
+
+       2026-09-08: this was "3 real posts, presented as 3 — no invented
+       4th" when insights.json had exactly 3 entries — restPosts showed
+       ALL non-featured posts with no cap because there were only 2 of
+       them. That assumption broke the moment more articles existed (now
+       6 total): the uncapped list rendered 5 cramped small-thumbnail rows
+       in a column designed for 2, reported (correctly) as looking broken.
+       This is a homepage TEASER, not the full index — /insights/ already
+       exists for browsing everything, and "View all insights" already
+       links there. head(2) keeps the curated 3-item preview this section
+       was actually designed to look like, regardless of how many articles
+       exist in total. #}
     {% set featuredPost = insights | selectattr("featured") | first %}
-    {% set restPosts = insights | rejectattr("featured") %}
+    {% set restPosts = insights | rejectattr("featured") | head(2) %}
     <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-x-10 gap-y-12">
       {% if featuredPost %}
       <article class="group fade-up">
