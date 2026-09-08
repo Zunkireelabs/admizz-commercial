@@ -1,2 +1,7 @@
 User-agent: *
 Disallow: /
+
+# Disallow: / is correct until launch (CLAUDE.md §6) — do not remove this
+# comment or the Sitemap line below when that flips, a crawler ignores
+# Sitemap: while Disallow: / is active, so this is a no-op until then.
+Sitemap: https://admizz.com/sitemap.xml

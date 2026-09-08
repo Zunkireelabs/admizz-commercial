@@ -86,7 +86,7 @@ permalink: /
         <svg class="absolute -left-16 -top-14 w-[560px] h-[560px] opacity-[0.16] pointer-events-none hidden lg:block -z-10" viewBox="0 0 560 560" aria-hidden="true">
           <defs>
             <pattern id="hero-dots" width="20" height="20" patternUnits="userSpaceOnUse">
-              <circle cx="1.5" cy="1.5" r="1.5" fill="#161B4D"/>
+              <circle cx="1.5" cy="1.5" r="1.5" fill="#0B0F69"/>
             </pattern>
             <clipPath id="hero-dots-circle"><circle cx="280" cy="280" r="280"/></clipPath>
           </defs>
@@ -94,7 +94,7 @@ permalink: /
         </svg>
 
         <span class="eyebrow-pill" data-hero-in>
-          <span class="w-1.5 h-1.5 rounded-full bg-navy"></span>
+          <span class="w-1.5 h-1.5 bg-navy"></span>
           Shaping futures. Building possibilities.
         </span>
 
@@ -124,16 +124,22 @@ permalink: /
     {# Real trust badge — Admizz Education's ICEF accreditation, independently
        verified against ICEF's public API (docs/01-AUDIT.md §2), not a claim
        taken from marketing copy. Anchored to the shell so it aligns with the
-       curve below, positioned over the photo layer via z-index. #}
+       curve below, positioned over the photo layer via z-index.
+       Mobile fix: at the mobile min-h (320px) the CTA row sits near the
+       bottom of this same shell, and this badge's bottom-0 previously
+       landed right on top of it — clipping the primary "Explore our
+       ventures" button. Below md it now sits in normal flow, after the
+       CTAs; only at md+ (where the hero is tall enough for the badge to
+       float clear of the button row) does it switch to absolute. #}
     <a
       href="https://accreditations.icef.com/certificate?id=c8a7212a-a25c-469f-8a7b-2b2f047e8c0c"
       target="_blank"
       rel="noopener noreferrer"
       data-hero-in
       data-motion
-      class="badge-float absolute bottom-0 right-gutter z-10 flex items-center gap-3 rounded-2xl bg-white/95 backdrop-blur-sm shadow-xl border border-rule px-4 py-3 max-w-[240px] hover:shadow-2xl transition-shadow duration-press ease-signature"
+      class="badge-float mt-6 md:mt-0 md:absolute md:bottom-0 right-gutter z-10 flex items-center gap-3 bg-white/95 backdrop-blur-sm shadow-xl border border-rule px-4 py-3 max-w-[240px] hover:shadow-2xl transition-shadow duration-press ease-signature"
     >
-      <span class="shrink-0 w-9 h-9 rounded-full bg-navy/10 flex items-center justify-center text-navy">
+      <span class="shrink-0 w-9 h-9 bg-navy/10 flex items-center justify-center text-navy">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
           <path d="M9 1.5l6 2.25v4c0 4-2.6 6.9-6 8.75-3.4-1.85-6-4.75-6-8.75v-4L9 1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
           <path d="M6.5 9l1.8 1.8L11.5 7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -141,7 +147,7 @@ permalink: /
       </span>
       <span>
         <span class="block text-small font-medium text-ink">ICEF Certified Agency</span>
-        <span class="block text-micro text-ink-faint">Admizz Education &middot; Verified</span>
+        <span class="block text-label text-ink-faint">Admizz Education &middot; Verified</span>
       </span>
     </a>
   </div>
@@ -158,7 +164,7 @@ permalink: /
      sub-pixel rounding at any scale. #}
   <div class="relative mt-4 md:mt-5">
     <svg viewBox="0 0 1440 140" preserveAspectRatio="none" class="block w-full h-[32px] md:h-[48px]" aria-hidden="true">
-      <path d="M0,140 L0,45 C 480,135 900,-5 1440,80 L1440,140 Z" fill="#161B4D"/>
+      <path d="M0,140 L0,45 C 480,135 900,-5 1440,80 L1440,140 Z" fill="#0B0F69"/>
     </svg>
     <div class="bg-navy-deep -mt-2 relative overflow-hidden">
       {# Soft diagonal light sweep — the reference's value band has real
@@ -166,32 +172,281 @@ permalink: /
          single navy fill. A large, heavily blurred gradient shape reads as
          ambient light rather than a hard-edged decoration. #}
       <div class="absolute -top-1/2 -left-1/4 w-[75%] h-[220%] bg-gradient-to-br from-navy-soft/55 via-navy/20 to-transparent rotate-12 blur-3xl pointer-events-none" aria-hidden="true"></div>
-      <div class="shell py-5 md:py-6 relative z-10">
-        <div class="grid grid-cols-1 md:grid-cols-3 divide-y divide-navy-on-muted/15 md:divide-y-0 md:divide-x">
-          {% set heroValues = [
-            { icon: "globe", title: "Global Reach", text: "Opportunities worldwide" },
-            { icon: "people", title: "Student First", text: "Guiding every step" },
-            { icon: "rocket", title: "Future Ready", text: "Careers that grow" }
-          ] %}
-          {% for v in heroValues %}
-          <div class="flex items-center gap-4 py-5 md:py-0 md:px-8 first:pt-0 last:pb-0 md:first:pl-0 md:last:pr-0 fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
-            <span class="shrink-0 text-navy-on-muted">
-              {% if v.icon == "globe" %}
-              <svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 10h15M10 2.5c2.5 2 2.5 13 0 15M10 2.5c-2.5 2-2.5 13 0 15" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-              {% elif v.icon == "people" %}
-              <svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="7.5" cy="6.5" r="2.75" stroke="currentColor" stroke-width="1.3"/><path d="M2 17c0-3 2.5-5 5.5-5s5.5 2 5.5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="14" cy="7.5" r="2.1" stroke="currentColor" stroke-width="1.2" opacity="0.7"/><path d="M12.5 17c.3-2.2 2-4 4-4.2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/></svg>
-              {% else %}
-              <svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2c2.2 1.6 3.5 4.4 3.5 7.5 0 1.7-.4 3.2-1 4.3l-2.5 2.7-2.5-2.7c-.6-1.1-1-2.6-1-4.3C6.5 6.4 7.8 3.6 10 2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="10" cy="8.5" r="1.4" stroke="currentColor" stroke-width="1.1"/><path d="M7 13.5l-2 3.5M13 13.5l2 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-              {% endif %}
-            </span>
-            <span>
-              <span class="block text-body font-medium text-navy-on">{{ v.title }}</span>
-              <span class="block text-small text-navy-on-muted">{{ v.text }}</span>
-            </span>
+      <div class="shell py-6 md:py-7 relative z-10">
+        {# Real proof, not decoration — replaces the old "Global Reach / Student
+           First / Future Ready" icon strip, which named zero facts. These are
+           Admizz Education's own published figures (src/_data/stats.json,
+           source: admizzeducation, status: draft), attributed explicitly —
+           this is the group site reporting a venture's results, not claiming
+           them as the whole group's. Caption pattern borrowed from scaler.com's
+           stat block ("Based on the 2026 Scaler career transition assessment")
+           — a number is only as credible as who it's attributed to. #}
+        <span class="eyebrow-on-navy fade-up">Across Admizz Education</span>
+        <div class="mt-5 grid grid-cols-2 md:grid-cols-4 divide-y divide-navy-on-muted/15 md:divide-y-0 md:divide-x">
+          {% for s in stats.headline %}
+          <div class="py-4 md:py-0 md:px-8 first:pt-0 md:first:pl-0 last:pb-0 md:last:pr-0 fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
+            <span class="block font-display font-light text-h3 text-navy-on">{{ s.value }}</span>
+            <span class="block mt-1 text-small text-navy-on-muted">{{ s.label }}</span>
           </div>
           {% endfor %}
         </div>
+        <p class="mt-6 font-mono text-label uppercase tracking-widest text-navy-on-muted/70 fade-up">
+          Figures published by Admizz Education, as of 2026
+        </p>
       </div>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ 01 — WHAT ADMIZZ IS
+   Positioning section — explains WHY the three businesses are one group,
+   not just that they are. Doesn't exist as its own section pre-rebuild;
+   was only implied in the hero subhead.
+
+   2026-08-31 v3: rebuilt against the same reference mockup — the three
+   venture "preview cards" now live INSIDE this section (photo, number,
+   stage, name, one-liner sourced from the venture's own existing
+   verticalLine field — nothing new written), plus a small vertical
+   pathway diagram on the right, echoing the bigger Ecosystem-pathway
+   section further down without duplicating it. This does NOT remove the
+   bigger Prepare/Study/Work sticky section below — open question, still
+   flagged, on whether that stays once this preview exists.
+
+   2026-09-02: moved to come right after the hero (was second, after "The
+   Shift") on explicit request — content and styling otherwise untouched,
+   this is a pure section-order swap. The id="what-admizz-is" anchor and
+   its own internal links are unaffected; "The Shift" section's own
+   "Explore how we help" link no longer points here (see that section,
+   now below, for why). #}
+<section id="what-admizz-is" class="bg-paper-sunk py-section-sm border-b border-rule">
+  <div class="shell">
+    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] gap-10 lg:gap-16">
+      <div class="fade-up">
+        <span class="eyebrow">What Admizz Is</span>
+        <h2 class="mt-4 font-display font-light text-h1 text-ink max-w-[12ch] text-balance">
+          One group. <em class="italic text-navy font-book">Three connected businesses.</em>
+        </h2>
+      </div>
+      <div class="fade-up" style="animation-delay:90ms">
+        <p class="text-body-lg text-ink-muted leading-relaxed max-w-measure">
+          Admizz Institute, Admizz Education and Admizz Workforce Solutions each answer to a different market &mdash; test preparation, international admissions, and workforce development are not the same business, and we don&rsquo;t run them as one.
+        </p>
+        <p class="mt-4 text-body text-ink-muted leading-relaxed max-w-measure">
+          What connects them is where they sit on the same line: a test score determines what a university application can achieve; a university decision shapes the career that follows it; a career runs on skills that keep changing after graduation. Most organizations serve one point on that line. Admizz was built to serve more than one of them, without pretending the three are interchangeable.
+        </p>
+        <a href="/ventures/" class="mt-6 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
+          Explore our businesses
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+
+    {# Preview row: 3 venture cards + a mini pathway diagram alongside.
+       All 3 photos are user-supplied, explicitly AI-generated images
+       (against this project's own "no AI-look imagery" rule in
+       docs/00-BRIEF.md §13 — overridden here on explicit instruction,
+       same pattern as the ecosystem.jpg exceptions elsewhere, NOT a
+       default for future sessions to repeat unprompted). #}
+    {% set previewImages = {
+      "institute": { file: "preview/institute-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
+      "education": { file: "preview/education-preview.jpg", alt: "Student walking outside a university building with a backpack" },
+      "workforce": { file: "preview/workforce-preview.jpg", alt: "Three colleagues talking in a modern office" }
+    } %}
+    {# 2026-09-02: cards used to sit in one shared .fade-up wrapper, so all
+       three photos/labels popped in together as a single flat block --
+       a design critique read this as "just content," no broadcast feel.
+       Each card now gets its own GSAP-driven reveal (data-venture-preview-
+       card, wired in main.js): index-staggered fade + a left-to-right
+       clip-path wipe on the photo, same hide-then-reveal idiom as the
+       hero/statement-band GSAP blocks elsewhere (visible by default in
+       plain CSS; GSAP hides then reveals only once it has actually
+       loaded). The mini pathway keeps its own simple .fade-up -- this
+       treatment is for the cards specifically. #}
+    <div class="mt-14 md:mt-16 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] gap-x-10 gap-y-10 items-start">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-10">
+        {% for v in ventures %}
+        {% set img = previewImages[v.id] %}
+        <div class="venture-preview-card" data-venture-preview-card>
+          {# 2026-09-06: numbered service-card treatment (reference: SaleUnion) —
+             index + stage combined into one compact mono line ("01 / PREPARE",
+             was a large display numeral beside a separate mono label), photo
+             moved up to lead the card (was name -> photo; now photo -> name),
+             and the closing link upgraded from underlined text to a small
+             solid pill button. Same data, same links, same photos throughout. #}
+          <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ v.index }} / {{ v.stage }}</span>
+          <a href="{{ v.href if v.href != '#' else '/ventures/' }}" class="venture-preview-photo mt-3 block relative overflow-hidden bg-navy-deep aspect-[3/2]">
+            <div class="absolute inset-0 [&_picture]:contents [&_picture]:block [&_picture]:h-full [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+              {% image "src/assets/images/" + img.file, img.alt, "(min-width: 1024px) 22vw, (min-width: 640px) 30vw, 80vw" %}
+            </div>
+          </a>
+          <h3 class="mt-4 font-display font-light text-h4 text-ink text-balance">{{ v.name }}</h3>
+          <p class="mt-2 text-small text-ink-muted leading-relaxed">{{ v.verticalLine }}</p>
+          <a href="/ventures/#record-{{ v.id }}" class="btn-card mt-4">
+            Learn more
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+
+      {# Mini pathway — echoes the bigger Ecosystem-pathway section further
+         down (same 3 real stages, same gold-dot idiom) at a much smaller
+         scale, as a compact index rather than a duplicate of that section. #}
+      <div class="hidden lg:flex flex-col items-start gap-6 pl-8 border-l border-rule self-stretch justify-center fade-up" style="animation-delay:140ms">
+        {% for v in ventures %}
+        <div class="flex items-center gap-2.5">
+          <span class="w-1.5 h-1.5 bg-gold" aria-hidden="true"></span>
+          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">{{ v.stage }}</span>
+        </div>
+        {% if not loop.last %}<span class="w-px h-6 bg-rule ml-[3px]" aria-hidden="true"></span>{% endif %}
+        {% endfor %}
+        <span class="w-px h-6 bg-rule ml-[3px]" aria-hidden="true"></span>
+        <div class="flex items-center gap-2.5">
+          <span class="w-1.5 h-1.5 bg-navy-on-muted/50" aria-hidden="true"></span>
+          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">Opportunity</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ 02 — THE SHIFT
+   New 2026-08-31 (homepage-narrative rebuild). Originally the opening move
+   of the homepage narrative, right after the hero: the world Admizz
+   operates in, before Admizz itself. Moved to second position 2026-09-02
+   (explicit request) — "What Admizz Is" now comes first instead. Content
+   and styling below are otherwise unchanged; only the closing link's
+   target changed (see that link's own comment).
+
+   2026-08-31 v3: rebuilt against a reference mockup (user-supplied
+   screenshot, same copy already written here, richer layout) — added the
+   eyebrow, the numbered "what's changing" breakdown, a background world
+   map, and a closing link.
+
+   v4 CORRECTION: the first pass reused the hero's plain dot-grid CIRCLE —
+   just a blob of dots, not a world map. Rebuilt with a real world outline
+   (MIT-licensed, simplemaps.com) driving a CSS mask, but that produced a
+   flat RECTANGLE (a map), not a globe.
+
+   v5: tried a round, shaded globe (bleeding off the section's right edge)
+   after v4's flat map wasn't right either.
+
+   v6: v5's revert was misread as "delete the map" instead of "go back to
+   the dotted world MAP version" — restored the flat dotted world map
+   (world-map-dots, same as v4), positioned in the open space to the right
+   of the two-column grid so it doesn't overlap the text now that the
+   column widths/breakpoint are actually correct (see the placement fixes
+   made to this section since v5). The tightened scale (narrower headline
+   column, smaller list type/spacing) from v5 stays.
+
+   v7: interactive globe (cobe) — superseded by v8, kept alive by moving
+   it to the Academic Network section further down this page instead of
+   deleting it (same markers, same JS hook, just relocated — see that
+   section for why it fits better there: it's literally partner-country
+   capitals, so it belongs next to the partner-network content, not here).
+
+   v8 (2026-09-06): globe replaced with a short muted looping video of two
+   people in conversation — reference: SaleUnion's "Our Impact" video
+   panel. Section restructured from 2 narrow text columns (with the globe
+   floating decoratively off to the side, xl+ only) into text-stack-left /
+   real-video-panel-right, matching that reference's actual proportions
+   instead of keeping the video as a small decorative extra. Video is
+   stock footage, cropped from a portrait source to this landscape frame
+   (verified across the whole clip that both people stay in frame, not
+   just the first frame) and stripped of audio — ambient only, autoplay +
+   loop + muted, no sound anywhere on this page. #}
+<section class="relative overflow-hidden bg-paper py-section-sm border-b border-rule">
+  {# 2026-09-06 correction: reverted to the ORIGINAL two-column layout
+     (text | "what's changing" list) with the media element positioned
+     exactly where the globe used to sit — same absolute slot, same size,
+     same xl:block-only visibility. An earlier pass restructured this into
+     a full-width video-panel layout, which was the wrong call: the actual
+     ask was "keep this section's presentation exactly as it is, just
+     swap the globe for the video" — not a layout rebuild. #}
+  {# Same right-side slot/size the globe occupied (450px square footprint,
+     xl:block only), but NOT forced into the globe's circular mask — a
+     landscape video of two people cropped into a circle would cut off
+     faces/chins unpredictably as object-cover centers within a square.
+     Kept as a real rectangle instead, vertically centered in that same
+     450px-tall footprint, which is what "same presentation" should
+     actually mean for video content rather than literal shape-matching. #}
+  <div class="absolute right-8 top-1/2 -translate-y-1/2 w-[450px] h-[450px] hidden xl:flex items-center" aria-hidden="true">
+    {# Video, muted + looping, no controls needed for a 2.7s ambient loop.
+       Cropped from a portrait source to 16:9, verified across the whole
+       clip (not just one frame) that both people stay fully in shot.
+       NOT the `autoplay` HTML attribute — that starts playback before any
+       JS (including the reduced-motion check every other animation on
+       this site respects) can run; this inline, synchronous script gates
+       playback on prefers-reduced-motion the same way main.js never even
+       loads cobe for those visitors. #}
+    <video
+      id="shift-video"
+      class="w-full aspect-video object-cover bg-navy-deep shadow-raised"
+      src="/assets/video/the-shift-team.mp4"
+      poster="/assets/images/homepage/the-shift-poster.jpg"
+      loop muted playsinline
+    ></video>
+  </div>
+  <script>
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var __shiftVideo = document.getElementById('shift-video');
+      if (__shiftVideo) __shiftVideo.play();
+    }
+  </script>
+
+  <div class="shell relative z-10 grid grid-cols-1 md:grid-cols-[minmax(0,26rem)_minmax(0,15.5rem)] gap-x-12 gap-y-8 md:items-center">
+    <div>
+      <span class="eyebrow fade-up">The Shift</span>
+      {# Was a <p> — this is the section's actual heading (h1 above, h3s
+         below in the "what's changing" breakdown), so it was skipping
+         straight from h1 to h3 with no h2 in between. Promoted to h2 with
+         no class changes, so the visual size/weight is unchanged. #}
+      <h2 class="mt-3 fade-up font-display font-light text-[clamp(1.5rem,1.1rem+1.8vw,2.3rem)] leading-[1.15] text-ink max-w-[20ch] text-balance" style="animation-delay:60ms">
+        Education is more global. Careers are less linear. The skills a job needs can shift <em class="italic text-navy font-book">faster</em> than a degree can be finished.
+      </h2>
+      <span class="block mt-5 w-10 h-px bg-gold" aria-hidden="true"></span>
+      {# Was text-small (13px) -- every sibling section-intro paragraph on
+         this page (hero, "What Admizz Is", etc.) uses text-body-lg for this
+         exact role; this one was the inconsistent outlier, which is why it
+         read as "not visible properly" next to the huge heading above it.
+         Matched to the sitewide convention instead of one-off darkening,
+         which would have made it inconsistent in the other direction (every
+         sibling keeps text-ink-muted, not full ink, at this larger size). #}
+      <p class="mt-4 text-body-lg text-ink-muted max-w-[36ch] fade-up" style="animation-delay:120ms">
+        For most people, the constraint isn&rsquo;t access anymore &mdash; it&rsquo;s knowing what comes next, and having a real way to prepare for it.
+        Admizz operates across the three places that question actually gets answered: preparation, education, and work.
+      </p>
+      {# Was #what-admizz-is -- that section is now ABOVE this one (see the
+         2026-09-02 note on this section's own header comment), so the old
+         target would scroll backward up the page. Repointed to the
+         Ecosystem/ventures section further down instead, keeping this a
+         genuine "keep scrolling to learn more" link. #}
+      <a href="#ventures" class="mt-4 inline-flex items-center gap-2 text-small font-medium text-navy fade-up" style="animation-delay:170ms">
+        Explore how we help
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    {# The "what's changing" breakdown — three one-line elaborations of the
+       headline statement above, not new claims about Admizz itself.
+       Dividers between items are a dotted rule (border-dotted), matching
+       the reference exactly — NOT the solid .border-rule hairline used
+       everywhere else on this page. #}
+    <div class="flex flex-col gap-4 fade-up" style="animation-delay:100ms">
+      {% set shifts = [
+        { title: "Education is changing.", text: "More options, more destinations, more complexity." },
+        { title: "Careers are changing.", text: "Paths aren't fixed anymore. People move, pivot and grow." },
+        { title: "Skills are changing.", text: "What you learn today may not be enough tomorrow." }
+      ] %}
+      {% for s in shifts %}
+      <div class="flex gap-3 pt-4 border-t border-dotted border-ink-faint/50 first:pt-0 first:border-t-0">
+        <span class="font-mono text-label tabular-nums text-navy-soft shrink-0">0{{ loop.index }}</span>
+        <div>
+          <h3 class="font-display font-book text-body text-ink">{{ s.title }}</h3>
+          <p class="mt-1 text-small text-ink-muted leading-relaxed">{{ s.text }}</p>
+        </div>
+      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
@@ -213,10 +468,10 @@ permalink: /
        right of the shell — that put real distance between a line and the
        heading it supports, reading as orphaned rather than connected. #}
     <div class="max-w-[42rem] fade-up">
-      <span class="eyebrow">One Ecosystem</span>
-      <h2 class="mt-3 font-display font-light text-h2 text-ink">Many ways forward.</h2>
+      <span class="eyebrow">Prepare / Study / Work</span>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink">Three businesses. Real ground covered.</h2>
       <p class="mt-4 text-body-lg text-ink-muted max-w-measure-tight">
-        Three ventures, three stages of the same journey — from readiness, to admission, to career.
+        Each of the three below solves a different problem, for a different audience &mdash; not three steps of one script.
       </p>
     </div>
   </div>
@@ -226,7 +481,344 @@ permalink: /
   {% include "partials/ecosystem-journey.njk" %}
 </section>
 
+{# ============================================================ 04 — OUR EXPERTISE
+   Rebuilt 2026-09-01 (was a click-to-expand row accordion, see git history
+   for that version). Now 4 photo cards that flip to a description panel on
+   hover — desktop only, since that's a real hover gesture; touch devices
+   tap instead, detected via matchMedia('(hover: none)') inside Alpine
+   rather than assuming touch = mobile width. Reuses the exact preview
+   photos already downloaded for the ventures section above (institute/
+   education/workforce-preview.jpg) — no new images sourced. Four
+   categories, not six: verified against ventures.json's actual
+   descriptions — test prep, admissions counseling, visa/scholarship
+   support, and workforce development are the only capabilities with real
+   copy behind them anywhere in this repo. Admissions & Counseling and
+   Visa & Scholarship Support both sit under Admizz Education, so they
+   share education-preview.jpg — the same grouping the venture data itself
+   uses, not a mismatch. Career Development and Learning & Training (from
+   the brief's example list) are still NOT included — no distinct,
+   verifiable service exists for either beyond what Workforce Development
+   already covers. #}
+<section class="bg-paper py-section-sm md:py-section border-t border-rule">
+  <div class="shell">
+    <div class="max-w-[42rem] fade-up">
+      <span class="eyebrow">Our Expertise</span>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink">What Admizz actually does.</h2>
+    </div>
+
+    {# Card-specific portrait photos (2026-09-01) — one distinct photo per
+       expertise category rather than sharing the 3 venture-level photos
+       used elsewhere on the page. User-supplied AI-generated images (same
+       exception basis as preview/*.jpg and ecosystem/*.jpg above — see
+       those comments), chosen/regenerated specifically for this card's
+       native 3:4 portrait aspect (source is 1086x1448, exact 3:4) so
+       object-cover needs no meaningful crop. Keyed by expertise index, not
+       ventureId, since 02/03 both belong to Admizz Education but now get
+       their own distinct photo instead of sharing one. #}
+    {% set expertisePhotos = {
+      "01": { file: "expertise/test-preparation.jpg", alt: "A student wearing headphones studying at a desk covered in handwritten notes and practice papers" },
+      "02": { file: "expertise/admissions-counseling.jpg", alt: "A counselor pointing at a university shortlist on a laptop while a student looks on, passport on the table" },
+      "03": { file: "expertise/visa-scholarship.jpg", alt: "A student reviewing a scholarship award letter and a visa application, passport on the desk" },
+      "04": { file: "expertise/workforce-development.jpg", alt: "A job coach and a colleague using a wheelchair reviewing a resume together at an office table" }
+    } %}
+    {% set expertise = [
+      { index: "01", name: "Test Preparation", ventureId: "institute", venture: "Admizz Institute", text: "Structured preparation for IELTS, PTE, SAT, GRE and GMAT — the tests that determine what an application can achieve before it's even submitted." },
+      { index: "02", name: "Admissions & Counseling", ventureId: "education", venture: "Admizz Education", text: "Choosing a destination, shortlisting institutions, and building an application around a student's actual academic profile, not a template." },
+      { index: "03", name: "Visa & Scholarship Support", ventureId: "education", venture: "Admizz Education", text: "Guidance through visa applications and scholarship opportunities — the practical steps that stand between an offer and actually enrolling." },
+      { index: "04", name: "Workforce Development", ventureId: "workforce", venture: "Admizz Workforce Solutions", text: "Supported employment, job coaching and career-transition guidance, focused on vocational rehabilitation for individuals with disabilities." }
+    ] %}
+    <div class="expertise-grid mt-10 md:mt-12 fade-up" style="animation-delay:90ms">
+      {% for e in expertise %}
+      {% set img = expertisePhotos[e.index] %}
+      {# 2026-09-06: replaced the hover/tap flip (photo face <-> separate
+         opaque panel) with a single static face — reference: SaleUnion's
+         case-study cards, where badge/heading/description/CTA all sit
+         directly over the photo, always visible, nothing hidden behind an
+         interaction. Badge position and index/name are untouched; the
+         description and CTA (previously only reachable via the flip) now
+         live in the same footer, over a deepened scrim so the extra text
+         stays readable against the photo. Alpine touch-detection is gone
+         with the flip it existed to support. #}
+      <a href="/ventures/#record-{{ e.ventureId }}" class="expertise-card group">
+        <div class="absolute inset-0 transition-transform duration-slow ease-signature group-hover:scale-105 [&_picture]:contents [&_picture]:block [&_picture]:h-full [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+          {% image "src/assets/images/" + img.file, img.alt, "(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 90vw" %}
+        </div>
+        <div class="expertise-card-scrim" aria-hidden="true"></div>
+        <span class="expertise-card-badge">{{ e.venture }}</span>
+        <div class="expertise-card-footer">
+          <span class="font-mono text-small tabular-nums text-navy-on-muted">{{ e.index }}</span>
+          <h3 class="mt-1 font-display font-light text-h4 text-navy-on text-balance">{{ e.name }}</h3>
+          <p class="mt-2 text-small text-navy-on-muted leading-relaxed">{{ e.text }}</p>
+          <span class="btn-card-on-navy mt-3">
+            Learn more
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ============================================================ 05 — VENTURES COVERFLOW
+   2026-09-02: removed the "Ecosystem pathway" diagram (Potential ->
+   Preparation -> Education -> Skills -> Work -> Opportunity) that used to
+   sit here, on user direction after a design critique flagged the same
+   three ventures being told four times in a row before the footer (preview
+   cards above -> the sticky "ecosystem-journey" record -> this pathway
+   diagram -> this coverflow). The pathway and the coverflow covered nearly
+   identical ground; this one survives because dropping the pathway (navy)
+   instead of the coverflow (paper) keeps the paper/navy section rhythm
+   intact — removing the coverflow instead would have put this section's
+   navy neighbors (the stat band above / "What We Believe" below) directly
+   back-to-back, the exact "too much blue" problem already fixed once
+   before (see the coverflow comment below). If this trade doesn't read
+   well in practice, the removed pathway markup is recoverable from git
+   history (redesign/homepage-narrative branch, commit before 2026-09-02).
+
+   Original 2026-08-31 note on this section, still accurate: adapted from a
+   React/shadcn coverflow-carousel component (drag-to-browse, 3D
+   perspective tilt on off-center cards). This site has no React — ported
+   only the actual mechanics (pointer-drag tracking, velocity-based flick,
+   the per-card 3D transform math, a requestAnimationFrame easing settle,
+   keyboard arrow nav) into vanilla JS (main.js, guarded by
+   `[data-coverflow]`).
+
+   Content: the same 3 real venture photos already used elsewhere on this
+   page (institute/education/workforce-preview.jpg), captioned with each
+   venture's real name/stage/verticalLine — NOT the source component's demo
+   content, which used random stock photos captioned with entirely
+   fabricated "album" metadata (Producer, Length, Year).
+
+   Only 3 real slides exist, fewer than this component pattern is usually
+   built for — loop math still works correctly at any count, verified.
+
+   2026-09-02: hidden on explicit request, same "if false" wrapper pattern
+   already used elsewhere on this page (see "Our Story" section
+   history) to disable a section without deleting it. The paper/navy
+   rhythm concern in the note above no longer applies to hiding THIS
+   section specifically — the section directly above (Our Expertise) is
+   paper, and the section below (What We Believe) is navy, so removing
+   this one just leaves a normal paper-to-navy transition, not two navy
+   sections back to back. Re-enable by removing this wrapper. #}
+{% if false %}
+<section class="bg-paper pt-section-sm pb-10 md:pb-12 border-b border-rule">
+  <div class="shell">
+    <div class="max-w-[42rem] fade-up">
+      <span class="eyebrow">Our Ventures, Up Close</span>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink">Drag or scroll through the three.</h2>
+    </div>
+  </div>
+
+  {% set coverflowImages = {
+    "institute": { file: "preview/institute-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
+    "education": { file: "preview/education-preview.jpg", alt: "Student walking outside a university building with a backpack" },
+    "workforce": { file: "preview/workforce-preview.jpg", alt: "Three colleagues talking in a modern office" }
+  } %}
+  <div class="coverflow mt-12 md:mt-16 fade-up" data-coverflow style="animation-delay:90ms; --cf-card: clamp(180px, 30vw, 340px);">
+    <div class="coverflow-frame" data-coverflow-frame tabindex="0" role="region" aria-roledescription="carousel" aria-label="Admizz ventures">
+      <div class="coverflow-track" data-coverflow-track>
+        {% for v in ventures %}
+        {% set img = coverflowImages[v.id] %}
+        <div class="coverflow-card" data-coverflow-card role="group" aria-roledescription="slide" aria-label="{{ loop.index }} of {{ ventures.length }}">
+          <div class="[&_picture]:contents [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+            {% image "src/assets/images/" + img.file, img.alt, "340px" %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <p class="coverflow-hint mt-4 text-center font-mono text-label uppercase tracking-widest text-ink-faint" data-coverflow-hint aria-hidden="true">Drag or scroll to explore</p>
+  </div>
+
+  <div class="shell mt-4">
+    <div class="text-center" data-coverflow-caption>
+      {% for v in ventures %}
+      <div class="coverflow-caption-item {{ '' if loop.index0 == 0 else 'hidden' }}" data-coverflow-caption-item data-index="{{ loop.index0 }}">
+        <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ v.stage }} &middot; {{ v.vertical }}</span>
+        <h3 class="mt-1.5 font-display font-book text-h4 text-ink">{{ v.name }}</h3>
+        <p class="mt-1.5 text-small text-ink-muted max-w-[38ch] mx-auto">{{ v.verticalLine }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="coverflow-dots mt-5 flex items-center justify-center gap-2.5" data-coverflow-dots role="tablist" aria-label="Choose a venture">
+      {% for v in ventures %}
+      <button
+        type="button"
+        class="coverflow-dot {{ 'is-active' if loop.index0 == 0 }}"
+        data-coverflow-dot
+        data-index="{{ loop.index0 }}"
+        role="tab"
+        aria-selected="{{ 'true' if loop.index0 == 0 else 'false' }}"
+        aria-label="Show {{ v.name }}"
+      ></button>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ============================================================ 06 — WHAT WE BELIEVE
+   Revived and rewritten from the disabled "Statement band" (previously
+   wrapped in {% if false %}, hidden 2026-08-25). Same navy-band visual
+   language, new job: a real point of view, not a generic mission quote.
+   Three concise principles, each one sentence — deliberately not slogans
+   ("unlock your potential" etc, banned by the brief). Grounded in what's
+   already established across ventures.json/marketContext.json, not new
+   claims.
+
+   2026-08-31 v2: was an equal 3-column grid — the exact "sameness" pattern
+   flagged as flat/templated. Reworked into an asymmetric 5/7-column split:
+   principle 01 gets a raised, larger panel of its own (the one this project
+   treats as foundational — everything else follows from taking preparation
+   seriously); 02 and 03 stack smaller beside it. Grain texture replaces the
+   section's previous plain gradient-only surface. #}
+<section class="beliefs-section relative overflow-hidden bg-navy-deep py-section-sm">
+  {% include "partials/grain-texture.njk" %}
+  <div class="beliefs-glow absolute -bottom-1/3 -right-1/4 w-[70%] h-[200%] bg-gradient-to-tl from-navy-accent/40 via-navy-soft/15 to-transparent -rotate-12 blur-3xl pointer-events-none" aria-hidden="true"></div>
+  <div class="shell relative">
+    <span class="eyebrow-on-navy fade-up">What We Believe</span>
+    {# Stacked-deck idle state (2026-09-01): 02/03 sit visually pulled back
+       on top of 01's box via `transform` only — grid placement never
+       changes, so the fan-out on hover is a pure transform transition,
+       never a layout jump. Desktop/tablet (>=768px) only; mobile has no
+       hover, so it stays the plain flat stack (main.css gates this behind
+       a min-width media query). #}
+    {# 2026-09-06: added an icon-in-circle badge per belief (reference:
+       SaleUnion's icon-badge trust-pillar row) and lightened the panel's
+       resting-state chrome (was a constant tinted background + visible
+       border even at rest — now that only appears on hover, so the panel
+       reads closer to SaleUnion's plain/minimal look by default). The
+       asymmetric layout, stacked-deck cascade, hover fan-out and per-panel
+       hover lift are all UNCHANGED — this is a skin change on top of the
+       existing interaction, not a rebuild of it. Icons are chosen to match
+       what each belief actually says, not decorative filler: a target for
+       "not a formality" (precision), a trajectory arrow for "lead
+       somewhere," and two overlapping rings for "close gaps." #}
+    <div class="beliefs-stack mt-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start">
+      <div class="belief-panel belief-panel-featured md:col-span-5 fade-up" style="animation-delay:80ms">
+        <span class="belief-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.4"/>
+            <circle cx="9" cy="9" r="3.5" stroke="currentColor" stroke-width="1.4"/>
+            <circle cx="9" cy="9" r="0.75" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="block mt-4 font-mono text-small tabular-nums text-navy-accent">01</span>
+        <h3 class="mt-2 font-display font-light text-h2 text-navy-on max-w-[14ch] text-balance">Preparation is not a formality.</h3>
+        <p class="mt-4 text-body text-navy-on-muted leading-relaxed max-w-[34ch]">A test score or an application isn&rsquo;t a checkbox &mdash; it&rsquo;s the thing that decides which doors are actually open.</p>
+      </div>
+      <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 md:mt-10">
+        {% set beliefs = [
+          { title: "Education should lead somewhere.", text: "A university choice is a career decision made early. We treat it as one, not as an admissions transaction.", icon: '<path d="M4 14L14 4M14 4H6M14 4V12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>' },
+          { title: "Skills close gaps services alone don't.", text: "Access to a program is a start. What a person can actually do with it afterward is the part that's easy to overlook.", icon: '<circle cx="6.5" cy="9" r="4" stroke="currentColor" stroke-width="1.4"/><circle cx="11.5" cy="9" r="4" stroke="currentColor" stroke-width="1.4"/>' }
+        ] %}
+        {% for b in beliefs %}
+        <div class="belief-panel belief-panel-stack-{{ loop.index }} fade-up" style="animation-delay:{{ loop.index0 * 90 + 170 }}ms">
+          <span class="belief-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">{{ b.icon | safe }}</svg>
+          </span>
+          <span class="block mt-3 font-mono text-small tabular-nums text-navy-accent">0{{ loop.index + 1 }}</span>
+          <h3 class="mt-2 font-display font-light text-h3 text-navy-on max-w-[16ch] text-balance">{{ b.title }}</h3>
+          <p class="mt-3 text-small text-navy-on-muted leading-relaxed max-w-[32ch]">{{ b.text }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ ACADEMIC NETWORK SPOTLIGHT
+   Replaces the full country-accordion (moved to /ventures/'s Admizz
+   Education record 2026-09-01 -- it's that venture's own proof point, not
+   a whole-group claim, and belongs on that record rather than the
+   homepage). Rillet.com-style flat logo grid: one flat set, no country
+   grouping/accordion, real color logos, no name text under them.
+
+   Selection is a curated sample, NOT a ranking -- there is no ranking
+   data (no QS/THE score, no admit rate) behind these 104 institutions, so
+   nothing here claims "best" or "top". Picked for name recognition only,
+   at least one per country so no country is invisible, all pulled
+   directly from universities.json (nothing invented). Full real list of
+   104 stays one click away via the link below, not hidden.
+
+   2026-09-06: the interactive globe (cobe) that used to live in "The
+   Shift" section moved here — same markup, same JS hook (main.js selects
+   by [data-globe]/[data-globe-fallback], not by position, so relocating
+   it needed no JS changes). This is genuinely a better home for it: the
+   globe's markers are real Admizz partner-country capitals, so it now
+   sits directly beside the section that's actually about the partner
+   network, instead of floating decoratively beside unrelated copy. #}
+<section class="relative overflow-hidden bg-paper py-section-sm md:py-section border-t border-rule">
+  <div class="absolute right-8 top-24 w-[380px] h-[380px] hidden xl:block" aria-hidden="true">
+    <div class="world-map-dots absolute inset-0 opacity-[0.42] pointer-events-none" data-globe-fallback></div>
+    <canvas class="globe-canvas absolute inset-0 w-full h-full opacity-0" data-globe></canvas>
+  </div>
+  <div class="shell relative z-10">
+    <div class="max-w-[42rem] fade-up">
+      <span class="eyebrow">Global Network</span>
+      <h2 class="mt-3 font-display font-light text-h2 text-ink">{{ universities.totalCount }} partner institutions, {{ universities.groups.length }} countries.</h2>
+      <p class="mt-4 text-body-lg text-ink-muted max-w-measure-tight">
+        A look inside the network behind Admizz Education's admissions work &mdash; one part of what one of the group's three businesses has built.
+        Figures and partner names published by Admizz Education, as of 2026.
+      </p>
+    </div>
+
+    {# Data note on one entry below: universities.json records "Washington
+       University" plainly, but its logo file actually reads "Washington
+       University of Science and Technology" — a different, real
+       institution from the famous St. Louis one. That fuller name is used
+       here instead of the shorter data-file name, so the tile can't be
+       misread as the well-known university it isn't. #}
+    {% set spotlight = [
+      { flag: "🇨🇦", name: "University of Toronto", logo: "/assets/images/universities/canada/university-of-toronto.webp" },
+      { flag: "🇨🇦", name: "McGill University", logo: "/assets/images/universities/canada/mcgill-university.webp" },
+      { flag: "🇨🇦", name: "University of British Columbia", logo: "/assets/images/universities/canada/university-of-british-columbia.webp" },
+      { flag: "🇫🇷", name: "Sorbonne University", logo: "/assets/images/universities/france/sorbonne-university.webp" },
+      { flag: "🇫🇷", name: "Sciences Po", logo: "/assets/images/universities/france/sciences-po.webp" },
+      { flag: "🇫🇷", name: "Université de Bordeaux", logo: "/assets/images/universities/france/universite-de-bordeaux.webp" },
+      { flag: "🇩🇪", name: "Technical University of Munich", logo: "/assets/images/universities/germany/technical-university-of-munich.webp" },
+      { flag: "🇩🇪", name: "Heidelberg University", logo: "/assets/images/universities/germany/heidelberg-university.webp" },
+      { flag: "🇩🇪", name: "Humboldt-Universität zu Berlin", logo: "/assets/images/universities/germany/humboldt-universitat-zu-berlin.webp" },
+      { flag: "🇦🇺", name: "University of Queensland", logo: "/assets/images/universities/australia/university-of-queensland.webp" },
+      { flag: "🇦🇺", name: "Monash University", logo: "/assets/images/universities/australia/monash-university.webp" },
+      { flag: "🇦🇺", name: "RMIT University", logo: "/assets/images/universities/australia/rmit-university.webp" },
+      { flag: "🇳🇿", name: "University of Auckland", logo: "/assets/images/universities/new-zealand/university-of-auckland.webp" },
+      { flag: "🇳🇿", name: "University of Otago", logo: "/assets/images/universities/new-zealand/university-of-otago.webp" },
+      { flag: "🇮🇳", name: "IISc Bangalore", logo: "/assets/images/universities/india/iisc-bangalore.webp" },
+      { flag: "🇮🇳", name: "University of Delhi", logo: "/assets/images/universities/india/university-of-delhi.webp" },
+      { flag: "🇮🇳", name: "Vellore Institute of Technology (VIT)", logo: "/assets/images/universities/india/vellore-institute-of-technology-vit.webp" },
+      { flag: "🇺🇸", name: "Colorado State University", logo: "/assets/images/universities/usa/colorado-state-university.webp" },
+      { flag: "🇺🇸", name: "Texas State University", logo: "/assets/images/universities/usa/texas-state-university.webp" },
+      { flag: "🇺🇸", name: "Washington University of Science and Technology", logo: "/assets/images/universities/usa/washington-university.webp" },
+      { flag: "🇬🇧", name: "University of Greenwich", logo: "/assets/images/universities/uk/university-of-greenwich.webp" },
+      { flag: "🇬🇧", name: "The University of Law", logo: "/assets/images/universities/uk/the-university-of-law.webp" },
+      { flag: "🇬🇧", name: "Coventry University", logo: "/assets/images/universities/uk/coventry-university.webp" },
+      { flag: "🇫🇮", name: "Haaga-Helia University of Applied Sciences", logo: "/assets/images/universities/finland/haaga-helia-university-of-applied-sciences.webp" }
+    ] %}
+    <ul class="academic-spotlight-grid mt-12 fade-up" style="animation-delay:90ms" data-spotlight-grid>
+      {% for u in spotlight %}
+      <li class="academic-spotlight-tile" style="--i: {{ loop.index0 }}">
+        <span class="academic-spotlight-flag" aria-hidden="true">{{ u.flag }}</span>
+        <img src="{{ u.logo }}" alt="{{ u.name }}" loading="lazy">
+      </li>
+      {% endfor %}
+    </ul>
+
+    <a href="/ventures/#record-education" class="mt-8 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline fade-up" style="animation-delay:140ms">
+      See the full network
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+{# "Our Story" / "Building momentum." timeline — hidden 2026-09-01 per
+   explicit request, same {% if false %} pattern already used elsewhere on
+   this page to disable a section without deleting it. Not a content or
+   code problem; re-enable by removing this wrapper. #}
+{% if false %}
 {% include "partials/story-journey.njk" %}
+{% endif %}
 
 {# ============================================================ INSIGHTS
    Photo-anchored editorial index. An earlier pass this session went
@@ -253,40 +845,96 @@ permalink: /
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 fade-up">
       <div>
         <span class="eyebrow">Insights</span>
-        <h2 class="mt-3 font-display font-light text-h2 text-ink">Ideas for what's next.</h2>
+        <h2 class="mt-3 font-display font-light text-h2 text-ink">Ideas shaping what's next.</h2>
       </div>
       <a href="/insights/" class="text-small font-medium text-ink link-underline shrink-0">View all insights</a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12 md:gap-y-0">
-      {% for post in insights %}
-      <article class="group md:border-l md:first:border-l-0 border-rule md:pl-8 md:first:pl-0 fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms">
-        <a href="/insights/{{ post.slug }}/" class="block relative rounded-lg overflow-hidden bg-navy-deep aspect-[4/3]" tabindex="-1" aria-hidden="true">
-          {# object-position biased right: all 3 source images carry a small
-             Admizz logo watermark baked into the top/bottom-LEFT corner
-             (verified via metadata — all exactly 1600x900, logo ~0-280px on
-             the x-axis). A 4:3 crop from a 16:9 source only trims width, not
-             height, so a centered crop sliced the watermark in half instead
-             of showing or hiding it cleanly. Shifting the crop window right
-             clears it with margin; nothing meaningful sits in the far-right
-             5-10% of any of these three photos. #}
-          <div class="absolute inset-0 transition-transform duration-slow ease-signature group-hover:scale-105 [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[80%_50%]">
-            {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 768px) 33vw, 100vw" %}
+    {# 2026-08-31 v2: was an equal 3-column grid (the same sameness problem
+       as Beliefs) — reworked into a featured + rest layout using the
+       `featured` field that's existed in insights.json since it was first
+       written, unused until now. Featured post gets a wider 16:9 plate and
+       runs the width of its column; the other two stack in a narrower,
+       smaller-image column beside it — genuine editorial hierarchy, not
+       three identical tiles.
+
+       2026-09-08: this was "3 real posts, presented as 3 — no invented
+       4th" when insights.json had exactly 3 entries — restPosts showed
+       ALL non-featured posts with no cap because there were only 2 of
+       them. That assumption broke the moment more articles existed (now
+       6 total): the uncapped list rendered 5 cramped small-thumbnail rows
+       in a column designed for 2, reported (correctly) as looking broken.
+       This is a homepage TEASER, not the full index — /insights/ already
+       exists for browsing everything, and "View all insights" already
+       links there. head(2) keeps the curated 3-item preview this section
+       was actually designed to look like, regardless of how many articles
+       exist in total. #}
+    {% set featuredPost = insights | selectattr("featured") | first %}
+    {% set restPosts = insights | rejectattr("featured") | head(2) %}
+    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-x-10 gap-y-12">
+      {% if featuredPost %}
+      <article class="group fade-up">
+        <a href="/insights/{{ featuredPost.slug }}/" class="block relative overflow-hidden bg-navy-deep aspect-[16/10]" tabindex="-1" aria-hidden="true">
+          <div class="absolute inset-0 transition-transform duration-slow ease-signature group-hover:scale-105 [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+            {% image "src/assets/images/insights/" + featuredPost.image, featuredPost.imageAlt, "(min-width: 1024px) 56vw, 100vw" %}
           </div>
-          <span class="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-navy-deep/85 to-transparent" aria-hidden="true"></span>
-          <span class="absolute bottom-3 left-4 flex items-center gap-2 font-mono text-micro text-white">
+          <span class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-navy-deep/85 to-transparent" aria-hidden="true"></span>
+          <span class="absolute bottom-4 left-5 flex items-center gap-2 font-mono text-label uppercase tracking-widest text-white">
             <span class="w-4 h-px bg-gold" aria-hidden="true"></span>
-            0{{ loop.index }}
+            Featured
           </span>
         </a>
-        <span class="mt-5 block font-mono text-micro uppercase tracking-widest text-navy-soft">{{ post.venture }} &middot; {{ post.body | readingTime }} min read</span>
-        <h3 class="mt-2 font-display font-book text-h4 text-ink text-balance">
-          <a href="/insights/{{ post.slug }}/" class="group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+        <span class="mt-5 block font-mono text-label uppercase tracking-widest text-navy-soft">{{ featuredPost.venture }} &middot; {{ featuredPost.body | readingTime }} min read</span>
+        <h3 class="mt-2 font-display font-light text-h2 text-ink text-balance max-w-[20ch]">
+          <a href="/insights/{{ featuredPost.slug }}/" class="group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ featuredPost.title }}</a>
         </h3>
-        <p class="mt-3 text-small text-ink-muted">{{ post.deck }}</p>
-        <a href="/insights/{{ post.slug }}/" class="mt-4 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">Read the piece</a>
+        <p class="mt-3 text-body text-ink-muted max-w-measure-tight">{{ featuredPost.deck }}</p>
+        <a href="/insights/{{ featuredPost.slug }}/" class="mt-4 inline-flex items-center gap-2 text-small font-medium text-ink link-underline">Read the piece</a>
       </article>
-      {% endfor %}
+      {% endif %}
+
+      {# self-start: without it, this column is a grid item in the outer
+         2-col row and gets force-stretched to match the tall featured
+         article's height (CSS Grid's `align-content: normal` computes to
+         `stretch`) -- content then sits at the top of that oversized box,
+         leaving a large dead gap between the two article rows. self-start
+         stops the stretch at the source instead of just hiding its
+         symptoms further down. #}
+      <div class="grid grid-cols-1 gap-y-10 self-start">
+        {% for post in restPosts %}
+        {# items-start: without it, this flex row's default cross-axis
+           stretch made the aspect-square thumbnail stretch to match its
+           sibling column's height (itself force-stretched by the outer
+           2-col grid matching the tall featured article) -- a square photo
+           rendering as a tall narrow rectangle. items-start locks the
+           thumbnail to its own natural square size regardless of how tall
+           any ancestor gets. #}
+        <article class="group flex items-start gap-5 fade-up" style="animation-delay:{{ loop.index0 * 90 + 90 }}ms">
+          {# 2026-09-03: the object-position-right crop this comment used to
+             describe is gone -- two of the three source images
+             (lifelong-learning.jpg, exams.jpg) had an Admizz logo watermark
+             baked into a corner, and a 16/10 or square crop biased toward
+             one edge still left a sliver of it visible at every aspect
+             ratio these photos render at across the site (measured, not
+             assumed). Fixed at the source instead: both files were cropped
+             with sharp to physically remove the watermarked region, so a
+             plain centered object-cover is correct here again. #}
+          <a href="/insights/{{ post.slug }}/" class="block relative overflow-hidden bg-navy-deep aspect-square w-28 md:w-32 shrink-0" tabindex="-1" aria-hidden="true">
+            <div class="absolute inset-0 transition-transform duration-slow ease-signature group-hover:scale-105 [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+              {% image "src/assets/images/insights/" + post.image, post.imageAlt, "128px" %}
+            </div>
+          </a>
+          <div class="min-w-0">
+            <span class="block font-mono text-label uppercase tracking-widest text-navy-soft">{{ post.venture }} &middot; {{ post.body | readingTime }} min read</span>
+            <h3 class="mt-1.5 font-display font-book text-h4 text-ink text-balance">
+              <a href="/insights/{{ post.slug }}/" class="group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+            </h3>
+            <p class="mt-2 text-small text-ink-muted leading-relaxed">{{ post.deck }}</p>
+            <a href="/insights/{{ post.slug }}/" class="mt-3 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline">Read the piece</a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </section>
@@ -326,22 +974,13 @@ permalink: /
       <span class="statement-line inline-block">through innovation, collaboration,</span>
       <span class="statement-line inline-block">and a commitment to quality education.</span>
     </p>
-    <span class="statement-line inline-block mt-8 md:block font-mono text-micro uppercase tracking-widest text-navy-on-muted">&mdash; Admizz Group</span>
+    <span class="statement-line inline-block mt-8 md:block font-mono text-label uppercase tracking-widest text-navy-on-muted">&mdash; Admizz Group</span>
   </div>
 </section>
 {% endif %}
 
-{# ============================================================ CLOSE #}
-<section class="relative overflow-hidden bg-navy-deep py-section">
-  {% include "partials/facet-field.njk" %}
-  <div class="shell relative text-center flex flex-col items-center">
-    <span class="eyebrow-on-navy fade-up">Get in touch</span>
-    <h2 class="mt-4 font-display font-light text-display-2 text-navy-on max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
-      Let's talk about <em class="italic text-navy-accent font-book">what's next.</em>
-    </h2>
-    <div class="mt-10 flex flex-wrap items-center justify-center gap-4 fade-up" style="animation-delay:160ms">
-      <a href="/contact/" class="btn-primary">Get in touch</a>
-      <a href="mailto:{{ site.email }}" class="btn-ghost-on-navy">{{ site.email }}</a>
-    </div>
-  </div>
-</section>
+{# CLOSE — extracted to partials/cta-close.njk (2026-09-07) so About,
+   Ventures, Insights and individual Insights posts can share the exact
+   same closing band instead of each carrying its own bespoke closer.
+   See that partial's header comment for the section's own history. #}
+{% include "partials/cta-close.njk" %}

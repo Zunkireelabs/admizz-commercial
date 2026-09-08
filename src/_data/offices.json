@@ -1,0 +1,38 @@
+{
+  "_note": "Denver is from admizz.com (group HQ). The three Nepal locations each have a dedicated page on admizzeducation.com (/birgunj, /janakpur, plus Kathmandu as the main office). Street addresses are NOT yet verified — withhold precise addresses from the public build until the client confirms them.",
+  "source": "mixed",
+  "status": "draft",
+  "locations": [
+    {
+      "city": "Denver",
+      "region": "Colorado",
+      "country": "United States",
+      "role": "Group headquarters",
+      "source": "admizz",
+      "addressVerified": false
+    },
+    {
+      "city": "Kathmandu",
+      "country": "Nepal",
+      "role": "Admizz Education",
+      "source": "admizzeducation",
+      "addressVerified": false
+    },
+    {
+      "city": "Birgunj",
+      "country": "Nepal",
+      "role": "Admizz Education",
+      "source": "admizzeducation",
+      "href": "https://admizzeducation.com/birgunj",
+      "addressVerified": false
+    },
+    {
+      "city": "Janakpur",
+      "country": "Nepal",
+      "role": "Admizz Education",
+      "source": "admizzeducation",
+      "href": "https://admizzeducation.com/janakpur",
+      "addressVerified": false
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+# Blocks committing images/video from outside the site's own asset trees.
+#
+# Why this exists on top of .gitignore: `git add -f` bypasses .gitignore
+# entirely, and that is exactly how 222 scratch screenshots (88MB) ended up
+# in this repo's history before anyone noticed. .gitignore states the rule;
+# this enforces it.
+#
+# Allowed locations for media:
+#   src/assets/**   — site images, fonts, video
+#   public/**       — unhashed static files (downloadable brand assets etc.)
+#
+# Install (hooks aren't versioned by git, so this has to be linked in):
+#   ln -sf ../../scripts/hooks/pre-commit .git/hooks/pre-commit
+#
+# Genuine exception (rare — think twice, it's usually the wrong folder):
+#   git commit --no-verify
+
+blocked=$(
+  git diff --cached --name-only --diff-filter=ACM \
+  | grep -iE '\.(png|jpe?g|webp|gif|avif|mp4|mov)$' \
+  | grep -vE '^(src/assets/|public/)'
+)
+
+if [ -n "$blocked" ]; then
+  echo ""
+  echo "  ✖ Commit blocked: media staged outside the asset trees."
+  echo ""
+  echo "$blocked" | sed 's/^/      /'
+  echo ""
+  echo "  Site media belongs in src/assets/ or public/."
+  echo "  Screenshots and scratch images should not be committed at all —"
+  echo "  keep them in temp_ss/, which is ignored."
+  echo ""
+  echo "  If this really is a site asset, move it into src/assets/ and"
+  echo "  stage it again. To override deliberately: git commit --no-verify"
+  echo ""
+  exit 1
+fi
+
+exit 0

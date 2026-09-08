@@ -1,0 +1,30 @@
+---
+layout: base.njk
+navyHeader: true
+title: Page not found — Admizz Group
+description: The page you're looking for doesn't exist or has moved.
+permalink: /404.html
+eleventyExcludeFromCollections: true
+---
+
+{# Custom 404 -- didn't exist before (every static host serves SOMETHING at
+   an unmatched URL; without this it would have been the raw server default,
+   or nothing at all depending on host config). Reuses the exact masthead
+   idiom already established for a standalone "moment" page: navy ground,
+   a large numeral (same device as /ventures/'s record plates), one short
+   line, real navigation back into the site rather than a dead end. #}
+<section class="bg-navy-deep py-section text-navy-on min-h-[70vh] flex items-center">
+  <div class="shell text-center">
+    <p class="font-display font-light tabular-nums leading-none text-navy-accent" style="font-size: clamp(4rem, 14vw, 9rem);">404</p>
+    <h1 class="mt-4 font-display font-light text-display-2 text-navy-on text-balance">This page doesn&rsquo;t exist.</h1>
+    <p class="mt-4 text-body-lg text-navy-on-muted max-w-measure mx-auto">
+      The link that brought you here may be out of date, or the page has moved. Here&rsquo;s where to go instead.
+    </p>
+
+    <div class="mt-9 flex flex-wrap items-center justify-center gap-4">
+      <a href="/" class="btn-primary">Back to home</a>
+      <a href="/ventures/" class="btn-ghost-on-navy">Our Ventures</a>
+      <a href="/contact/" class="btn-ghost-on-navy">Contact</a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,82 @@
+---
+layout: base.njk
+title: Privacy Policy — Admizz Group
+description: How Admizz Group collects, uses and protects information across admizz.com.
+permalink: /privacy/
+---
+
+{# New page (2026-09-08) -- closes docs/01-AUDIT.md §9 item 19 / LAUNCH-BLOCKERS.md.
+   Written to describe the site's REAL, current technical footprint (Google
+   Analytics, gated behind env.GA_MEASUREMENT_ID in base.njk; the ICEF badge
+   widget, a third-party script from www-cdn.icef.com; the contact form) --
+   nothing here claims a certification or compliance status that hasn't been
+   verified (no "we are GDPR/CCPA certified", just the rights this policy
+   commits to honoring). ⚠️ Written assuming the contact form's CRM wiring
+   (CLAUDE.md §7 / LAUNCH-BLOCKERS.md #1) is live, since this document only
+   matters once the site is public, and the form must be wired before that
+   point anyway -- re-check this page's "How we use information" section
+   against whatever the actual CRM integration ends up doing before launch.
+   ⚠️ Boilerplate legal structure, but written specifically for this site's
+   real behavior -- still needs an actual legal/counsel review before launch,
+   same as any policy a non-lawyer drafts. #}
+
+<section class="bg-paper py-section-sm">
+  <div class="shell">
+    <span class="eyebrow">Legal</span>
+    <h1 class="mt-3 font-display font-light text-display-2 text-ink max-w-[20ch] text-balance">Privacy Policy</h1>
+  </div>
+</section>
+
+<section class="bg-paper pb-section">
+  <div class="shell">
+    <div class="legal-prose">
+      <p class="legal-meta">Last updated 8 September 2026</p>
+
+      <p>This policy explains what information Admizz Group ("Admizz", "we", "us") collects through admizz.com, how we use it, and the choices you have. It covers this site only — our operating ventures, Admizz Education (admizzeducation.com) and Admizz Workforce Solutions (admizzworks.com), publish their own privacy policies for the services they provide directly.</p>
+
+      <h2>Information we collect</h2>
+      <p>We collect information in two ways:</p>
+      <ul>
+        <li><strong>Information you provide directly.</strong> When you submit our contact form, we collect your name, email address, the message you write, and which part of Admizz your enquiry is directed to.</li>
+        <li><strong>Information collected automatically.</strong> Where analytics is enabled, we use Google Analytics to understand how visitors use this site — pages viewed, general location (country/city level), device and browser type, and referring site. We do not use this to identify you personally.</li>
+      </ul>
+      <p>We do not require an account or login to use this site, and we do not knowingly collect payment information here.</p>
+
+      <h2>How we use information</h2>
+      <ul>
+        <li>To respond to enquiries submitted through our contact form and route them to the right team within Admizz.</li>
+        <li>To understand aggregate site usage and improve the site's content and performance.</li>
+        <li>To meet legal obligations, where applicable.</li>
+      </ul>
+      <p>We do not sell personal information, and we do not use the contents of your enquiry for advertising or marketing to third parties.</p>
+
+      <h2>Cookies and analytics</h2>
+      <p>This site uses a small number of cookies, primarily from Google Analytics where enabled. See our <a href="/cookies/">Cookie Policy</a> for the full list and how to control them.</p>
+
+      <h2>Third-party services</h2>
+      <p>A small number of external services run on this site as part of how it functions:</p>
+      <ul>
+        <li><strong>Google Analytics</strong> (Google LLC) — usage analytics, as described above.</li>
+        <li><strong>ICEF Agency Identification System</strong> (ICEF GmbH) — displays our live accreditation badge (IAS 6499) via a script hosted on ICEF's own servers.</li>
+      </ul>
+      <p>Each operates under its own privacy policy, which we encourage you to review: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google's Privacy Policy</a> and <a href="https://www.icef.com/" target="_blank" rel="noopener noreferrer">ICEF</a>.</p>
+
+      <h2>Data retention</h2>
+      <p>We retain enquiry information only for as long as needed to respond to it and for a reasonable period afterward for our own records, unless you ask us to delete it sooner. Analytics data is retained according to Google Analytics' own default retention settings.</p>
+
+      <h2>Your rights</h2>
+      <p>Depending on where you live, you may have the right to access, correct, or request deletion of personal information we hold about you, to object to or restrict certain processing, and to receive a copy of your data in a portable format. To exercise any of these rights, contact us using the details below.</p>
+
+      <h2>Children's privacy</h2>
+      <p>This site is directed at institutions, partners, press and prospective clients, not children. We do not knowingly collect personal information from children.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>We may update this policy from time to time. The "last updated" date at the top of this page reflects the most recent revision.</p>
+
+      <h2>Contact us</h2>
+      <p>Questions about this policy, or a request relating to your information, can be sent to <a href="mailto:{{ site.email }}">{{ site.email }}</a>, or by post to Admizz Group, {{ site.address }}.</p>
+    </div>
+  </div>
+</section>
+
+{% include "partials/cta-close.njk" %}

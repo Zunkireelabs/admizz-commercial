@@ -54,6 +54,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/assets/fonts": "assets/fonts" });
   eleventyConfig.addPassthroughCopy({ "src/assets/css": "assets/css" });
   eleventyConfig.addPassthroughCopy({ "src/assets/js": "assets/js" });
+  eleventyConfig.addPassthroughCopy({ "src/assets/video": "assets/video" });
 
   // Watch targets
   eleventyConfig.addWatchTarget("src/assets/css/");
@@ -87,6 +88,25 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("head", function (array, n) {
     if (!array || !Array.isArray(array)) return [];
     return array.slice(0, n);
+  });
+
+  // Serialize a value to JSON for embedding in an inline x-data attribute
+  // (e.g. /insights/'s gridCount, computed client-side from real post data
+  // rather than a hardcoded venture list). Do NOT add `| safe` at the call
+  // site — Nunjucks auto-escapes by default, which is what correctly turns
+  // this JSON's own `"` characters into `&quot;` so the surrounding
+  // double-quoted HTML attribute doesn't get closed early.
+  eleventyConfig.addFilter("json", function (value) {
+    return JSON.stringify(value);
+  });
+
+  // Map an array of objects down to only the given keys — used to keep
+  // client-side JSON blobs (e.g. /insights/'s x-data) small, instead of
+  // serializing entire records (full article bodies, images, etc.) just
+  // to read two fields in Alpine.
+  eleventyConfig.addFilter("pluck", function (array, keys) {
+    if (!array || !Array.isArray(array)) return [];
+    return array.map((item) => Object.fromEntries(keys.map((k) => [k, item[k]])));
   });
 
   // Title case filter

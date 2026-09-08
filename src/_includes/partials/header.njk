@@ -8,6 +8,25 @@
   x-effect="document.body.classList.toggle('overflow-hidden', open)"
   class="fixed inset-x-0 top-0 z-50"
 >
+  {# Scrim, added 2026-09-02: once the header shrinks into its floating pill
+     (margin-top on .header-frame below), the reserved band above/around the
+     pill — full header width, from y:0 to the pill's top edge, plus the
+     pill's own rounded-corner cutaways — has nothing painted in it. A design
+     critique caught real page content (e.g. /about/'s "Milestones that
+     shaped who we are." heading) scrolling up INTO that gap and appearing to
+     collide with/poke through the pill's rounded edge — jarring, reads as a
+     rendering bug even though nothing is actually broken. This full-width
+     fade sits behind the pill and softens that transition instead of a hard
+     collision. Paper-toned since by the time `scrolled` is true the header-
+     bar itself has already gone to its light/paper look on every page
+     (including navyHeader ones — see the :class binding below); hidden
+     entirely until then so it never washes out an unscrolled navy hero. #}
+  <div
+    class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-paper via-paper/70 to-transparent pointer-events-none transition-opacity duration-slow ease-signature -z-10"
+    :class="scrolled ? 'opacity-100' : 'opacity-0'"
+    aria-hidden="true"
+  ></div>
+
   {# header-frame/header-bar: a simple full-width bar by default (the correct
      no-JS/reduced-motion state too — see main.js), morphing into a floating
      pill once scroll starts. header-frame's shrink comes from GSAP tweening
@@ -25,7 +44,7 @@
       class="header-bar relative flex items-center justify-between gap-4 rounded-none pl-6 pr-3 py-3 overflow-hidden transition-colors duration-slow ease-signature"
       :class="(navyHeader && !scrolled && !open) ? 'bg-white/10 border border-white/25 backdrop-blur-md' : 'bg-white/95 border border-rule backdrop-blur-md'"
     >
-      <a href="/" class="flex items-center gap-2 shrink-0" aria-label="{{ site.name }} — home">
+      <a href="/" class="header-home flex items-center gap-2 shrink-0" aria-label="{{ site.name }} — home">
         <img
           src="/assets/images/brand/mark-navy.png"
           alt="{{ site.name }}"
@@ -38,23 +57,33 @@
 
       <nav class="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2" aria-label="Primary">
         {% for item in navigation.main %}
+        {# navyHeader-unscrolled link color was text-navy-on-muted (#A9BDD1)
+           against the translucent glass bar over a navy hero -- ~6.7:1
+           composited contrast, passes AA but reads as genuinely hard to
+           read next to the crisp white logo/gold button beside it (flagged
+           directly: "I can't even read what's in there"). Matched to
+           text-navy-on (~11:1), the same brighter token the mobile menu
+           toggle icon already uses in this exact state (see the button
+           below) -- this was the one inconsistent element, not a deliberate
+           choice. Hover moves to the gold accent instead of white, since
+           off-white to pure white barely registers as a state change. #}
         <a
           href="{{ item.href }}"
           class="nav-link text-small font-medium transition-colors duration-press ease-signature"
-          :class="(navyHeader && !scrolled && !open) ? 'text-navy-on-muted hover:text-white' : 'text-ink-muted hover:text-navy-soft'"
+          :class="(navyHeader && !scrolled && !open) ? 'text-navy-on hover:text-navy-accent' : 'text-ink-muted hover:text-navy-soft'"
         >{{ item.label }}</a>
         {% endfor %}
       </nav>
 
       <a
         href="/contact/"
-        class="hidden md:inline-flex btn-primary rounded-full"
+        class="hidden md:inline-flex btn-primary"
       >Get in touch</a>
 
       <button
         type="button"
         @click="open = !open"
-        class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full"
+        class="md:hidden inline-flex items-center justify-center w-10 h-10"
         :class="(navyHeader && !scrolled && !open) ? 'text-navy-on' : 'text-ink'"
         :aria-expanded="open"
         aria-controls="mobile-nav"
@@ -81,7 +110,7 @@
     x-show="open"
     x-cloak
     x-collapse
-    class="md:hidden mx-gutter mt-3 rounded-3xl bg-paper border border-rule shadow-lg shadow-navy-deep/10 max-h-[calc(100dvh-6rem)] overflow-y-auto"
+    class="md:hidden mx-gutter mt-3 bg-paper border border-rule shadow-lg shadow-navy-deep/10 max-h-[calc(100dvh-6rem)] overflow-y-auto"
     aria-label="Mobile"
   >
     <div class="px-6 py-6 flex flex-col gap-1">
@@ -92,7 +121,7 @@
         class="py-3 text-h4 font-display font-book text-ink border-b border-rule last:border-b-0"
       >{{ item.label }}</a>
       {% endfor %}
-      <a href="/contact/" @click="open = false" class="btn-primary rounded-full mt-5 justify-center">Get in touch</a>
+      <a href="/contact/" @click="open = false" class="btn-primary mt-5 justify-center">Get in touch</a>
     </div>
   </nav>
 </header>

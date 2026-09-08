@@ -16,6 +16,35 @@ if (document.readyState === 'loading') {
 }
 
 // ---------------------------------------------------------------------------
+// Reading progress (/insights/<slug>/ only — the element exists nowhere else)
+//
+// Deliberately outside the reduced-motion-gated GSAP block below: this isn't
+// motion for its own sake, it's a position indicator, and a reader who has
+// asked for reduced motion still benefits from knowing where they are. It's
+// a transform on a 2px bar (compositor-only, no layout), updated inside
+// requestAnimationFrame so a fast scroll can't queue up work.
+// ---------------------------------------------------------------------------
+const readProgress = document.querySelector('[data-read-progress]');
+if (readProgress) {
+  let ticking = false;
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    readProgress.style.transform = `scaleX(${ratio})`;
+    ticking = false;
+  };
+  const onScroll = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
+}
+
+// ---------------------------------------------------------------------------
 // Motion layer
 //
 // Lenis, GSAP and ScrollTrigger are only ever imported when the user has NOT
@@ -81,6 +110,40 @@ if (!prefersReducedMotion) {
       }).to(statementLines, { opacity: 1, y: 0, stagger: 0.12 });
     }
 
+    // "What Admizz Is" venture preview cards — same hide-then-reveal idiom
+    // as the hero/statement-band above, added 2026-09-02 after a design
+    // critique: the three cards used to share one .fade-up wrapper, so all
+    // three photos popped in together as a single flat block. Each card
+    // now reveals on its own (index-staggered), and each photo does a
+    // left-to-right clip-path wipe instead of a plain fade -- reads as an
+    // editorial reveal rather than a generic "content appeared" fade.
+    // The card's fade/rise and its own photo's wipe share the same index
+    // in gsap.utils.toArray, so `stagger` on both tweens keeps each card's
+    // two effects in sync with each other while still offsetting card 1
+    // from card 2 from card 3.
+    const previewCards = gsap.utils.toArray('[data-venture-preview-card]');
+    if (previewCards.length) {
+      const previewPhotos = previewCards.map((card) => card.querySelector('.venture-preview-photo'));
+      gsap.set(previewCards, { opacity: 0, y: 18 });
+      gsap.set(previewPhotos, { clipPath: 'inset(0 100% 0 0)' });
+      gsap.timeline({
+        defaults: { ease: 'signature' },
+        scrollTrigger: {
+          trigger: previewCards[0].closest('section'),
+          start: 'top 65%',
+          // restart (not the default "play once") on BOTH onEnter and
+          // onEnterBack, per explicit request -- this replays every time the
+          // section scrolls into view, not just the first. "restart" resets
+          // progress to 0 before playing, so nothing needs to happen on
+          // leave/leaveBack for this to work correctly scrolling away either
+          // direction.
+          toggleActions: 'restart none restart none',
+        },
+      })
+        .to(previewCards, { opacity: 1, y: 0, duration: 0.6, stagger: 0.12 })
+        .to(previewPhotos, { clipPath: 'inset(0 0% 0 0)', duration: 0.7, stagger: 0.12 }, '<');
+    }
+
     // Header shape morph — simple full-width bar at the top, floating pill
     // once scroll starts (see header.njk comment for the margin-not-width
     // mechanism). Values are read from the live DOM at setup time — the
@@ -97,13 +160,28 @@ if (!prefersReducedMotion) {
       // zero margin (i.e. already inside the header's own gutter padding) —
       // reading this directly sidesteps clientWidth vs. content-box confusion.
       const availableWidth = headerFrame.getBoundingClientRect().width;
-      const pillInset = Math.max(0, (availableWidth - 1152) / 2);
+      // Was a hardcoded pixel constant (1152, then 1312) that had to be
+      // manually kept in sync with .shell's max-width in tailwind.config.js
+      // every time that changed -- missed once already when the shell went
+      // 1240 -> 1400, and .shell is now viewport-relative (min(94vw,1800px))
+      // so no single constant could ever be correct for every screen size
+      // anyway. Reading a real .shell element's live rendered width instead
+      // means this is correct automatically, on any screen, permanently.
+      const referenceShell = document.querySelector('.shell');
+      const shellWidth = referenceShell ? referenceShell.getBoundingClientRect().width : 1312;
+      const pillInset = Math.max(0, (availableWidth - shellWidth) / 2);
 
       gsap.timeline({ scrollTrigger: { start: 0, end: 140, scrub: 0.3 } })
         .fromTo(headerFrame,
           { marginLeft: 0, marginRight: 0, marginTop: 0 },
           { marginLeft: pillInset, marginRight: pillInset, marginTop: topPad, ease: 'none' },
           0)
+        // Deliberate exception to the sitewide zero-radius rule (main.css /
+        // tailwind.config.js): a floating pill bar with margins around it
+        // needs rounded ends to read as intentional rather than a mistake —
+        // a sharp-cornered rectangle floating mid-page looked broken, per
+        // direct feedback. Every other card/panel/button on the site stays
+        // sharp; only this one component is exempted.
         .fromTo(headerBar,
           { borderRadius: 0, boxShadow: '0 2px 4px rgba(16,25,43,0), 0 18px 40px -20px rgba(16,25,43,0)' },
           { borderRadius: 999, boxShadow: '0 2px 4px rgba(16,25,43,.05), 0 18px 40px -20px rgba(16,25,43,.24)', ease: 'none' },
@@ -154,6 +232,24 @@ if (!prefersReducedMotion) {
       });
     });
 
+    // Close section photo (homepage, "Let's talk about what's next") — same
+    // mechanism as the hero photo above, but a much stronger drift on
+    // purpose: at the hero's -6%/-inset-y-[2%] settings this was measured at
+    // ~7px of movement across the section's entire scroll range — real, but
+    // imperceptible. Reference (SaleUnion's closing CTA) has an obviously
+    // visible background-scrolls-independently-of-text effect, so this one
+    // is tuned much larger (-inset-y-[12%] overscan / yPercent -22) —
+    // verified to produce real, visible movement, not just a nonzero value.
+    gsap.utils.toArray('.close-photo-parallax').forEach((photo) => {
+      const section = photo.closest('section');
+      if (!section) return;
+      gsap.to(photo, {
+        yPercent: -22,
+        ease: 'none',
+        scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 1.2 },
+      });
+    });
+
     // Ecosystem story (homepage "One Ecosystem" section) — sticky photo
     // (plain CSS position:sticky, set in the markup, not GSAP pin) crossfades
     // as each text block scrolls to center. No pinning, no scroll-hijacking —
@@ -185,12 +281,33 @@ if (!prefersReducedMotion) {
           if (ghostNum) ghostNum.textContent = block.dataset.index;
           if (ghostStage) ghostStage.textContent = block.dataset.stage;
           if (!initial) {
-            // Slides in from the side (x), not up (y) — a deliberate ask,
-            // and it also reads better here: this column sits beside a
-            // full-height photo, so a horizontal arrival feels connected to
-            // it in a way a vertical one didn't.
-            const fields = block.querySelectorAll('.eco-field');
-            gsap.fromTo(fields, { opacity: 0, x: 32 }, { opacity: 1, x: 0, stagger: 0.07, duration: 0.6, ease: 'signature' });
+            // 2026-09-02: was one flat .eco-field group on a uniform 70ms
+            // stagger -- 9 pieces of very different content (a label, a
+            // display-size headline, a stat number, a chip list) all
+            // sliding the same way, arriving within about a second, read as
+            // one hurried block rather than a deliberate reveal. Four
+            // explicit stages instead, each with its own motion suited to
+            // what it actually is, overlapping slightly (negative position
+            // offsets) so it reads as one continuous sequence, not four
+            // separate waits. Slides in from the side (x), not up (y) —
+            // still the deliberate original ask, kept for groups 0/1/3;
+            // this column sits beside a full-height photo, so a horizontal
+            // arrival feels connected to it in a way a vertical one didn't.
+            const group0 = block.querySelectorAll('[data-eco-group="0"]');
+            const group1 = block.querySelectorAll('[data-eco-group="1"]');
+            const chips = block.querySelectorAll('[data-eco-group="2"] li');
+            const group3 = block.querySelectorAll('[data-eco-group="3"]');
+            gsap.timeline({ defaults: { ease: 'signature' } })
+              // 0 — label + title: the "what is this" beat, fastest to land.
+              .fromTo(group0, { opacity: 0, x: 32 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.06 })
+              // 1 — supporting text, overlapping the tail of group 0.
+              .fromTo(group1, { opacity: 0, x: 32 }, { opacity: 1, x: 0, duration: 0.55, stagger: 0.08 }, '-=0.25')
+              // 2 — exam chips pop in individually (y, not x — they read as
+              // items being placed down, not text sliding in), not as one
+              // sliding block.
+              .fromTo(chips, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.35, stagger: 0.05 }, '-=0.15')
+              // 3 — stat + CTA: the payoff, arrives last.
+              .fromTo(group3, { opacity: 0, x: 32 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.08 }, '-=0.1');
           }
         }
       };
@@ -498,38 +615,18 @@ if (!prefersReducedMotion) {
     }
 
     // -----------------------------------------------------------------
-    // /about/ — Journey → Three Businesses card-stack handoff.
+    // /about/ — the Journey → Three Businesses section pin is GONE
+    // (2026-09-08). It froze the whole Journey section as a single card
+    // while the next section slid over it, which meant the four milestone
+    // rows inside it could not stack against each other — a pinned
+    // ancestor leaves position:sticky children nothing to scroll within.
     //
-    // The incoming section is already visually a "card" in pure CSS
-    // (rounded top + shadow, main.css) — that part needs no JS and holds
-    // even with motion off. What GSAP adds is timing: pin the outgoing
-    // section briefly once its bottom reaches the viewport bottom, so the
-    // next section's rounded edge visibly slides up and over it instead of
-    // an instant cut. pinSpacing:false — the incoming section is already
-    // next in normal flow, so no extra gap should open up while pinned.
+    // The milestones now stack on each other in pure CSS instead (see
+    // .journey-row in main.css): a stronger use of the same idea, since
+    // the stacking now carries meaning (2015 → today) rather than just
+    // transitioning between two sections. No JS involved, so it survives
+    // reduced-motion and no-JS untouched.
     // -----------------------------------------------------------------
-    const stackOutgoing = document.querySelector('[data-stack-outgoing]');
-    if (stackOutgoing) {
-      // The outgoing section itself shrinks and dims WHILE pinned — not
-      // just sitting static underneath — so the handoff reads as one card
-      // being tucked away behind the next, not a coincidental overlap.
-      gsap.set(stackOutgoing, { transformOrigin: 'top center' });
-      ScrollTrigger.create({
-        trigger: stackOutgoing,
-        start: 'bottom bottom',
-        end: '+=400',
-        pin: true,
-        pinSpacing: false,
-        scrub: true,
-        onUpdate: (self) => {
-          gsap.set(stackOutgoing, {
-            scale: 1 - self.progress * 0.06,
-            opacity: 1 - self.progress * 0.4,
-          });
-        },
-        onLeaveBack: () => gsap.set(stackOutgoing, { scale: 1, opacity: 1 }),
-      });
-    }
   });
 }
 
@@ -537,21 +634,430 @@ if (!prefersReducedMotion) {
 // do we "arm" them into the hidden pre-reveal state and start observing — so a no-JS
 // visitor, a crawler, or a screenshot tool that doesn't simulate real scrolling all see
 // the complete, correct page rather than content stuck at opacity:0.
+//
+// Stagger is computed PER GROUP, AT REVEAL TIME — not per document at load.
+// The earlier version assigned `i * 60ms` capped at 300ms using each element's
+// index across the whole document, once, on load. That produced two bugs:
+//   1. Every .fade-up past the 5th on a page hit the 300ms cap and therefore
+//      shared one delay, so they arrived SIMULTANEOUSLY — the uniform
+//      everything-at-once reveal this system exists to avoid.
+//   2. The delay was baked in at load but consumed on scroll, so a late
+//      element sat idle for 300ms after entering view. That is lag, not rhythm.
+// Elements that cross the threshold in the same observer callback are one
+// visual beat-group: they are ordered by document position and staggered
+// against each other. An element crossing alone gets 0ms and starts at once.
+const REVEAL_STEP_MS = 110;  // gap between beats inside one group
+const REVEAL_CAP_MS = 440;   // no element ever waits longer than this
+
+// An element's group is its nearest explicit [data-reveal-group], else its
+// nearest <section>. Opt a subtree out of its section's rhythm by marking it.
+const revealGroupOf = (el) => el.closest('[data-reveal-group], section') || document.body;
+
 const revealObserver = new IntersectionObserver(
   (entries) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        if (el.classList.contains('fade-up')) el.dataset.revealed = 'true';
-        revealObserver.unobserve(el);
+    const arriving = entries.filter((entry) => entry.isIntersecting);
+    if (!arriving.length) return;
+
+    // Callback order is not guaranteed to be document order; sort so the
+    // stagger always runs top-to-bottom, the direction the eye reads.
+    arriving.sort((a, b) =>
+      a.target.compareDocumentPosition(b.target) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+    );
+
+    const beatsSoFar = new Map();
+    for (const entry of arriving) {
+      const el = entry.target;
+      const group = revealGroupOf(el);
+      const beat = beatsSoFar.get(group) ?? 0;
+      beatsSoFar.set(group, beat + 1);
+
+      if (el.classList.contains('fade-up')) {
+        el.style.animationDelay = prefersReducedMotion
+          ? '0ms'
+          : `${Math.min(beat * REVEAL_STEP_MS, REVEAL_CAP_MS)}ms`;
+        el.dataset.revealed = 'true';
       }
+      revealObserver.unobserve(el);
     }
   },
   { threshold: 0.2, rootMargin: '0px 0px -8% 0px' }
 );
 
-document.querySelectorAll('.fade-up').forEach((el, i) => {
-  el.style.animationDelay = prefersReducedMotion ? '0ms' : `${Math.min(i * 60, 300)}ms`;
+document.querySelectorAll('.fade-up').forEach((el) => {
   el.classList.add('js-armed');
   revealObserver.observe(el);
 });
+
+// ---------------------------------------------------------------------------
+// Globe (homepage §01, The Shift) — cobe, adapted to vanilla JS
+//
+// The source component this was adapted from (Leonxlnx/taste-skill's
+// cobe-globe.tsx) assumed a React + shadcn project. This site has neither —
+// cobe's own API (`createGlobe(canvas, options)`) is plain canvas/WebGL with
+// no React dependency, so only that core logic was ported; the React
+// wrapper (hooks, JSX, CSS-anchor-positioned marker labels) was dropped.
+// Markers are real Admizz partner-country capitals, drawn from
+// universities.json's own country list (src/_data/universities.json), not
+// invented cities — same non-negotiable that governs every other stat on
+// this site.
+//
+// Explicit override of CLAUDE.md's "no spinning globe" rule, on request.
+// Progressive enhancement, same pattern as the rest of this site: the flat
+// .world-map-dots fallback (main.css) is the element's PERMANENT visible
+// state under prefers-reduced-motion or if this import ever fails — the
+// canvas only fades in once cobe has actually loaded and rendered a frame.
+// ---------------------------------------------------------------------------
+
+const globeCanvas = document.querySelector('[data-globe]');
+
+if (globeCanvas && !prefersReducedMotion) {
+  import('cobe').then(({ default: createGlobe }) => {
+    const fallback = document.querySelector('[data-globe-fallback]');
+
+    // Real coordinates (capital cities) for the 9 countries in
+    // universities.json's partner-university register — not arbitrary
+    // demo cities.
+    const markers = [
+      { location: [51.5074, -0.1278], size: 0.028 },  // United Kingdom — London
+      { location: [38.9072, -77.0369], size: 0.028 }, // United States — Washington, D.C.
+      { location: [-35.2809, 149.13], size: 0.028 },  // Australia — Canberra
+      { location: [45.4215, -75.6972], size: 0.028 }, // Canada — Ottawa
+      { location: [48.8566, 2.3522], size: 0.028 },   // France — Paris
+      { location: [60.1699, 24.9384], size: 0.028 },  // Finland — Helsinki
+      { location: [-41.2865, 174.7762], size: 0.028 }, // New Zealand — Wellington
+      { location: [28.6139, 77.209], size: 0.028 },   // India — New Delhi
+      { location: [52.52, 13.405], size: 0.028 },     // Germany — Berlin
+    ];
+
+    let phi = 0;
+    let width = 0;
+    let globe = null;
+    let pointerInteracting = null;
+
+    const onResize = () => {
+      width = globeCanvas.offsetWidth;
+    };
+    window.addEventListener('resize', onResize);
+    onResize();
+
+    // cobe v2's real API (checked node_modules/cobe/dist/index.d.ts — there
+    // is no `onRender` option, despite the source component using one;
+    // that was a bug in this port's first pass, silently doing nothing).
+    // Animation is driven by calling `globe.update()` inside your own
+    // requestAnimationFrame loop, same as the original component's actual
+    // `animate()` function.
+    globe = createGlobe(globeCanvas, {
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      width: width * 2,
+      height: width * 2,
+      phi: 0,
+      theta: 0.28,
+      dark: 0,
+      diffuse: 1.5,
+      mapSamples: 20000,
+      mapBrightness: 6,
+      // Brand colors, not the source component's demo blue — baseColor is
+      // this site's paper tone, markerColor a lightened gold-text (blended
+      // toward paper — cobe has no marker opacity control, only color, so
+      // this is how "soften" is actually achieved) instead of the original
+      // solid gold-text, which read as flat stickers on the sphere at any
+      // size. glowColor is paper again so the sphere's rim blends into the
+      // section instead of reading as a hard-edged disc.
+      baseColor: [0.965, 0.965, 0.953],
+      markerColor: [0.75, 0.68, 0.48],
+      glowColor: [0.965, 0.965, 0.953],
+      markers,
+    });
+
+    const animate = () => {
+      if (!pointerInteracting) phi += 0.0032;
+      globe.update({ phi, width: width * 2, height: width * 2 });
+      requestAnimationFrame(animate);
+    };
+    animate();
+
+    // First-frame handoff: crossfade from the flat fallback to the canvas
+    // only once cobe has actually drawn something, never before.
+    requestAnimationFrame(() => {
+      globeCanvas.style.opacity = '1';
+      if (fallback) fallback.style.opacity = '0';
+    });
+
+    globeCanvas.addEventListener('pointerdown', (e) => {
+      pointerInteracting = e.clientX;
+      globeCanvas.style.cursor = 'grabbing';
+    });
+    window.addEventListener('pointerup', () => {
+      pointerInteracting = null;
+      globeCanvas.style.cursor = 'grab';
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (pointerInteracting !== null) {
+        const delta = e.clientX - pointerInteracting;
+        phi += delta / 200;
+        pointerInteracting = e.clientX;
+      }
+    });
+    globeCanvas.addEventListener('touchmove', (e) => {
+      if (pointerInteracting !== null && e.touches[0]) {
+        const delta = e.touches[0].clientX - pointerInteracting;
+        phi += delta / 100;
+        pointerInteracting = e.touches[0].clientX;
+      }
+    }, { passive: true });
+  }).catch(() => {
+    // cobe failed to load — the flat .world-map-dots fallback is already
+    // the visible state, nothing more to do.
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Ventures coverflow (homepage §05b) — vanilla port
+//
+// Source: a React/shadcn coverflow-carousel component. Ported only the real
+// mechanics (pointer-drag tracking with velocity-based flick, per-card 3D
+// transform math, a requestAnimationFrame easing settle, keyboard arrows) —
+// no React, no state library, just the same math against plain DOM nodes.
+// Runs regardless of prefers-reduced-motion: dragging is a direct
+// user-driven action, not an ambient animation, so it isn't gated the way
+// the globe's autoplay is — only the transition on settle would ever need
+// throttling, and CSS custom easing already handles that smoothly enough
+// to leave alone.
+// ---------------------------------------------------------------------------
+
+const coverflow = document.querySelector('[data-coverflow]');
+
+if (coverflow) {
+  const frame = coverflow.querySelector('[data-coverflow-frame]');
+  const track = coverflow.querySelector('[data-coverflow-track]');
+  const cards = Array.from(coverflow.querySelectorAll('[data-coverflow-card]'));
+  const hint = coverflow.querySelector('[data-coverflow-hint]');
+  const captionItems = Array.from(
+    document.querySelectorAll('[data-coverflow-caption-item]')
+  );
+  const dots = Array.from(document.querySelectorAll('[data-coverflow-dot]'));
+  const count = cards.length;
+
+  if (frame && track && count > 0) {
+    // Tuned to match the source component's own defaults.
+    const ROTATE = 44;
+    const DEPTH = 0.6;
+    const FALLOFF = 0.56;
+    const GAP = 0.05;
+    const LOOP = true;
+
+    let pos = 0;
+    let target = 0;
+    let width = 0;
+    let rafId = null;
+    let drag = null; // { x, pos, v, t }
+    let wheelSettleTimer = null;
+
+    const indexAt = (p) => ((Math.round(p) % count) + count) % count;
+
+    const dismissHint = () => hint && hint.classList.add('is-dismissed');
+
+    const setCaption = (index) => {
+      captionItems.forEach((item) => {
+        item.classList.toggle('hidden', Number(item.dataset.index) !== index);
+      });
+      dots.forEach((dot) => {
+        const active = Number(dot.dataset.index) === index;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+    };
+
+    // Distance drives a dark scrim + slight desaturation (via the --cf-dist
+    // custom property, read in main.css) instead of opacity. Fading via
+    // opacity against this section's light paper background made off-center
+    // cards blend toward WHITE, not recede into shadow — read as washed-out/
+    // broken rather than "further away". Opacity is now used only for the
+    // loop-wrap cutoff (`edge`), same as before.
+    const paint = () => {
+      if (!width) return;
+      const pitch = width * (1 + GAP);
+      cards.forEach((card, index) => {
+        let offset = index - pos;
+        if (LOOP) {
+          offset = ((offset % count) + count) % count;
+          if (offset > count / 2) offset -= count;
+        }
+        const distance = Math.abs(offset);
+        const ramp = Math.pow(distance, FALLOFF);
+        const tilt = Math.min(ROTATE * ramp, 82) * Math.sign(offset);
+        card.style.transform =
+          `translateX(calc(-50% + ${offset * pitch}px)) ` +
+          `translateZ(${-DEPTH * width * ramp}px) rotateY(${-tilt}deg)`;
+        const edge = LOOP ? Math.min(1, Math.max(0, count / 2 - distance)) : 1;
+        card.style.opacity = String(edge);
+        card.style.setProperty('--cf-dist', String(Math.min(distance, 1.4)));
+        card.style.zIndex = String(100 - Math.round(distance));
+      });
+    };
+
+    const settle = (newTarget) => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      target = newTarget;
+      setCaption(indexAt(target));
+      const step = () => {
+        const remaining = target - pos;
+        if (Math.abs(remaining) < 0.0004) {
+          pos = target;
+          paint();
+          rafId = null;
+          return;
+        }
+        pos += remaining * 0.16;
+        paint();
+        rafId = requestAnimationFrame(step);
+      };
+      rafId = requestAnimationFrame(step);
+    };
+
+    const clampPos = (p) => (LOOP ? p : Math.max(0, Math.min(count - 1, p)));
+    const nudge = (by) => settle(clampPos(Math.round(target) + by));
+
+    // Only now — after cards, frame, and track are all confirmed present —
+    // does the layout switch from the plain flex-row fallback to the
+    // interactive stacked-3D one.
+    track.classList.add('js-armed');
+
+    const measure = () => {
+      width = cards[0].offsetWidth;
+      paint();
+    };
+    measure();
+    new ResizeObserver(measure).observe(frame);
+
+    frame.addEventListener('pointerdown', (e) => {
+      dismissHint();
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      frame.setPointerCapture(e.pointerId);
+      frame.style.cursor = 'grabbing';
+      target = pos;
+      drag = { x: e.clientX, pos, v: 0, t: performance.now() };
+    });
+    frame.addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      const pitch = width * (1 + GAP);
+      if (!pitch) return;
+      const now = performance.now();
+      const previous = pos;
+      pos = clampPos(drag.pos - (e.clientX - drag.x) / pitch);
+      drag.v = ((pos - previous) / Math.max(now - drag.t, 1)) * 1000;
+      drag.t = now;
+      setCaption(indexAt(pos));
+      paint();
+    });
+    const endDrag = () => {
+      if (!drag) return;
+      const carried = Math.max(-2, Math.min(2, drag.v * 0.18));
+      drag = null;
+      frame.style.cursor = 'grab';
+      settle(clampPos(Math.round(pos + carried)));
+    };
+    frame.addEventListener('pointerup', endDrag);
+    frame.addEventListener('pointercancel', endDrag);
+
+    frame.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        dismissHint();
+        nudge(-1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        dismissHint();
+        nudge(1);
+      }
+    });
+
+    // Any wheel/trackpad gesture over the carousel moves it — vertical
+    // scroll included, since that's what a plain mouse actually produces
+    // (a first version only handled trackpad horizontal swipe, which meant
+    // nothing happened for anyone testing with a normal mouse wheel). This
+    // does mean scrolling while the cursor sits on the cards moves the
+    // carousel instead of the page — move the mouse off it to keep
+    // scrolling the page, same tradeoff as Apple-style scroll carousels.
+    // Prefers whichever axis has more motion so a trackpad's horizontal
+    // swipe still works exactly as before.
+    frame.addEventListener(
+      'wheel',
+      (e) => {
+        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+        if (!delta) return;
+        e.preventDefault();
+        dismissHint();
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+        const pitch = width * (1 + GAP);
+        if (!pitch) return;
+        // A single mouse-wheel notch sends deltaY around 100 — dividing by
+        // the full pitch made one notch move the carousel by ~9%, needing
+        // 10+ notches before anything visibly happened. This scales one
+        // notch to roughly a third of a card, so 2-3 notches clearly move
+        // it, while a trackpad's smaller continuous deltas still feel
+        // proportional rather than twitchy.
+        pos = clampPos(pos + delta / pitch / 0.9);
+        target = pos;
+        setCaption(indexAt(pos));
+        paint();
+        clearTimeout(wheelSettleTimer);
+        wheelSettleTimer = setTimeout(() => settle(Math.round(pos)), 140);
+      },
+      { passive: false }
+    );
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        dismissHint();
+        settle(clampPos(Number(dot.dataset.index)));
+      });
+    });
+  }
+}
+
+// Academic network spotlight grid (homepage, replaces the old country
+// accordion) — tiles fade in with a per-tile stagger (--i, set inline per
+// <li>) the first time the grid scrolls into view. Not gated behind
+// prefers-reduced-motion since it's a one-time short reveal, same class of
+// motion as .fade-up elsewhere on this site (which also isn't gated).
+//
+// Same "armed" safe pattern as .fade-up above: tiles render fully visible
+// in plain CSS (main.css), and only get .spotlight-armed added here, right
+// before this observer starts watching — so a no-JS visitor, a crawler, or
+// a screenshot tool that never fires the observer still sees every logo,
+// not a grid stuck at opacity:0 forever.
+const spotlightGrid = document.querySelector('[data-spotlight-grid]');
+if (spotlightGrid) {
+  // Left/right-converging direction: each tile's --dx is set from where its
+  // own center actually sits relative to the GRID's center, measured live —
+  // not a static odd/even column guess baked in at build time, because the
+  // grid's `auto-fill` column count changes per breakpoint (2-3 columns on
+  // mobile, up to 8 on desktop), so only a runtime measurement gives the
+  // correct half at every width.
+  const gridRect = spotlightGrid.getBoundingClientRect();
+  const gridCenterX = gridRect.left + gridRect.width / 2;
+  spotlightGrid.querySelectorAll('.academic-spotlight-tile').forEach((tile) => {
+    const tileRect = tile.getBoundingClientRect();
+    const tileCenterX = tileRect.left + tileRect.width / 2;
+    const dx = tileCenterX < gridCenterX ? '-28px' : '28px';
+    tile.style.setProperty('--dx', dx);
+    tile.classList.add('spotlight-armed');
+  });
+  new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.15 }
+  ).observe(spotlightGrid);
+}

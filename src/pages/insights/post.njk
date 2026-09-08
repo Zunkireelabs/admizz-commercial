@@ -5,6 +5,7 @@ pagination:
   data: insights
   size: 1
   alias: post
+  addAllPagesToCollections: true
 permalink: "/insights/{{ post.slug }}/"
 eleventyComputed:
   title: "{{ post.title }} — Admizz Group"
@@ -24,6 +25,10 @@ eleventyComputed:
    breaks of its own to preserve.
    ============================================================================ #}
 
+{# Reading progress: a 2px bar, scaled by main.js on scroll. With no JS it
+   simply never grows — nothing on the page depends on it. #}
+<div class="read-progress" data-read-progress aria-hidden="true"></div>
+
 <section class="insights-hero bg-navy-deep py-section-sm">
   {# Large faint Admizz mark — simple, on purpose: the real brand mark
      (same asset the header uses inverted, and /ventures/'s field diagram
@@ -33,20 +38,32 @@ eleventyComputed:
   <img src="/assets/images/brand/mark-white.png" alt="" width="1024" height="308"
     class="insights-hero-mark" data-hero-in aria-hidden="true">
 
-  <div class="shell relative">
+  <div class="shell relative"><div class="page-canvas">
     <a href="/insights/" class="inline-flex items-center gap-2 text-small font-medium text-navy-on-muted hover:text-navy-soft transition-colors duration-press ease-signature fade-up">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 7H2M6 3L2 7l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       All insights
     </a>
-    <span class="eyebrow-on-navy mt-7 fade-up" style="animation-delay:60ms">{{ post.venture }}</span>
+    {# Venture + reading time as one meta line, not two disconnected labels
+       -- was the venture as the eyebrow, then reading time floating alone
+       below the deck paragraph with no visual relationship to it. No real
+       author or publish date exists for these articles (nothing invented
+       here per non-negotiable #1), so this pairing is the real, honest
+       attribution this page has: matches the "{{ venture }} · {{ time }}"
+       pattern already used for these same posts everywhere else on the
+       site (the homepage insights list, /insights/ index cards). #}
+    {# Research pieces say so here too, with their real source count —
+       the same citations-driven marker used on /insights/, so a piece
+       can't claim sourcing it doesn't carry. #}
+    <span class="eyebrow-on-navy mt-7 fade-up" style="animation-delay:60ms">
+      {{ post.venture }} &middot; {{ post.body | readingTime }} min read{% if post.citations %} &middot; {{ post.citations | length }} sources cited{% endif %}
+    </span>
     <h1 class="mt-3 font-display font-light text-display-2 text-navy-on max-w-[20ch] text-balance fade-up" style="animation-delay:120ms">{{ post.title }}</h1>
     <p class="mt-5 text-body-lg text-navy-on-muted max-w-measure fade-up" style="animation-delay:180ms">{{ post.deck }}</p>
-    <span class="mt-5 block font-mono text-micro uppercase tracking-widest text-navy-on-muted fade-up" style="animation-delay:220ms">{{ post.body | readingTime }} min read</span>
-  </div>
+  </div></div>
 </section>
 
 <section class="bg-paper py-section">
-  <div class="shell grid grid-cols-1 md:grid-cols-[1fr_16rem] gap-10 md:gap-16">
+  <div class="shell"><div class="page-canvas page-canvas-reading grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_15rem] gap-10 md:gap-14">
     {# data-hero-in, not .fade-up: this block sits right at the fold under
        the navy masthead, so .fade-up's scroll-gated reveal left it at
        opacity:0 (invisible, not just unrendered) on an ordinary viewport
@@ -57,15 +74,72 @@ eleventyComputed:
        to it. Still fully visible by default with no CSS hiding of its
        own — GSAP sets the hidden state itself only once it has loaded. #}
     <div data-hero-in>
-      <div class="rounded-lg overflow-hidden bg-navy-deep mb-10">
+      {# aspect ratio + object-cover: was rendering the source photo
+         uncropped at its native aspect, with no consistent framing against
+         the rest of the site's article imagery. (The watermark that used
+         to sit in these source photos' corner -- see 2026-09-03 note on
+         insights.json's images -- is now physically cropped out of the
+         source files themselves, so no object-position bias is needed
+         here.) #}
+      <div class="overflow-hidden bg-navy-deep mb-10 aspect-[16/10] [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
         {% imageEager "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 768px) 60vw, 100vw" %}
       </div>
 
+      {# | safe (2026-09-08): the new research-tagged articles (source:
+         "research") cite sources inline as real <a> links, matching the
+         exact pattern already used in marketContext.json's `analysis`
+         field (also rendered `| safe`) -- authored content, not visitor
+         input, so this isn't an XSS risk the way escaping user text would
+         be. The 3 original marketing-tagged posts have no markup in their
+         paragraphs, so this is a no-op for them. #}
       <div class="insights-article-prose">
         {% for para in post.bodyParagraphs %}
-        <p>{{ para }}</p>
+        <p>{{ para | safe }}</p>
+
+        {# Key figures land after the opening paragraph, where the piece has
+           set up its subject but not yet made its case — the numbers the
+           article exists to make were previously plain grey body text.
+           Each keeps its own publisher link, the same "figure with its
+           provenance directly beneath it" pattern already proven by
+           .market-stat on /ventures/, rather than a new device. Driven by
+           post.keyFigures, so the marketing-sourced articles (which have
+           none) simply don't render this. #}
+        {% if loop.first and post.keyFigures %}
+        <div class="article-figures">
+          {% for f in post.keyFigures %}
+          <div class="article-figure">
+            <p class="article-figure-value font-display font-light tabular-nums text-ink">{{ f.value }}</p>
+            <p class="mt-2 text-small text-ink-muted leading-relaxed">{{ f.label }}</p>
+            <a href="{{ f.href }}" target="_blank" rel="noopener noreferrer" class="mt-2 inline-flex items-center gap-1 font-mono text-label uppercase tracking-widest text-gold-text link-underline">
+              {{ f.publisher }}
+              <svg width="9" height="9" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
         {% endfor %}
       </div>
+
+      {% if post.citations %}
+      <div class="source-tier mt-12">
+        <div class="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 class="font-display font-book text-h4 text-ink">Sources</h2>
+          <span class="font-mono text-label uppercase tracking-widest text-ink-faint">Read at the primary source before publication</span>
+        </div>
+        <div class="mt-4">
+          {% for c in post.citations %}
+          <a href="{{ c.href }}" target="_blank" rel="noopener noreferrer" class="flex items-baseline justify-between gap-4 py-3 border-t border-rule group">
+            <span class="text-small text-ink group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ c.label }}</span>
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="shrink-0 text-ink-faint"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          {% endfor %}
+        </div>
+        <p class="mt-4 text-small text-ink-muted">
+          How we handle figures across the whole site: <a href="/sources/" class="link-underline text-ink">Sources &amp; Methodology</a>.
+        </p>
+      </div>
+      {% endif %}
 
       {# hrefLabel-style fix, same pattern as /ventures/ and /contact/: where
          there's no real URL (Institute — ventureHref is "#"), render a
@@ -73,7 +147,11 @@ eleventyComputed:
          rel=noopener since they leave the site. #}
       {% for v in ventures %}{% if v.name == post.venture %}
       {% if v.href == "#" %}
-      <p class="mt-8 text-small text-ink-faint">{{ v.hrefLabel }}</p>
+      {# Was just {{ v.hrefLabel }} alone ("No public site yet") with no
+         subject -- a design critique read it as an orphaned, unexplained
+         note. The contact page's version of this same fallback already
+         frames it with the venture name; matching that here. #}
+      <p class="mt-8 text-small text-ink-faint">{{ post.venture }} &mdash; {{ v.hrefLabel }}</p>
       {% else %}
       <a href="{{ v.href }}" class="mt-8 inline-flex items-center gap-2 text-small font-medium text-ink link-underline" target="_blank" rel="noopener noreferrer">
         Explore {{ post.venture }}
@@ -89,13 +167,18 @@ eleventyComputed:
         {% for other in insights %}
         {% if other.slug != post.slug %}
         <a href="/insights/{{ other.slug }}/" class="py-4 border-t border-rule first:border-t-0 group">
-          <span class="font-mono text-micro uppercase tracking-widest text-navy-soft">{{ other.venture }}</span>
+          <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ other.venture }}</span>
           <h3 class="mt-1 text-h4 font-display font-book text-ink group-hover:text-navy-soft transition-colors duration-press ease-signature">{{ other.title }}</h3>
-          <span class="mt-1 block font-mono text-micro uppercase tracking-widest text-ink-muted">{{ other.body | readingTime }} min read</span>
+          <span class="mt-1 block font-mono text-label uppercase tracking-widest text-ink-muted">{{ other.body | readingTime }} min read</span>
         </a>
         {% endif %}
         {% endfor %}
       </div>
     </aside>
-  </div>
+  </div></div>
 </section>
+
+{# CLOSE — shared with the homepage/About/Ventures/Insights index
+   (partials/cta-close.njk). This template previously had no closing CTA
+   at all, ending cold on the "More Insights" sidebar (2026-09-07). #}
+{% include "partials/cta-close.njk" %}

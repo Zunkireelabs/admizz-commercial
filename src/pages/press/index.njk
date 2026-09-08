@@ -1,0 +1,108 @@
+---
+layout: base.njk
+title: Press & Media Kit — Admizz Group
+description: Brand assets, company background and media contact for Admizz Group.
+permalink: /press/
+---
+
+{# New page (2026-09-08) -- closes docs/01-AUDIT.md §9 item 22 ("Press /
+   media kit / brand assets"). "In the news" is deliberately an honest
+   empty state, not a section quietly left off the page: CLAUDE.md
+   non-negotiable #1 says build components that are STRONG WHEN EMPTY
+   rather than skip them or invent coverage that doesn't exist. Same
+   pattern already used for Institute's "No public site yet" elsewhere.
+   Logos offered are the 2 real PNG marks that exist in the repo
+   (src/assets/images/brand/) -- no SVG exists to offer, and this page
+   doesn't claim one does. Colors are the real, exact hex values from
+   tailwind.config.js, not resampled/approximated. #}
+
+<section class="bg-paper py-section-sm">
+  <div class="shell">
+    <span class="eyebrow">Press</span>
+    <h1 class="mt-3 font-display font-light text-display-2 text-ink max-w-[20ch] text-balance">Press &amp; Media Kit</h1>
+    <p class="mt-5 text-body-lg text-ink-muted max-w-measure">
+      Brand assets and company background for journalists, partners and anyone writing about Admizz Group.
+    </p>
+  </div>
+</section>
+
+<section class="bg-paper pb-section">
+  <div class="shell">
+    <div class="legal-prose">
+      <h2>About Admizz</h2>
+      <p>{{ site.description }} Founded in {{ site.founded }} and headquartered in {{ site.address }}, Admizz operates as three connected businesses — Admizz Institute (test preparation), Admizz Education (study abroad) and Admizz Workforce Solutions (workforce development) — each serving a different stage of the same journey, from preparation through to employment.</p>
+      <p>For company facts, figures and their sources, see our <a href="/sources/">Sources &amp; Methodology</a> page. For the full story, see <a href="/about/">Our Story</a>.</p>
+    </div>
+
+    {# Download links point to public/brand/ (Vite's publicDir, copied
+       as-is with a stable un-hashed URL -- same mechanism robots.txt
+       already uses), NOT src/assets/images/brand/. That second path is
+       what the <img> tags below reference, and Vite auto-rewrites <img
+       src> to its own hashed build output (verified: mark-navy.png ->
+       /assets/mark-navy-<hash>.png) -- but it does NOT rewrite plain
+       <a href> attributes, so a download link at the raw src path 404s
+       post-build. Caught by testing the actual built output, not assumed. #}
+    <div class="mt-14">
+      <h2 class="font-display font-book text-h3 text-ink">Logo</h2>
+      <p class="mt-2 text-body text-ink-muted max-w-measure">Please don't alter, recolor or add effects to the mark. Use the navy version on light backgrounds, white on dark.</p>
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
+        <div class="rounded-lg border border-rule bg-paper-raised p-6 flex flex-col items-start gap-5">
+          <div class="w-full aspect-[16/9] rounded flex items-center justify-center bg-paper">
+            <img src="/assets/images/brand/mark-navy.png" alt="Admizz logo, navy, for light backgrounds" class="h-10 w-auto">
+          </div>
+          <a href="/brand/admizz-logo-navy.png" download class="inline-flex items-center gap-2 text-small font-medium text-ink link-underline">
+            Download PNG (navy)
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v8M3.5 7L7 10.5 10.5 7M2.5 12h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+        <div class="rounded-lg border border-rule bg-navy-deep p-6 flex flex-col items-start gap-5">
+          <div class="w-full aspect-[16/9] rounded flex items-center justify-center">
+            <img src="/assets/images/brand/mark-white.png" alt="Admizz logo, white, for dark backgrounds" class="h-10 w-auto">
+          </div>
+          <a href="/brand/admizz-logo-white.png" download class="inline-flex items-center gap-2 text-small font-medium text-navy-on link-underline">
+            Download PNG (white)
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v8M3.5 7L7 10.5 10.5 7M2.5 12h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-14">
+      <h2 class="font-display font-book text-h3 text-ink">Colors</h2>
+      <p class="mt-2 text-body text-ink-muted max-w-measure">The exact values used across this site — not approximated.</p>
+      <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-5 max-w-3xl">
+        {% set swatches = [
+          { name: "Navy", hex: "#0D1282", text: "white" },
+          { name: "Gold", hex: "#FFD800", text: "ink" },
+          { name: "Paper", hex: "#F6F6F3", text: "ink", border: true },
+          { name: "Ink", hex: "#10192B", text: "white" }
+        ] %}
+        {% for s in swatches %}
+        <div>
+          <div class="aspect-square rounded-lg{% if s.border %} border border-rule{% endif %}" style="background-color: {{ s.hex }};"></div>
+          <p class="mt-2.5 text-small font-medium text-ink">{{ s.name }}</p>
+          <p class="font-mono text-label uppercase tracking-widest text-ink-faint">{{ s.hex }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="mt-14 max-w-measure">
+      <h2 class="font-display font-book text-h3 text-ink">In the news</h2>
+      {# Honest empty state, not omitted or invented. #}
+      <div class="mt-4 rounded-lg border border-rule bg-paper-raised p-8">
+        <p class="text-body text-ink-muted">No press coverage published here yet. If you're working on a story about Admizz and need facts, figures or an interview, get in touch below — we'll get back to you.</p>
+      </div>
+    </div>
+
+    <div class="mt-14 max-w-measure">
+      <h2 class="font-display font-book text-h3 text-ink">Media inquiries</h2>
+      <p class="mt-3 text-body text-ink-muted">
+        <a href="mailto:{{ site.email }}" class="link-underline text-ink font-medium">{{ site.email }}</a><br>
+        <a href="{{ site.phoneHref }}" class="link-underline text-ink">{{ site.phone }}</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+{% include "partials/cta-close.njk" %}

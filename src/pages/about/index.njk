@@ -38,12 +38,12 @@ permalink: /about/
    Two columns: copy left, photo right — plain, no border/radius/shadow on
    the photo, just the image sitting in its column. #}
 <section class="story-hero bg-paper">
-  <div class="shell story-hero-grid">
+  <div class="shell"><div class="page-canvas story-hero-grid">
     <div class="story-hero-copy">
       <span class="eyebrow" data-hero-in>Our Story</span>
       <h1 class="mt-4 font-display font-light text-display-2 text-ink text-balance" data-hero-in>
         A journey of <em class="italic text-navy font-book">purpose.</em><br>
-        A future of <em class="italic text-gold font-book">impact.</em>
+        A future of <em class="italic text-gold-text font-book">impact.</em>
       </h1>
       <p class="mt-6 text-body-lg text-ink-muted max-w-measure-tight leading-relaxed" data-hero-in>
         Since 2015, Admizz Group has worked at the intersection of education and opportunity &mdash; helping students and professionals find the preparation, guidance and pathways to their next milestone.
@@ -57,32 +57,181 @@ permalink: /about/
     <div class="story-hero-photo" data-hero-in>
       {% imageEager "src/assets/images/story/hero-building-branded.png", "The Admizz mark on a building facade, directional brand imagery", "(min-width: 1000px) 44vw, 92vw" %}
     </div>
+  </div></div>
+
+  {# Proof block (2026-09-08 v3) — v2 was four equal cards with the numbers
+     at display scale, and the client's read was right: "3" and "9" rendered
+     fist-sized are underwhelming, not impressive, and four identical boxes
+     isn't a composition. Rebuilt around the strongest REAL asset this
+     project has — 103 actual partner university marks harvested from
+     admizzeducation.com — which had never appeared on this page at all.
+
+     Attribution matters here: universities.json is source:admizzeducation,
+     status:draft — Admizz's own published partner list, not independently
+     audited — so the caption says so, exactly as the homepage does. The
+     ICEF card beside it is the opposite kind of claim: independently
+     verifiable, with the real verify route attached. Keeping them adjacent
+     but distinct is the honest presentation. #}
+  <div class="shell">
+    <div class="page-canvas">
+      <div class="bento mt-14 md:mt-20">
+
+        <div class="bento-item bento-wide fade-up" style="grid-row: span 1;">
+          <div>
+            <span class="font-mono text-label uppercase tracking-widest text-ink-faint">The network</span>
+            <p class="mt-3 font-display font-light text-h2 text-ink text-balance max-w-[20ch]">
+              <span class="tabular-nums">{{ universities.totalCount }}</span> partner institutions across
+              <span class="tabular-nums">{{ destinations.countries | length }}</span> countries.
+            </p>
+          </div>
+
+          {# Two marks per country group, across the first five groups — a
+             representative spread rather than a hand-picked "best" set,
+             and it stays correct if the harvested data changes. #}
+          <div class="logo-wall">
+            {% for g in universities.groups | head(5) %}
+              {% for uni in g.universities | head(2) %}
+              <span class="logo-tile" title="{{ uni.name }}">
+                <img src="{{ uni.logo }}" alt="{{ uni.name }}" width="120" height="72" loading="lazy" decoding="async">
+              </span>
+              {% endfor %}
+            {% endfor %}
+          </div>
+
+          <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+            <a href="/ventures/#record-education" class="text-small font-medium text-ink link-underline">See the full network &rarr;</a>
+            <span class="font-mono text-label uppercase tracking-widest text-ink-faint">Published by Admizz Education, as of 2026</span>
+          </div>
+        </div>
+
+        <div class="bento-item bento-item-navy fade-up" style="animation-delay:90ms">
+          <span class="font-mono text-label uppercase tracking-widest text-navy-accent">Accreditation</span>
+          <div>
+            <p class="bento-num bento-num-word font-display font-light text-navy-on">ICEF</p>
+            <p class="mt-3 text-small text-navy-on-muted">
+              Agency <span class="tabular-nums">IAS&nbsp;6499</span>, held by Admizz Education &mdash; verifiable at ICEF directly, not self-reported.
+            </p>
+            <a href="https://www.icef.com/" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center gap-1.5 text-small font-medium text-navy-on link-underline">
+              Verify with ICEF
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="bento-item bento-item-tint fade-up" style="animation-delay:170ms">
+          <span class="font-mono text-label uppercase tracking-widest text-gold-text">Operating since</span>
+          <div>
+            <p class="bento-num font-display font-light tabular-nums text-ink">{{ site.founded }}</p>
+            <p class="mt-3 text-small text-ink-muted">Founded in Denver, Colorado &mdash; still the group&rsquo;s headquarters, now behind three businesses.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </section>
 
-{# ============================================================ TIMELINE #}
-<section id="journey" class="story-journey-section bg-paper-sunk py-section border-t border-rule" data-stack-outgoing>
-  <div class="shell">
-    <span class="eyebrow fade-up">The Journey</span>
-    <h2 class="mt-4 font-display font-light text-h1 text-ink max-w-[16ch] text-balance fade-up" style="animation-delay:80ms">
-      Milestones that shaped who we are.
-    </h2>
+{# ============================================================ THE JOURNEY
+   2026-09-08 v3: was a vertical dotted timeline — text left, small photo
+   far right, a scrubbed connector line down the side. Two problems, both
+   measured rather than assumed: rows sprawled with ~500px of dead paper
+   between the copy and its photo, and the whole track sat left-aligned
+   inside the 95vw shell, leaving 820px of empty page down the right at a
+   1890px window (what the client circled).
 
-    <div class="story-timeline-track" data-story-timeline>
-      <div class="story-timeline-line" aria-hidden="true"></div>
-      {% for t in timeline %}
-      <div class="story-timeline-row">
-        <span class="story-timeline-dot" aria-hidden="true"></span>
-        <div class="story-timeline-body">
-          <span class="story-timeline-year font-mono text-small font-medium tabular-nums text-navy-soft">{{ t.year }}</span>
-          <h3 class="mt-1.5 font-display font-book text-h3 text-ink">{{ t.label }}</h3>
-          <p class="mt-1.5 text-body text-ink-muted leading-relaxed max-w-measure-tight">{{ t.text }}</p>
-        </div>
-        <div class="story-timeline-photo">
-          {% image "src/assets/images/story/" + t.image, t.imageAlt, "(min-width: 700px) 22rem, 90vw" %}
-        </div>
+   Rebuilt as alternating claim + visual rows, the device the SaleUnion
+   reference uses for its own numbered sections: mono year label, a large
+   display heading, the copy, and a substantial image plate opposite —
+   sides swapping each row so the page has rhythm instead of one long
+   left-hugging column. Content is capped and centred (.page-canvas), so
+   both margins match at any width.
+
+   The dotted-line/dot markup and its GSAP scrub are gone with it; the
+   arrival animation is the same index-staggered .fade-up used elsewhere,
+   so nothing here depends on JS to become visible. #}
+<section id="journey" class="story-journey-section bg-paper-sunk py-section border-t border-rule">
+  <div class="shell">
+    <div class="page-canvas">
+      <span class="eyebrow fade-up">The Journey</span>
+      <h2 class="mt-4 font-display font-light text-h1 text-ink max-w-[18ch] text-balance fade-up" style="animation-delay:80ms">
+        Milestones that shaped who we are.
+      </h2>
+
+      <div class="mt-12 md:mt-16">
+        {% for t in timeline %}
+        <article class="journey-row" style="--stack-index: {{ loop.index0 }}">
+          <div class="journey-copy fade-up" style="animation-delay:{{ loop.index0 * 60 }}ms">
+            <p class="journey-year font-display font-light tabular-nums">{{ t.year }}</p>
+            <h3 class="mt-4 font-display font-book text-h2 text-ink text-balance max-w-[16ch]">{{ t.label }}</h3>
+            <p class="mt-4 text-body-lg text-ink leading-relaxed max-w-measure-tight">{{ t.text }}</p>
+            {# timeline.json has carried an `impact` sentence per milestone
+               since the file was written and no template ever rendered it —
+               every entry showed only the one-line `text`, which is why
+               this section read as thin. Existing content, now shown. #}
+            {% if t.impact %}
+            <p class="mt-5 pt-5 border-t border-rule text-body text-ink-muted leading-relaxed max-w-measure-tight">{{ t.impact }}</p>
+            {% endif %}
+          </div>
+
+          {# Plate: a photo where a meaningful one exists, a DESIGNED DATA
+             PANEL where it doesn't. timeline-2020.jpg was a stock sunset
+             sky and timeline-today.jpg an abstract glass facade — neither
+             said anything about its milestone, and no real Admizz
+             photography exists for them. Rather than swap in more
+             meaningless stock, those two rows now carry the actual data
+             the milestone is about (the real destination list; the real
+             venture list), which is also the device the reference uses:
+             its right-hand panels are designed information, not photos.
+             Replace with real photography if the client supplies it —
+             the photo branch below already handles it. #}
+          {% if t.year == "2020" %}
+          <div class="data-panel data-panel-navy fade-up" style="animation-delay:{{ loop.index0 * 60 + 90 }}ms">
+            <span class="font-mono text-label uppercase tracking-widest text-navy-accent">Where we place students</span>
+            {# Anchors the panel's top — without it the label floated alone
+               above a large void, since the list is bottom-aligned. #}
+            <p class="mt-4 font-display font-light text-navy-on">
+              <span class="bento-num tabular-nums">{{ destinations.countries | length }}</span>
+              <span class="ml-2 text-h4 text-navy-on-muted">study destinations</span>
+            </p>
+            <div class="data-panel-grid">
+              {% for c in destinations.countries %}
+              <span class="data-panel-row">
+                <span aria-hidden="true">{{ c.flag }}</span>
+                <span class="text-small text-navy-on">{{ c.name }}</span>
+              </span>
+              {% endfor %}
+            </div>
+          </div>
+
+          {% elif t.year == "Today" %}
+          <div class="data-panel fade-up" style="animation-delay:{{ loop.index0 * 60 + 90 }}ms">
+            <span class="font-mono text-label uppercase tracking-widest text-ink-faint">The group today</span>
+            <p class="mt-4 font-display font-light text-ink">
+              <span class="bento-num tabular-nums">{{ ventures | length }}</span>
+              <span class="ml-2 text-h4 text-ink-muted">connected businesses</span>
+            </p>
+            <div class="data-panel-list">
+              {% for v in ventures %}
+              <span class="data-panel-item">
+                <span class="font-mono text-small tabular-nums text-navy-soft">{{ v.index }}</span>
+                <span>
+                  <span class="block font-display font-book text-h4 text-ink">{{ v.name }}</span>
+                  <span class="block mt-0.5 font-mono text-label uppercase tracking-widest text-ink-faint">{{ v.vertical }}</span>
+                </span>
+              </span>
+              {% endfor %}
+            </div>
+          </div>
+
+          {% else %}
+          <div class="journey-plate fade-up" style="animation-delay:{{ loop.index0 * 60 + 90 }}ms">
+            <span class="journey-plate-badge bento-tag" aria-hidden="true">{{ "0" }}{{ loop.index }} / {{ t.year }}</span>
+            {% image "src/assets/images/story/" + t.image, t.imageAlt, "(min-width: 900px) 38vw, 92vw" %}
+          </div>
+          {% endif %}
+        </article>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
   </div>
 </section>
@@ -92,7 +241,7 @@ permalink: /about/
    link to each record. "Learn more" points at the real in-page anchor
    /ventures/ already exposes (verified: id="record-{id}" on that page). #}
 <section class="story-businesses-section bg-paper py-section" data-stack-incoming>
-  <div class="shell">
+  <div class="shell"><div class="page-canvas">
     <span class="eyebrow fade-up">Our Businesses</span>
     <h2 class="mt-4 font-display font-light text-h1 text-ink max-w-[18ch] text-balance fade-up" style="animation-delay:80ms">
       Three businesses. <em class="italic text-navy font-book">One purpose.</em>
@@ -101,9 +250,19 @@ permalink: /about/
       Different focus areas, a shared conviction that access to opportunity shouldn&rsquo;t depend on where someone starts.
     </p>
 
+    {# 2026-09-06: ascending-tone staggered treatment (reference: Scalient's
+       3-step process cards, light-to-accent intensity) — was a flat,
+       identical 3-column grid (the same "sameness" pattern already flagged
+       and fixed elsewhere on the site, e.g. Beliefs). Card 1 stays the
+       plain paper-raised tier; card 2 steps up to a stronger border/shadow;
+       card 3 (Work — the group's newest, most active-growth venture) is
+       the boldest, inverted to navy. A real index numeral (v.index, already
+       in ventures.json) is added per card — nothing new invented, and it's
+       the same numbering device used on /ventures/. #}
     <div class="story-venture-grid mt-10">
       {% for v in ventures %}
-      <article class="story-venture-card" data-story-venture-card>
+      <article class="story-venture-card story-venture-card-{{ loop.index }}" data-story-venture-card>
+        <span class="story-venture-num" aria-hidden="true">{{ v.index }}</span>
         <span class="story-venture-icon story-venture-icon-{{ v.id }}" aria-hidden="true">
           {% if v.id == "institute" %}
           <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
@@ -113,9 +272,9 @@ permalink: /about/
           <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 16V9M8 16V4M13 16v-5M18 16V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           {% endif %}
         </span>
-        <h3 class="mt-4 font-display font-book text-h4 text-ink">{{ v.name }}</h3>
-        <p class="mt-1 font-mono text-micro uppercase tracking-widest text-navy-soft">{{ v.vertical }}</p>
-        <p class="mt-3 text-small text-ink-muted leading-relaxed">{{ v.verticalLine }}</p>
+        <h3 class="mt-4 font-display font-book text-h4">{{ v.name }}</h3>
+        <p class="story-venture-vertical mt-1 font-mono text-label uppercase tracking-widest">{{ v.vertical }}</p>
+        <p class="story-venture-text mt-3 text-small leading-relaxed">{{ v.verticalLine }}</p>
         <a href="/ventures/#record-{{ v.id }}" class="story-venture-link">
           Learn more
           <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -123,38 +282,69 @@ permalink: /about/
       </article>
       {% endfor %}
     </div>
-  </div>
+  </div></div>
+</section>
+
+{# ============================================================ STATEMENT
+   2026-09-08: the page ran paper → grey → paper → grey → CTA with no
+   tonal peak anywhere, so the story had no moment that landed. This is
+   the same navy statement device the homepage already uses, reusing the
+   exact .statement-line hook (main.js staggers those phrase-by-phrase on
+   scroll, generic and page-agnostic) rather than inventing a second
+   motion idiom. Copy is written framing, not a new factual claim — it
+   restates the "three businesses, one group" positioning already
+   established on /ventures/ and in the section directly below. #}
+<section class="relative overflow-hidden bg-navy-deep py-section-sm">
+  {% include "partials/grain-texture.njk" %}
+  <div class="shell relative"><div class="page-canvas">
+    <p class="font-display font-light text-h1 text-navy-on max-w-[38ch] text-balance">
+      <span class="statement-line inline-block">Preparation, education and work</span>
+      <span class="statement-line inline-block italic text-navy-accent font-book">aren&rsquo;t three industries.</span>
+      <span class="statement-line inline-block">They&rsquo;re three stages of the same</span>
+      <span class="statement-line inline-block">decision &mdash; so we built for all three.</span>
+    </p>
+    <span class="statement-line inline-block mt-8 md:block font-mono text-label uppercase tracking-widest text-navy-on-muted">&mdash; Why the group exists</span>
+  </div></div>
 </section>
 
 {# ============================================================ LEADERSHIP #}
+{# 2026-09-08: was `shell grid [22rem_1fr] items-start` on the full
+   min(95vw,2200px) shell — the 1fr text column absorbed the entire
+   remaining width while the statement inside stayed at its own measure,
+   so the block dead-ended in ~200px of empty grey before the CTA. The
+   row now has a reading-width cap of its own and centres its two
+   columns against each other, same fix applied to the timeline track
+   above. Portrait gets the rounded plate treatment the rest of the site
+   uses for photography (.venture-plate, insights cards) instead of a
+   bare square of navy. #}
 <section class="bg-paper-sunk py-section border-t border-rule">
-  <div class="shell grid grid-cols-1 md:grid-cols-[minmax(0,22rem)_1fr] gap-10 md:gap-16 items-start">
+  <div class="shell">
+   <div class="page-canvas grid grid-cols-1 md:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] gap-10 md:gap-14 items-center">
     <div class="fade-up">
-      <div class="rounded-lg overflow-hidden bg-navy-deep">
-        {% image "src/assets/images/people/founder.png", "Manish K Sah, Founder & CEO of Admizz Group", "(min-width: 768px) 22rem, 90vw", [400, 640, 900] %}
+      <div class="overflow-hidden rounded-lg bg-navy-deep aspect-[4/5] [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-top">
+        {% image "src/assets/images/people/founder.png", "Manish K Sah, Founder & CEO of Admizz Group", "(min-width: 768px) 19rem, 90vw", [400, 640, 900] %}
       </div>
     </div>
     <div class="fade-up" style="animation-delay:100ms">
       <span class="eyebrow">Leadership</span>
       <h2 class="mt-3 font-display font-light text-h2 text-ink max-w-[16ch] text-balance">A vision for what&rsquo;s next.</h2>
-      <blockquote class="mt-8 font-display italic font-book text-h3 text-ink leading-snug max-w-measure text-balance">
-        &ldquo;{{ site.founder.quote }}&rdquo;
-      </blockquote>
+      {# Not a blockquote: no verified personal quote from the founder exists
+         in the audit (docs/01-AUDIT.md) for admizz.com itself -- the previous
+         version presented invented, paraphrased marketing copy in quotation
+         marks as if he'd said it. Replaced with a plain, factual statement
+         (site.founder.statement) grounded only in facts already established
+         elsewhere on the site. A real quote is an open content request. #}
+      <p class="mt-8 font-display italic font-book text-h3 text-ink leading-snug max-w-measure text-balance">
+        {{ site.founder.statement }}
+      </p>
       <p class="mt-6 text-body font-medium text-ink">{{ site.founder.name }}</p>
       <p class="text-small text-ink-muted">{{ site.founder.title }}, {{ site.founder.org }}</p>
     </div>
+   </div>
   </div>
 </section>
 
-{# ============================================================ CLOSE #}
-<section class="relative overflow-hidden bg-navy-deep py-section">
-  {% include "partials/facet-field.njk" %}
-  <div class="shell relative grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-end gap-8">
-    <div class="fade-up">
-      <p class="font-display font-light text-display-2 text-navy-on max-w-[20ch] text-balance">
-        The story continues. <em class="italic text-navy-accent font-book">We&rsquo;re just getting started.</em>
-      </p>
-    </div>
-    <a href="/ventures/" class="btn-primary shrink-0 fade-up" style="animation-delay:80ms">Explore our ventures</a>
-  </div>
-</section>
+{# CLOSE — shared with the homepage/Ventures/Insights (partials/cta-close.njk),
+   swapped from this page's own "The story continues" / ventures-link
+   band (2026-09-07) so every page ends on the same contact CTA. #}
+{% include "partials/cta-close.njk" %}

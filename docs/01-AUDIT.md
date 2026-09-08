@@ -336,12 +336,18 @@ Hand this to the client. Grouped by whether it blocks the build.
 6. **Is Admizz Institute a live business?** No website, no address, no course list, no pricing, no
    schedule, no named trainers. Commission real content or restructure the story.
 7. **Verified exam list** — GMAT vs TOEFL/Duolingo do not reconcile across sites.
-8. **Confirm the current Kathmandu address** — two conflicting addresses are indexed.
+8. **Confirm the current Kathmandu address** — two conflicting addresses are indexed. (Removed
+   from `/contact/` display 2026-09-02, along with the unconfirmed Denver ZIP "80202" and the
+   "Mon–Fri 9–6 MST" phone hours — none of the three were ever verified.)
 
 ### 🟠 P1 — high value, does not exist anywhere
 
-9. **Group-level founder bio.** The only bio in existence is on admizzworks.com, first-person, and
-   framed entirely around Workforce.
+9. **Group-level founder bio, and a real quote from Manish K Sah.** The only bio in existence is on
+   admizzworks.com, first-person, and framed entirely around Workforce. `/about/`'s "Leadership"
+   section previously showed a quote attributed to him that doesn't match anything verified for
+   admizz.com in this audit — removed 2026-09-02 and replaced with a plain factual statement
+   (`site.founder.statement`) built only from facts already established elsewhere on the site. A
+   real, confirmed quote should replace that statement once one exists.
 10. **Leadership/team page.** Pushpa Rauniyar is President and appears nowhere on admizz.com.
 11. **Founding narrative** — why founded, what problem was seen, the India-inbound → global-outbound
     pivot, why Denver.

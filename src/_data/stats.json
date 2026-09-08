@@ -1,0 +1,32 @@
+{
+  "_note": "Proof figures published by Admizz Education (admizzeducation.com homepage + /about, both agree). Harvested 2026-08-30. These are Admizz's own stated results, tagged with provenance — not independently audited. The group site is partner/press-facing, so keep the register institutional (see CLAUDE.md 'Register translation rule' in docs/RESUME-PROMPT.md).",
+  "source": "admizzeducation",
+  "status": "draft",
+  "headline": [
+    {
+      "value": "2,000+",
+      "label": "students enrolled worldwide",
+      "note": "Across Admizz Education since 2015. The 2021 milestone of 1,000 (see timeline) has since doubled."
+    },
+    {
+      "value": "100+",
+      "label": "partner universities & colleges",
+      "note": "In 9 countries — see the partner index."
+    },
+    {
+      "value": "95%",
+      "label": "student visa approval rate",
+      "note": "For applications submitted with Admizz Education guidance."
+    },
+    {
+      "value": "$2M+",
+      "label": "in scholarships awarded to students"
+    }
+  ],
+  "secondary": [
+    { "value": "9", "label": "study destinations" },
+    { "value": "10+ yrs", "label": "operating since 2015" },
+    { "value": "24 hr", "label": "average response time" },
+    { "value": "4", "label": "offices across the US and Nepal" }
+  ]
+}

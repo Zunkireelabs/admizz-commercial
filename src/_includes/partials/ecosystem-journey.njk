@@ -77,30 +77,63 @@
     {% for v in ventures %}
     {% set img = ecosystemImages[v.id] %}
     <article class="ecosystem-story-block min-h-[75vh] md:min-h-[82vh] flex flex-col justify-center py-10 md:py-0 md:pl-14 lg:pl-20 border-t border-rule first:border-t-0 md:border-t-0" data-block="{{ loop.index0 }}" data-index="{{ v.index }}" data-stage="{{ v.stage }}">
-      <div class="md:hidden mb-6 aspect-[4/3] overflow-hidden rounded-lg bg-navy-deep">
+      <div class="md:hidden mb-6 aspect-[4/3] overflow-hidden bg-navy-deep">
         {% image "src/assets/images/ecosystem/" + img.file, img.alt, "90vw" %}
       </div>
-      <span class="ecosystem-block-label eco-field font-mono text-label uppercase tracking-widest text-ink-faint">{{ v.index }} &mdash; {{ v.stage | upper }}</span>
+      {# 2026-09-02: was one flat .eco-field group, all 9 pieces sliding in
+         together on a uniform 70ms stagger -- read as everything arriving
+         in a hurry rather than a deliberate sequence. Now four data-eco-
+         group stages (wired in main.js): 0 = label+title (the "what is
+         this" beat), 1 = the supporting text, 2 = the exam chips (each
+         pops individually, not as one sliding block), 3 = the stat + CTA
+         (the payoff, arrives last). eco-field class kept for any other
+         selector that still targets it; the reveal itself now reads
+         data-eco-group. #}
+      <span class="ecosystem-block-label eco-field font-mono text-label uppercase tracking-widest text-ink-faint" data-eco-group="0">{{ v.index }} &mdash; {{ v.stage | upper }}</span>
       {# Two-tone name — "Admizz" one color, the venture-specific word(s) in
          the gold CTA color — same technique admizzeducation.com's own hero
          uses (its emphasized word breaks from the base heading color). All
          three names start "Admizz ", so splitting on the first space
          reliably separates the two parts without hardcoding per-venture. #}
-      <h3 class="ecosystem-block-title eco-field mt-4 font-display font-light text-display-2 max-w-[14ch] text-balance">
+      <h3 class="ecosystem-block-title eco-field mt-4 font-display font-light text-display-2 max-w-[14ch] text-balance" data-eco-group="0">
         <span class="text-ink">{{ v.name.split(' ')[0] }}</span>
-        <span class="text-gold">{{ v.name.split(' ').slice(1).join(' ') }}</span>
+        <span class="text-gold-text">{{ v.name.split(' ').slice(1).join(' ') }}</span>
       </h3>
-      <span class="eco-field mt-2 font-mono text-micro uppercase tracking-widest text-navy-soft block">{{ v.vertical }}</span>
-      <p class="eco-field mt-5 text-body-lg text-ink-muted max-w-measure-tight">{{ v.description }}</p>
+
+      {# 2026-09-06: trimmed from 9 rendered pieces down to ~5 (label+title,
+         one line, the pull-quote, exams as plain text, stat+CTA) — density
+         was the actual complaint, not the sticky-photo mechanic or cards
+         (a card treatment was already tried and rejected here, see header
+         comment). Full detail (the plain `description` paragraph, the
+         standalone `vertical` line) still lives on /ventures/ via "See the
+         full record" below -- nothing is deleted from the site, just not
+         duplicated on the homepage. `problem` stays: it's the punchier,
+         single-line hook; `verticalLine` is promoted from a small italic
+         footnote to the section's actual pull-quote, since it was the one
+         line worth making bigger, not smaller. #}
+      {% if v.problem %}
+      <p class="eco-field mt-4 font-display font-light text-h4 text-ink text-balance" data-eco-group="1">{{ v.problem }}</p>
+      {% endif %}
       {% if v.verticalLine %}
-      <p class="eco-field mt-2 text-small text-ink-faint italic">{{ v.verticalLine }}</p>
+      <p class="eco-field mt-4 font-display font-light italic text-h3 text-navy-soft max-w-[20ch] text-balance" data-eco-group="1">&ldquo;{{ v.verticalLine }}&rdquo;</p>
       {% endif %}
       {% if v.exams.length %}
-      <ul class="eco-field mt-5 flex flex-wrap gap-2">
-        {% for e in v.exams %}<li class="font-mono text-micro uppercase tracking-wide text-ink-faint border border-rule rounded-sm px-2 py-1">{{ e }}</li>{% endfor %}
-      </ul>
+      <p class="eco-field mt-5 font-mono text-label uppercase tracking-wide text-ink-faint" data-eco-group="2">{{ v.exams | join(' &middot; ') | safe }}</p>
       {% endif %}
-      <a href="{{ v.href }}" class="eco-field mt-6 inline-flex items-center gap-2 text-small font-medium text-ink link-underline w-fit">
+
+      {# Evidence — the same verified sector stat already built and sourced
+         for /ventures/ (marketContext.json), reused here rather than a
+         second, separately-verified figure. Leads with the number, source
+         inline, exactly the /ventures/ pattern. #}
+      {% set mc = marketContext[v.id] %}
+      {% if mc and mc.stats.length %}
+      <div class="eco-field mt-6 pt-5 border-t border-rule flex items-baseline gap-3" data-eco-group="3">
+        <span class="font-display font-light text-h3 tabular-nums text-ink shrink-0">{{ mc.stats[0].value }}</span>
+        <span class="text-small text-ink-muted leading-snug">{{ mc.stats[0].label }} <span class="font-mono text-label uppercase tracking-widest text-ink-faint">&mdash; {{ mc.stats[0].publisher }}</span></span>
+      </div>
+      {% endif %}
+
+      <a href="{{ v.href }}" class="eco-field mt-6 inline-flex items-center gap-2 text-small font-medium text-ink link-underline w-fit" data-eco-group="3">
         {{ v.cta }}
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -113,11 +146,11 @@
    redesign's move away from boxed chrome. #}
 <div class="shell mt-4 md:mt-8">
   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pt-10 border-t border-rule">
-    <p class="font-display font-light text-h3 text-ink max-w-[24ch] text-balance">
-      One ecosystem. <em class="italic text-navy font-book">Endless possibilities.</em>
+    <p class="font-display font-light text-h3 text-ink max-w-[26ch] text-balance">
+      Three businesses. <em class="italic text-navy font-book">One record, in full.</em>
     </p>
     <a href="/ventures/" class="btn-primary shrink-0">
-      Let's build your future
+      See the full record
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
   </div>

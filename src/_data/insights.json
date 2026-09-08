@@ -17,6 +17,148 @@
     "imageSource": "pexels (Pexels License, free commercial use, no attribution required) — swapped 2026-08-25, the original global-opportunities.jpg was also the homepage hero photo and showed up twice on the same page"
   },
   {
+    "slug": "why-test-preparation-isnt-a-one-exam-business",
+    "title": "Why Test Preparation Isn't a One-Exam Business Anymore",
+    "deck": "PTE Academic volume is up 90% in a year, and the SAT just completed its shift to fully digital testing. Neither trend points to a single default exam.",
+    "venture": "Admizz Institute",
+    "ventureHref": "#",
+    "image": "exams-detail.jpg",
+    "imageAlt": "Student filling in an answer sheet during an exam",
+    "body": "For years, the standardized test that mattered for study abroad was the one your target country's institutions asked for, and that was usually IELTS. That's no longer the whole picture. Pearson's PTE Academic saw global volumes rise 90% in a single year (2022 vs. 2021), a scale of growth that reflects more institutions and immigration authorities accepting a computer-delivered format, not just more people testing. Meanwhile, admissions testing has been going through its own transition: more than 1.97 million students in the US high school Class of 2024 took the SAT at least once, up from 1.91 million the year before, the same year the SAT Suite completed its full move to digital testing everywhere it's offered. Colleges that had gone test-optional during the pandemic have also been reinstating score requirements, citing the SAT's value in identifying students likely to succeed. The practical result for anyone preparing for international study or migration: knowing one exam well is no longer enough. Effective preparation now means current, format-specific expertise across whichever combination of tests — IELTS, PTE, SAT, GRE, GMAT — a student's actual pathway requires, which is exactly the breadth Admizz Institute is built to cover.",
+    "bodyParagraphs": [
+      "For years, the standardized test that mattered for study abroad was the one your target country's institutions asked for, and that was usually IELTS. That's no longer the whole picture.",
+      "Pearson's PTE Academic saw global volumes rise 90% in a single year (2022 vs. 2021), a scale of growth that reflects more institutions and immigration authorities accepting a computer-delivered format, not just more people testing.",
+      "Admissions testing has been going through its own transition: more than 1.97 million students in the US high school Class of 2024 took the SAT at least once, up from 1.91 million the year before, the same year the SAT Suite completed its full move to digital testing everywhere it's offered. Colleges that had gone test-optional during the pandemic have also been reinstating score requirements, citing the SAT's value in identifying students likely to succeed.",
+      "The practical result for anyone preparing for international study or migration: knowing one exam well is no longer enough. Effective preparation now means current, format-specific expertise across whichever combination of tests — IELTS, PTE, SAT, GRE, GMAT — a student's actual pathway requires, which is exactly the breadth Admizz Institute is built to cover."
+    ],
+    "citations": [
+      {
+        "label": "Pearson — PTE Academic volume growth, 2023",
+        "href": "https://in.pearson.com/our-story/news-room/2023/08/pearson-test-of-english--pte--volume-grows-by-76--globally-in-h1.html"
+      },
+      {
+        "label": "College Board Newsroom — SAT participation & digital transition, 2024",
+        "href": "https://newsroom.collegeboard.org/sat-participation-continues-grow-sat-suite-successfully-completes-its-transition-digital-testing"
+      }
+    ],
+    "source": "research",
+    "imageSource": "distinct crop of the same licensed source file this venture's other article uses (sharp, 2026-09-08) -- the two posts per venture were rendering the IDENTICAL photo, visible side by side in the /insights/ grid. Same licence, no new asset sourced; same technique already used for institute-plate.jpg on /ventures/.",
+    "keyFigures": [
+      {
+        "value": "90%",
+        "label": "growth in PTE Academic tests taken globally, 2022 vs 2021",
+        "publisher": "Pearson",
+        "href": "https://in.pearson.com/our-story/news-room/2023/08/pearson-test-of-english--pte--volume-grows-by-76--globally-in-h1.html"
+      },
+      {
+        "value": "1.97M",
+        "label": "students in the US Class of 2024 took the SAT at least once",
+        "publisher": "College Board",
+        "href": "https://newsroom.collegeboard.org/sat-participation-continues-grow-sat-suite-successfully-completes-its-transition-digital-testing"
+      }
+    ]
+  },
+  {
+    "slug": "closing-the-employment-gap-vocational-rehabilitation",
+    "title": "The Vocational Rehabilitation Employment Gap, By the Numbers",
+    "deck": "872,460 people received vocational rehabilitation services nationally in a single cohort — the real test of the system is how many of them end up with a job.",
+    "venture": "Admizz Workforce Solutions",
+    "ventureHref": "https://admizzworks.com/",
+    "image": "lifelong-learning-detail.jpg",
+    "imageAlt": "Colleagues in conversation at a modern workspace",
+    "body": "Vocational rehabilitation is one of the largest, least-discussed workforce programs in the country. In the 2023/24 cohort, state VR programs reported serving 872,460 people nationally under the Workforce Innovation and Opportunity Act. Of those who exited the program in that period, 52.1% recorded a measurable skill gain — real evidence the training itself works. The harder number is what happens next: 55.9% of exiters had a job within two quarters of leaving the program. That's real progress, and it's also the actual size of the gap left to close. Context helps explain why that gap exists: nationally, the employment rate for people with a disability is 22.8%, against an 8.3% unemployment rate — roughly double the unemployment rate for people without a disability. Skills training that doesn't convert into employment isn't failing on its own terms; it's running into a labor market that hasn't caught up. Closing the distance between services received and jobs actually held — through hands-on training, employer partnerships and follow-through past the point of course completion — is the specific problem Admizz Workforce Solutions exists to work on.",
+    "bodyParagraphs": [
+      "Vocational rehabilitation is one of the largest, least-discussed workforce programs in the country. In the 2023/24 cohort, state VR programs reported serving 872,460 people nationally under the Workforce Innovation and Opportunity Act.",
+      "Of those who exited the program in that period, 52.1% recorded a measurable skill gain — real evidence the training itself works. The harder number is what happens next: 55.9% of exiters had a job within two quarters of leaving the program. That's real progress, and it's also the actual size of the gap left to close.",
+      "Context helps explain why that gap exists: nationally, the employment rate for people with a disability is 22.8%, against an 8.3% unemployment rate — roughly double the unemployment rate for people without a disability. Skills training that doesn't convert into employment isn't failing on its own terms; it's running into a labor market that hasn't caught up.",
+      "Closing the distance between services received and jobs actually held — through hands-on training, employer partnerships and follow-through past the point of course completion — is the specific problem Admizz Workforce Solutions exists to work on."
+    ],
+    "citations": [
+      {
+        "label": "Center for Research on Disability — 2025 Disability Statistics Compendium, Section 14 (VR)",
+        "href": "https://researchondisability.org/annual-disability-statistics-collection/2025-compendium-table-contents/section-14-vocational-rehabilitation-compendium-2025"
+      },
+      {
+        "label": "US Bureau of Labor Statistics — disability employment statistics",
+        "href": "https://www.bls.gov/news.release/disabl.nr0.htm"
+      }
+    ],
+    "source": "research",
+    "imageSource": "distinct crop of the same licensed source file this venture's other article uses (sharp, 2026-09-08) -- the two posts per venture were rendering the IDENTICAL photo, visible side by side in the /insights/ grid. Same licence, no new asset sourced; same technique already used for institute-plate.jpg on /ventures/.",
+    "keyFigures": [
+      {
+        "value": "872,460",
+        "label": "people received vocational rehabilitation services nationally, 2023/24",
+        "publisher": "CRD, 2025 Compendium",
+        "href": "https://researchondisability.org/annual-disability-statistics-collection/2025-compendium-table-contents/section-14-vocational-rehabilitation-compendium-2025"
+      },
+      {
+        "value": "55.9%",
+        "label": "of program exiters had a job within two quarters of leaving",
+        "publisher": "CRD, 2025 Compendium",
+        "href": "https://researchondisability.org/annual-disability-statistics-collection/2025-compendium-table-contents/section-14-vocational-rehabilitation-compendium-2025"
+      },
+      {
+        "value": "22.8%",
+        "label": "employment rate for people with a disability, nationally",
+        "publisher": "US Bureau of Labor Statistics",
+        "href": "https://www.bls.gov/news.release/disabl.nr0.htm"
+      }
+    ]
+  },
+  {
+    "slug": "the-real-numbers-behind-global-student-mobility",
+    "title": "What the Global Student Mobility Data Actually Shows",
+    "deck": "International students contributed $42.9 billion to the US economy alone in 2024/25, inside a global market projected to more than double by 2030.",
+    "venture": "Admizz Education",
+    "ventureHref": "https://admizzeducation.com/",
+    "image": "study-abroad-detail.jpg",
+    "imageAlt": "Diverse group of university students in a lecture hall",
+    "body": "International student mobility is easy to describe in the abstract — a growing number of people choosing to study outside their home country — and much more interesting once you look at the actual scale involved. In the US alone, 1.18 million international students enrolled in 2024/25, up 5% on the year before. Behind that headline enrollment number is a real economic footprint: those students contributed $42.9 billion to the US economy in the same academic year, supporting more than 355,000 jobs in higher education, accommodation, retail, transportation and other sectors that a purely academic framing of 'international education' tends to leave out. Zoom out further and the trend holds: HolonIQ projects the global international-education market will more than double, from roughly $196 billion to $433 billion, by 2030. None of this happens evenly. Visa policy, post-study work rights and processing speed now shape where students actually go as much as program quality does — which is precisely why counseling built around more than one destination country, rather than a single default market, is the more resilient model. That breadth, across test prep, university partnerships and visa support, is what Admizz Education is structured to provide.",
+    "bodyParagraphs": [
+      "International student mobility is easy to describe in the abstract — a growing number of people choosing to study outside their home country — and much more interesting once you look at the actual scale involved.",
+      "In the US alone, 1.18 million international students enrolled in 2024/25, up 5% on the year before. Behind that headline enrollment number is a real economic footprint: those students contributed $42.9 billion to the US economy in the same academic year, supporting more than 355,000 jobs in higher education, accommodation, retail, transportation and other sectors that a purely academic framing of \"international education\" tends to leave out.",
+      "Zoom out further and the trend holds: HolonIQ projects the global international-education market will more than double, from roughly $196 billion to $433 billion, by 2030.",
+      "None of this happens evenly. Visa policy, post-study work rights and processing speed now shape where students actually go as much as program quality does — which is precisely why counseling built around more than one destination country, rather than a single default market, is the more resilient model. That breadth, across test prep, university partnerships and visa support, is what Admizz Education is structured to provide."
+    ],
+    "citations": [
+      {
+        "label": "IIE — Open Doors 2025 report",
+        "href": "https://www.iie.org/news/open-doors-2025-press-release/"
+      },
+      {
+        "label": "NAFSA & JB International — international student economic value, 2025",
+        "href": "https://www.nafsa.org/about/about-nafsa/international-students-contributed-43-billion-us-economy-2024-2025-fall-2025"
+      },
+      {
+        "label": "HolonIQ — global international-education market projection",
+        "href": "https://www.holoniq.com/notes/196b-international-education-market-set-to-reach-433b-by-2030"
+      }
+    ],
+    "source": "research",
+    "imageSource": "distinct crop of the same licensed source file this venture's other article uses (sharp, 2026-09-08) -- the two posts per venture were rendering the IDENTICAL photo, visible side by side in the /insights/ grid. Same licence, no new asset sourced; same technique already used for institute-plate.jpg on /ventures/.",
+    "keyFigures": [
+      {
+        "value": "1.18M",
+        "label": "international students in the US, 2024/25 — up 5% on the year before",
+        "publisher": "IIE, Open Doors 2025",
+        "href": "https://www.iie.org/news/open-doors-2025-press-release/"
+      },
+      {
+        "value": "$42.9B",
+        "label": "contributed to the US economy, supporting 355,000+ jobs",
+        "publisher": "NAFSA & JB International",
+        "href": "https://www.nafsa.org/about/about-nafsa/international-students-contributed-43-billion-us-economy-2024-2025-fall-2025"
+      },
+      {
+        "value": "$433B",
+        "label": "projected size of the global international-education market by 2030",
+        "publisher": "HolonIQ",
+        "href": "https://www.holoniq.com/notes/196b-international-education-market-set-to-reach-433b-by-2030"
+      }
+    ]
+  },
+  {
     "slug": "empowering-careers-through-lifelong-learning",
     "title": "Empowering Careers Through Lifelong Learning",
     "deck": "Discover how innovative training and education programs are shaping a skilled and future-ready workforce.",

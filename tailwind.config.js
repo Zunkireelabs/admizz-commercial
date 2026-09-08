@@ -4,60 +4,69 @@ import typography from '@tailwindcss/typography';
 export default {
   content: ['./src/**/*.{html,njk,md,js}'],
   theme: {
-    // 2026-08-20 rebrand: token KEYS unchanged (navy.*, gold.*, paper.*, ink.*)
-    // so every existing utility class (bg-navy-deep, text-gold-text, ...) keeps
-    // working — only the VALUES moved from the recovered navy/gold identity to
-    // a blue-led palette, a deliberate direction change (see CLAUDE.md §5).
-    // `navy` now carries the primary brand blue; `gold` is demoted to a rare,
-    // deliberate warm accent (the ventures-register line, the confirmation
-    // check) rather than the default accent everywhere. All pairs below are
-    // freshly contrast-verified, not eyeballed — see CLAUDE.md §5 for ratios.
+    // 2026-08-30 revert: the 2026-08-20 rebrand above replaced the documented
+    // navy/gold identity with #3D5AFE — Material Design's Indigo A400, a
+    // framework default, not a brand color. That's exactly what CLAUDE.md §2's
+    // anti-template rule bans. Token KEYS are unchanged (navy.*, gold.*,
+    // paper.*, ink.*) so no template needed editing — only the VALUES move
+    // back to the recovered identity: #002856 and #FDD63F are both sampled
+    // from real brand assets (the logo mark), not invented. All pairs below
+    // are freshly contrast-verified per docs/briefs/A-palette-revert.md.
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
       white: '#FFFFFF',
       black: '#000000',
 
-      // Ground — cool, near-neutral document stock
+      // Ground — warm, near-neutral document stock (not cool/blue-tinted)
       paper: {
-        DEFAULT: '#F4F5FB',
+        DEFAULT: '#F6F6F3',
         raised: '#FFFFFF',
-        sunk: '#EAEBF6',
+        sunk: '#EDEDE7',
       },
 
       // Ink — never pure black
       ink: {
-        DEFAULT: '#151833',
-        muted: '#4A5068',
-        faint: '#868DA6',
+        DEFAULT: '#10192B',
+        muted: '#454E60',
+        faint: '#666E80', // fixes an AA failure: the old value measured 3.03:1 on paper
       },
 
-      // Brand blue (token key stays `navy`) — ink, punctuation and the two
-      // full-bleed bookend bands; still never the default page canvas.
+      // Navy — ink, punctuation and the two full-bleed bookend bands;
+      // still never the default page canvas.
+      // 2026-08-30: DEFAULT and gold.DEFAULT below moved to an EXACT match
+      // of admizzeducation.com's live brand colors (#0D1282 / #FFD800,
+      // confirmed via firecrawl branding scrape), at the user's explicit
+      // request, superseding the "sampled from the group logo" values this
+      // revert used minutes earlier. deep/soft re-derived by preserving the
+      // old ramp's HSL-lightness deltas against the new hue (not guessed) —
+      // see the contrast check below. navy.on/on-muted left as-is: still
+      // AA-safe against the new navy, and admizzeducation.com doesn't
+      // publish light-on-navy tokens to match against.
       navy: {
-        DEFAULT: '#3D5AFE',
-        deep: '#161B4D',
-        soft: '#2B3FA0',
-        on: '#EDEFFC',
-        'on-muted': '#AEB4E8',
-        accent: '#7C93FF', // lighter emphasis blue — headline em-phrases on navy (5.76:1)
+        DEFAULT: '#0D1282',
+        deep: '#0B0F69',
+        soft: '#131ABB',
+        on: '#EAF0F6',
+        'on-muted': '#A9BDD1',
+        accent: '#FFD800', // gold — headline em-phrases on navy
       },
 
-      // Gold — demoted secondary accent, used sparingly and deliberately now.
-      // DEFAULT corrected 2026-08-25: sampled directly from the real logo
-      // file (mark-navy.png) rather than left at the rebrand's invented
-      // #F2B33D, which turned out not to match the actual brand asset —
-      // #FDD63F is what's really in the mark (and matches the original
-      // pre-rebrand palette CLAUDE.md documents, confirming it's correct).
+      // Gold — foil / accent ONLY. Never text on a light ground (1.41:1,
+      // fails). Use gold.text for gold-toned text on paper/white.
+      // DEFAULT is admizzeducation.com's exact #FFD800 (was #FDD63F,
+      // sampled from the group logo — nearly identical, but this request
+      // is for pixel parity with the sister site specifically).
       gold: {
-        DEFAULT: '#FDD63F',
-        text: '#8A5E10', // 5.23:1 on paper — AA on light, matches the old ratio's spirit
-        sunk: '#FFF3DC',
+        DEFAULT: '#FFD800',
+        text: '#8A6200', // 5.49:1 on white — AA; hue/lightness relationship to
+                          // the new gold unchanged, so the contrast math still holds
+        sunk: '#FBF0D2',
       },
 
       rule: {
-        DEFAULT: '#E1E2ED',
-        strong: '#C7C9DC',
+        DEFAULT: '#E2E1DA',
+        strong: '#C9C7BD',
       },
 
       // Semantic — separate from the accent, per the design system
@@ -65,8 +74,14 @@ export default {
       crit: { DEFAULT: '#A8231B', bg: '#FBEDEC' },
     },
 
-    // Tight radii scaled to element size. Uniform rounded-2xl is the loudest
-    // template tell of 2026, so the scale tops out low and deliberately.
+    // Restored graduated scale (2026-09-07) — the 2026-09-01 zero-radius
+    // sweep flattened every rounded-* utility to 0 sitewide, which drifted
+    // from this project's own documented design system (CLAUDE.md §5:
+    // "Radii scale to element size: 4px chips/inputs · 8px cards ·
+    // 12-16px panels. Never uniform rounded-2xl.") — uniform zero is the
+    // same anti-pattern at the opposite extreme, not a fix of it. These
+    // are the exact values used before that sweep (git history,
+    // 893fcc4^), not newly invented ones.
     borderRadius: {
       none: '0',
       sm: '2px',
@@ -78,10 +93,20 @@ export default {
     },
 
     extend: {
+      // 2026-09-01 v2: Inter experiment reverted, replaced with a different
+      // single-font experiment -- Newsreader (already the site's display
+      // serif) applied to all 3 roles instead of just headlines. Newsreader
+      // is a variable optical-size serif specifically engineered to render
+      // correctly from tiny label text up through large display sizes,
+      // which is why it was picked as the "one font, whole site" candidate
+      // over Inter. Original per-role system, for reference/revert:
+      // display: ['Newsreader', 'Georgia', 'Times New Roman', 'serif'],
+      // sans: ['Archivo', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+      // mono: ['Chivo Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       fontFamily: {
         display: ['Newsreader', 'Georgia', 'Times New Roman', 'serif'],
-        sans: ['Archivo', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-        mono: ['Chivo Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        sans: ['Newsreader', 'Georgia', 'Times New Roman', 'serif'],
+        mono: ['Newsreader', 'Georgia', 'Times New Roman', 'serif'],
       },
 
       // Fluid scale. Every step keeps max <= 2.5x min so WCAG 1.4.4 holds under zoom.
@@ -116,7 +141,18 @@ export default {
       },
 
       maxWidth: {
-        shell: '1240px',
+        // 1240 -> 1400 (fixed px) still left large empty side margins on
+        // wide monitors -- a flat pixel guess can't work for every screen
+        // size. min() scales the column WITH the actual viewport instead:
+        // fills 95% of the screen up to a 2200px ceiling, so even a very
+        // large/wide browser window (measured at ~2450px CSS width) sees
+        // only a modest, deliberate margin rather than empty space. Still
+        // a real ceiling, not true edge-to-edge, so paragraph text never
+        // stretches into unreadable mile-long lines on an ultrawide
+        // display -- body copy is separately capped by .measure/
+        // .measure-tight regardless, only the outer layout (cards, grids,
+        // the ledger sidebar) gets the extra room.
+        shell: 'min(95vw, 2200px)',
         measure: '68ch',
         'measure-tight': '54ch',
       },
@@ -130,6 +166,8 @@ export default {
       transitionDuration: {
         press: '100ms',   // hover / press / focus — slower than ~120ms reads as lag
         enter: '480ms',   // entrances and reveals
+        reveal: '620ms',  // scroll reveals — longer than `enter` so the 28px
+                          // travel reads as movement rather than a jump
         slow: '720ms',
       },
 
