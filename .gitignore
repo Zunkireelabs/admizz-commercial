@@ -46,3 +46,10 @@ scripts/output/
 .crop.mjs
 .hdr.mjs
 .strip.mjs
+
+# Scratch screenshots — working files only, never part of the build.
+# CLAUDE.md §9 always described this as untracked scratch, but 222 files
+# (88MB) had been committed by mistake; untracked here going forward.
+# The existing files remain in git history — removing them from there
+# needs a history rewrite, deliberately not done.
+temp_ss/
