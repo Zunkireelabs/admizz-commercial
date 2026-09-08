@@ -39,7 +39,7 @@ permalink: /insights/
    ============================================================================ #}
 
 <section class="insights-masthead bg-paper">
-  <div class="shell insights-masthead-grid">
+  <div class="shell"><div class="page-canvas insights-masthead-grid">
     <div class="fade-up">
       <span class="eyebrow">Insights</span>
       <h1 class="mt-4 font-display font-light text-display-2 text-ink max-w-[14ch] text-balance">
@@ -80,7 +80,7 @@ permalink: /insights/
     <div class="insights-masthead-photo fade-up" style="animation-delay:80ms">
       {% imageEager "src/assets/images/insights/masthead-notes.jpg", "Someone writing out a plan by hand next to an open laptop", "(min-width: 900px) 42vw, 92vw" %}
     </div>
-  </div>
+  </div></div>
 </section>
 
 <section class="bg-paper pb-section" x-data="{
@@ -90,7 +90,7 @@ permalink: /insights/
       return this.posts.filter(p => !p.featured && (this.active === 'all' || this.active === p.venture)).length;
     }
   }">
-  <div class="shell">
+  <div class="shell"><div class="page-canvas">
     {# Real filter — every option is a venture that actually has a post
        behind it; "All" plus the 3 real values, nothing invented. #}
     <div class="insights-filters fade-up" role="group" aria-label="Filter by venture">
@@ -100,77 +100,105 @@ permalink: /insights/
       {% endfor %}
     </div>
 
+    {# Featured piece (2026-09-08 v2) — was a plain 2-column photo/text
+       split. Rebuilt on the SaleUnion reference's signature layering
+       move: the copy sits in a raised card pulled up over the bottom
+       edge of its own image, so the two read as one composed object
+       rather than a picture with a caption beside it. Falls back
+       gracefully with no JS — the overlap is pure CSS margin. #}
     {% for post in insights %}{% if post.featured %}
-    <article class="insights-feature mt-10 fade-up" x-show="active === 'all' || active === '{{ post.venture }}'">
-      <a href="/insights/{{ post.slug }}/" class="insights-feature-photo">
-        {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 900px) 50vw, 92vw" %}
+    <article class="mt-10 fade-up" x-show="active === 'all' || active === '{{ post.venture }}'">
+      <a href="/insights/{{ post.slug }}/" class="overlap-media" tabindex="-1" aria-hidden="true">
+        {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 900px) 78vw, 92vw" %}
       </a>
-      <div class="insights-feature-body">
+      <div class="overlap-card">
         <span class="font-mono text-label uppercase tracking-widest text-gold-text">Featured</span>
-        <h2 class="mt-3 font-display font-book text-h2 text-ink text-balance">
+        <h2 class="mt-3 font-display font-book text-h2 text-ink text-balance max-w-[22ch]">
           <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
         </h2>
-        <p class="mt-3 text-body text-ink-muted max-w-measure-tight leading-relaxed">{{ post.deck }}</p>
+        <p class="mt-3 text-body text-ink-muted max-w-measure leading-relaxed">{{ post.deck }}</p>
         <div class="insights-row-foot mt-5">
           <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy link-underline">Read the article &rarr;</a>
-          <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
+          <span class="insights-row-time">{{ post.venture }} &middot; {{ post.body | readingTime }} min read</span>
         </div>
       </div>
     </article>
     {% endif %}{% endfor %}
 
-    {# 2026-09-08: was a hardcoded x-show enumerating the exact 2 ventures
-       that happened to have a non-featured post at the time (Institute,
-       Workforce), plus `.is-narrowed` driven by "any filter is active"
-       (assumed that always meant exactly 1 result). Both broke the moment
-       a venture could have more than one grid post — true as soon as more
-       posts existed per venture. NOT switched to auto-fit — that was
-       already tried (see the CSS comment on .insights-grid) and rejected:
-       auto-fit also collapses to 1 column on an ordinary narrow window,
-       not only when a filter reduces the count, and this grid's fixed
-       aspect-ratio photos render oversized in that state. Fixed instead by
-       computing the real visible count in Alpine (gridCount, below) from
-       the actual insights data, so `.is-narrowed` and the empty-state
-       x-show both track reality for any number of posts per venture. #}
-    <div class="insights-grid mt-4" :class="gridCount === 1 ? 'is-narrowed' : ''" x-show="gridCount > 0">
-      {% for post in insights %}{% if not post.featured %}
-      <article class="insights-card fade-up" style="animation-delay:{{ loop.index0 * 90 }}ms" x-show="active === 'all' || active === '{{ post.venture }}'">
-        <a href="/insights/{{ post.slug }}/" class="insights-card-photo">
-          {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 700px) 34vw, 92vw" %}
-        </a>
-        <div class="insights-card-body">
-          <span class="insights-card-num" aria-hidden="true">{{ "0" }}{{ loop.index }}</span>
-          <span class="font-mono text-label uppercase tracking-widest text-navy-soft">
-            {{ post.venture }}{% if post.citations %} <span class="insights-tag-research">Research</span>{% endif %}
-          </span>
-          <h2 class="mt-2 font-display font-book text-h4 text-ink">
-            <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+    {# Article mosaic (2026-09-08 v3) — was a uniform 2-up card grid, i.e.
+       the layout every template ships with. Rebuilt as a bento: the first
+       non-featured piece takes a wide photo cell, the rest are text cells,
+       so the block has real hierarchy instead of five identical tiles.
+
+       The empty-state and column behaviour still come from `gridCount`,
+       computed in Alpine from the actual post data (see x-data above) —
+       a previous version hardcoded which ventures had grid posts and broke
+       the moment any venture had more than one. Not auto-fit either: that
+       was tried and rejected (see .insights-grid's CSS note) because it
+       also collapses on an ordinary narrow window, not just when filtered. #}
+    {# rejectattr first: looping `insights` and skipping the featured post
+       inside the loop left loop.index counting the skipped item too, so the
+       photo cell landed on the wrong card. Iterating the filtered list makes
+       the index mean what it reads as. #}
+    {% set restPosts = insights | rejectattr("featured") %}
+    <div class="bento mt-14" x-show="gridCount > 0">
+      {% for post in restPosts %}
+      {% set isPhoto = loop.index == 1 or loop.index == 4 %}
+      <article
+        class="bento-item {% if isPhoto %}bento-item-photo bento-wide{% elif post.citations %}bento-item-tint{% endif %} fade-up"
+        style="animation-delay:{{ loop.index0 * 70 }}ms"
+        x-show="active === 'all' || active === '{{ post.venture }}'">
+
+        {% if isPhoto %}
+        <div class="bento-photo-img" aria-hidden="true">
+          {% image "src/assets/images/insights/" + post.image, post.imageAlt, "(min-width: 1000px) 40vw, 92vw" %}
+        </div>
+        <span class="bento-photo-scrim" aria-hidden="true"></span>
+        <span class="journey-plate-badge bento-tag">{{ "0" }}{{ loop.index }} / {{ post.venture | replace("Admizz ", "") }}</span>
+        <div class="bento-photo-body">
+          {% if post.citations %}<span class="insights-tag-research insights-tag-research-on-navy">Research</span>{% endif %}
+          <h2 class="mt-3 font-display font-book text-h3 text-navy-on text-balance max-w-[20ch]">
+            <a href="/insights/{{ post.slug }}/" class="hover:text-navy-accent transition-colors duration-press ease-signature">{{ post.title }}</a>
           </h2>
-          <p class="mt-2 text-small text-ink-muted">{{ post.deck }}</p>
-          <div class="insights-row-foot mt-4">
-            <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy link-underline">Read the article &rarr;</a>
-            {# 2026-09-08: half these articles cite real third-party sources
-               (Pearson, College Board, IIE, NAFSA, federal disability data)
-               and half are Admizz's own marketing copy — and they looked
-               identical in this list, so the evidence-backed ones were
-               invisible. The marker is driven by the `citations` array the
-               post actually carries, so it can't drift out of sync with
-               the content: no citations, no badge. "1 min read" alone,
-               repeated six times, was also the only metadata on this page. #}
+          <p class="mt-2 text-small text-navy-on-muted max-w-measure-tight">{{ post.deck }}</p>
+          <div class="mt-4 flex items-center gap-5">
+            <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy-on link-underline">Read the article &rarr;</a>
             {% if post.citations %}
-            <span class="insights-sourced">
-              <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 3.5h10M2 7h10M2 10.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              {{ post.citations | length }} sources
-            </span>
+            <span class="font-mono text-label uppercase tracking-widest text-navy-accent">{{ post.citations | length }} sources</span>
             {% else %}
-            <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
+            <span class="font-mono text-label uppercase tracking-widest text-navy-on-muted">{{ post.body | readingTime }} min read</span>
             {% endif %}
           </div>
         </div>
+
+        {% else %}
+        <div>
+          <span class="font-mono text-label uppercase tracking-widest text-navy-soft">
+            {{ post.venture | replace("Admizz ", "") }}{% if post.citations %} <span class="insights-tag-research">Research</span>{% endif %}
+          </span>
+          <h2 class="mt-3 font-display font-book text-h4 text-ink text-balance">
+            <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
+          </h2>
+          <p class="mt-2 text-small text-ink-muted">{{ post.deck }}</p>
+        </div>
+        <div class="mt-5 flex items-center justify-between gap-4">
+          <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy link-underline">Read the article &rarr;</a>
+          {# Marker driven by the post's real `citations` array — no
+             hand-set flag to drift out of sync with the content. #}
+          {% if post.citations %}
+          <span class="insights-sourced">
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 3.5h10M2 7h10M2 10.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            {{ post.citations | length }} sources
+          </span>
+          {% else %}
+          <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
+          {% endif %}
+        </div>
+        {% endif %}
       </article>
-      {% endif %}{% endfor %}
+      {% endfor %}
     </div>
-  </div>
+  </div></div>
 </section>
 
 {# CLOSE — shared with the homepage/About/Ventures (partials/cta-close.njk),

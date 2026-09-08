@@ -2049,6 +2049,180 @@
   display: block;
 }
 
+/* =====================================================
+   Premium layout kit (2026-09-08) — /about/ + /insights/
+   -----------------------------------------------------
+   Built after a side-by-side against the SaleUnion reference. The single
+   biggest difference wasn't colour or type, it was CONTAINMENT: the
+   reference caps its content and centres it, so both margins match at
+   any width. `.shell` here is min(95vw, 2200px), which is right for the
+   full-bleed record pages but left /about/'s constrained blocks pinned
+   to the left edge — measured 820px of dead paper down the right side
+   at a 1890px window. .page-canvas is the cap, applied per-section on
+   these two pages rather than by changing .shell (which the homepage,
+   /ventures/ and /contact/ are all tuned against).
+   ===================================================== */
+.page-canvas {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+}
+
+/* ---------- Bento (mixed-size fact/feature cards) ----------
+   Reference device: cards of deliberately different sizes with numbers
+   set at display scale as the graphic itself, rather than a row of
+   identical small stat cells. Radius stays on this project's own scale
+   (xl = 14px, the documented "panel" step) instead of the reference's
+   ~24px — the design system bans uniform heavy rounding as a template
+   tell, and the premium quality here comes from the composition. */
+.bento {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.875rem;
+}
+@media (min-width: 640px) {
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+}
+@media (min-width: 1000px) {
+  .bento { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.125rem; }
+  .bento-wide { grid-column: span 2; }
+}
+.bento-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: theme("borderRadius.xl");
+  background-color: theme("colors.paper.raised");
+  border: 1px solid theme("colors.rule.DEFAULT");
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  min-height: 13.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: box-shadow theme("transitionDuration.enter") theme("transitionTimingFunction.signature"),
+    transform theme("transitionDuration.enter") theme("transitionTimingFunction.signature");
+}
+.bento-item:hover { box-shadow: theme("boxShadow.raised"); transform: translateY(-2px); }
+/* Tinted variants — the reference's soft grounds, rebuilt from this
+   project's own tokens (gold.sunk, navy tints) rather than its pastels. */
+.bento-item-tint { background-color: theme("colors.gold.sunk / 45%"); border-color: theme("colors.gold.text / 18%"); }
+.bento-item-navy {
+  background-color: theme("colors.navy.deep");
+  border-color: transparent;
+  color: theme("colors.navy.on");
+}
+.bento-item-navy:hover { box-shadow: theme("boxShadow.lift"); }
+.bento-num {
+  font-size: clamp(2.75rem, 5.2vw, 4.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+/* Word values ("ICEF") need a smaller step than digits: at the numeric
+   size the letterforms overflowed the card's padding box and clipped. */
+.bento-num-word { font-size: clamp(2rem, 3.2vw, 2.75rem); line-height: 1.05; }
+/* Photo bento cell — image fills, content sits over a bottom scrim */
+.bento-item-photo { padding: 0; border-color: transparent; background-color: theme("colors.navy.deep"); }
+.bento-photo-img { position: absolute; inset: 0; }
+.bento-photo-img :is(picture, img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bento-photo-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, theme("colors.navy.deep / 88%") 0%, theme("colors.navy.deep / 45%") 45%, theme("colors.navy.deep / 10%") 100%);
+}
+.bento-photo-body { position: relative; padding: clamp(1.25rem, 2vw, 1.75rem); margin-top: auto; }
+/* Small tag chip — a chip, not a button, so the "no pill shapes" rule
+   (which governs .btn variants) doesn't apply; kept at the chip step of
+   the radius scale rather than fully round. */
+.bento-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: theme("borderRadius.md");
+  background-color: theme("colors.gold.DEFAULT");
+  color: theme("colors.navy.deep");
+  font-family: theme("fontFamily.mono");
+  font-size: theme("fontSize.label");
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ---------- Journey: alternating claim + visual rows ----------
+   Replaces the vertical dotted list. Reference device: a mono eyebrow, a
+   large display heading, supporting copy, and a substantial visual panel
+   opposite — alternating sides so the page has rhythm instead of one
+   long left-aligned column. */
+.journey-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.75rem, 3.5vw, 3.25rem);
+  align-items: center;
+  padding-block: clamp(2.25rem, 4vw, 3.5rem);
+  border-top: 1px solid theme("colors.rule.DEFAULT");
+}
+.journey-row:first-child { border-top: 0; }
+@media (min-width: 900px) {
+  .journey-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Even rows mirror: copy moves to column 2, plate to column 1. */
+  .journey-row:nth-child(even) .journey-copy { order: 2; }
+}
+.journey-year {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+  color: theme("colors.navy.DEFAULT / 30%");
+}
+.journey-plate {
+  position: relative;
+  overflow: hidden;
+  border-radius: theme("borderRadius.xl");
+  aspect-ratio: 4 / 3;
+  background-color: theme("colors.navy.deep");
+}
+.journey-plate :is(picture, img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+.journey-plate-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1;
+}
+
+/* ---------- Featured card overlapping its photo ----------
+   The reference's signature layering move: a white card pulled up over
+   the bottom edge of the image it belongs to, so the two read as one
+   composed object instead of a photo with text under it. */
+.overlap-media {
+  position: relative;
+  overflow: hidden;
+  border-radius: theme("borderRadius.xl");
+  aspect-ratio: 16 / 9;
+  background-color: theme("colors.navy.deep");
+  display: block;
+}
+.overlap-media :is(picture, img) {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform theme("transitionDuration.slow") theme("transitionTimingFunction.signature");
+}
+.overlap-media:hover :is(picture, img) { transform: scale(1.04); }
+.overlap-card {
+  position: relative;
+  z-index: 1;
+  margin-top: -3.5rem;
+  margin-inline: 1.25rem;
+  padding: clamp(1.5rem, 2.5vw, 2.25rem);
+  background-color: theme("colors.paper.raised");
+  border: 1px solid theme("colors.rule.DEFAULT");
+  border-radius: theme("borderRadius.xl");
+  box-shadow: theme("boxShadow.raised");
+}
+@media (min-width: 900px) {
+  .overlap-card { margin-top: -5rem; margin-inline: 2.5rem 5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlap-media :is(picture, img) { transition: none; }
+  .overlap-media:hover :is(picture, img) { transform: none; }
+  .bento-item:hover { transform: none; }
+}
+
 /* ---------- Three businesses ---------- */
 .story-venture-grid {
   display: grid;
@@ -2244,6 +2418,13 @@
   color: theme("colors.gold.text");
   background-color: theme("colors.gold.sunk / 45%");
   letter-spacing: 0.08em;
+}
+/* On a navy photo cell the paper-ground gold tokens invert: gold.text is
+   tuned for contrast on light and goes muddy over a dark scrim. */
+.insights-tag-research-on-navy {
+  color: theme("colors.navy.accent");
+  border-color: theme("colors.navy.accent / 45%");
+  background-color: theme("colors.navy.deep / 55%");
 }
 .insights-sourced {
   display: inline-flex;
