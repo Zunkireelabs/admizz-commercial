@@ -48,6 +48,34 @@ permalink: /insights/
       <p class="mt-5 text-body-lg text-ink-muted max-w-measure-tight leading-relaxed">
         Perspectives from across Admizz Education, Admizz Institute and Admizz Workforce Solutions.
       </p>
+
+      {# 2026-09-08: the copy column ran out well above the photo's bottom
+         edge, leaving a dead block of paper under it. Filled with something
+         real rather than filler: the counts are computed from the actual
+         data (no hardcoded "6"), and the sourcing line is only true because
+         the research pieces genuinely cite primary sources — which is now
+         the strongest thing this page can say about itself. #}
+      <dl class="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-3">
+        <div>
+          <dt class="font-mono text-label uppercase tracking-widest text-ink-faint">Articles</dt>
+          <dd class="mt-1 font-display font-light text-h3 text-ink tabular-nums">{{ insights | length }}</dd>
+        </div>
+        <div>
+          <dt class="font-mono text-label uppercase tracking-widest text-ink-faint">Businesses</dt>
+          <dd class="mt-1 font-display font-light text-h3 text-ink tabular-nums">{{ ventures | length }}</dd>
+        </div>
+        <div>
+          <dt class="font-mono text-label uppercase tracking-widest text-ink-faint">Sourced research</dt>
+          {# selectattr, not a {% set %} counter inside a {% for %} — a
+             variable assigned inside a Nunjucks loop doesn't survive
+             outside it, so that rendered blank (caught in the built
+             output, not assumed). #}
+          <dd class="mt-1 font-display font-light text-h3 text-ink tabular-nums">{{ insights | selectattr("citations") | length }}</dd>
+        </div>
+      </dl>
+      <p class="mt-5 text-small text-ink-muted max-w-measure-tight leading-relaxed">
+        Pieces marked <span class="insights-tag-research">Research</span> cite third-party data, read at its primary source before publication &mdash; see <a href="/sources/" class="link-underline text-ink">Sources &amp; Methodology</a>.
+      </p>
     </div>
     <div class="insights-masthead-photo fade-up" style="animation-delay:80ms">
       {% imageEager "src/assets/images/insights/masthead-notes.jpg", "Someone writing out a plan by hand next to an open laptop", "(min-width: 900px) 42vw, 92vw" %}
@@ -112,14 +140,31 @@ permalink: /insights/
         </a>
         <div class="insights-card-body">
           <span class="insights-card-num" aria-hidden="true">{{ "0" }}{{ loop.index }}</span>
-          <span class="font-mono text-label uppercase tracking-widest text-navy-soft">{{ post.venture }}</span>
+          <span class="font-mono text-label uppercase tracking-widest text-navy-soft">
+            {{ post.venture }}{% if post.citations %} <span class="insights-tag-research">Research</span>{% endif %}
+          </span>
           <h2 class="mt-2 font-display font-book text-h4 text-ink">
             <a href="/insights/{{ post.slug }}/" class="hover:text-navy-soft transition-colors duration-press ease-signature">{{ post.title }}</a>
           </h2>
           <p class="mt-2 text-small text-ink-muted">{{ post.deck }}</p>
           <div class="insights-row-foot mt-4">
             <a href="/insights/{{ post.slug }}/" class="text-small font-medium text-navy link-underline">Read the article &rarr;</a>
+            {# 2026-09-08: half these articles cite real third-party sources
+               (Pearson, College Board, IIE, NAFSA, federal disability data)
+               and half are Admizz's own marketing copy — and they looked
+               identical in this list, so the evidence-backed ones were
+               invisible. The marker is driven by the `citations` array the
+               post actually carries, so it can't drift out of sync with
+               the content: no citations, no badge. "1 min read" alone,
+               repeated six times, was also the only metadata on this page. #}
+            {% if post.citations %}
+            <span class="insights-sourced">
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 3.5h10M2 7h10M2 10.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              {{ post.citations | length }} sources
+            </span>
+            {% else %}
             <span class="insights-row-time">{{ post.body | readingTime }} min read</span>
+            {% endif %}
           </div>
         </div>
       </article>

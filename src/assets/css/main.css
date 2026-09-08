@@ -1847,9 +1847,11 @@
 /* ---------- Hero — two columns, plain photo ---------- */
 .story-hero {
   padding-top: clamp(7rem, 10vw, 9rem);
-  /* No bottom padding, on purpose — the photo/CTA row runs straight into
-     the Journey section with zero gap between them. */
-  padding-bottom: 0;
+  /* Was padding-bottom: 0 so the photo row ran straight into the Journey
+     section. The proof strip now closes this section instead, and a strip
+     whose bottom rule sits flush on the next section's edge reads as a
+     collision, so it gets breathing room of its own. */
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 .story-hero-grid {
   display: grid;
@@ -1895,10 +1897,55 @@
   display: block;
 }
 
+/* ---------- Story proof strip (2026-09-08) ----------
+   Paper-ground sibling of .record-strip (which is navy-only — it uses
+   navy.on-muted borders for the /ventures/ masthead). Same idiom on
+   purpose: /about/ had zero evidence anywhere on it, which is the exact
+   "reads like a consultancy, not a firm" gap /ventures/ already closed.
+   Only hard, independently checkable facts go in here (founding year,
+   business count, destination count, the ICEF credential) — not the
+   admizzeducation-sourced draft figures, which need their own provenance
+   caption and already carry one on the homepage. */
+.story-proof-strip {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 1px solid theme("colors.rule.DEFAULT");
+}
+.story-proof-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid theme("colors.rule.DEFAULT");
+}
+@media (min-width: 700px) {
+  .story-proof-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-bottom: 1px solid theme("colors.rule.DEFAULT");
+  }
+  .story-proof-item {
+    padding: 1.25rem 1.75rem 1.25rem 0;
+    border-bottom: 0;
+  }
+  .story-proof-item:not(:nth-child(4n + 1)) {
+    border-left: 1px solid theme("colors.rule.DEFAULT");
+    padding-left: 1.75rem;
+  }
+}
+.story-proof-value {
+  font-size: clamp(1.75rem, 1.4rem + 1.3vw, 2.4rem);
+  line-height: 1.05;
+}
+
 /* ---------- Timeline ---------- */
 .story-timeline-track {
   position: relative;
   margin-top: 2.75rem;
+  /* The shell is min(95vw, 2200px) — very wide by design for the record
+     pages. Left unconstrained, this list sprawled: text ended around
+     450px while its photo started around 1000px, leaving ~500px of dead
+     paper down the middle of every row (measured, not eyeballed). The
+     track gets its own reading-width cap so the two halves of each row
+     actually relate to each other. */
+  max-width: 58rem;
 }
 /* Scroll-scrubbed by GSAP (main.js) — no hiding CSS, resting state IS
    scaleY(1); JS sets it to 0 itself only once it has actually loaded. */
@@ -1939,7 +1986,20 @@
 }
 .story-timeline-row:first-child { border-top: 0; padding-top: 0.5rem; }
 @media (min-width: 700px) {
-  .story-timeline-row { grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; }
+  /* Was `minmax(0, 1fr) auto` with the photo capped at 22rem — the 1fr
+     text track absorbed all remaining width while the text inside it
+     stayed at its own measure, so the slack showed up as dead space
+     between the two. Now the photo track carries a real share of the
+     row and the text track is what flexes. */
+  .story-timeline-row {
+    /* Text track sized to the copy's own cap (.max-w-measure-tight is
+       54ch ≈ 27rem) rather than 1fr. A 1fr text track just re-created
+       the dead space one level down: the cell was 784px wide while the
+       paragraph inside it stopped at 420px. */
+    grid-template-columns: minmax(0, 27rem) minmax(0, 1fr);
+    gap: clamp(1.75rem, 3.5vw, 3rem);
+    align-items: center;
+  }
 }
 /* Scroll-driven "active card" — main.js toggles .is-active as each row
    crosses the viewport centre. The row visibly separates from the flat
@@ -1971,8 +2031,11 @@
 .story-timeline-row.is-active .story-timeline-dot { transform: scale(1.8); }
 .story-timeline-photo {
   width: 100%;
-  max-width: 22rem;
-  aspect-ratio: 12 / 5;
+  /* max-width dropped (was 22rem) — the photo now fills its own grid
+     track, which is what closes the gap. 4/3 instead of the old 12/5
+     letterbox: at this width a 12/5 crop rendered as a thin strip with
+     nothing readable in it. */
+  aspect-ratio: 4 / 3;
   border-radius: theme("borderRadius.lg");
   overflow: hidden;
   background-color: theme("colors.navy.deep");
@@ -2138,9 +2201,15 @@
   padding-bottom: 1.75rem;
   border-bottom: 1px solid theme("colors.rule.DEFAULT");
 }
+/* 2026-09-08: was borderRadius.full, which is the one control on the site
+   breaking the "Buttons — two variants only. No pill shapes." rule stated
+   at the top of this file and followed by .btn/.btn-card everywhere else.
+   Matched to .btn's rounded-md. (Class name kept — it's referenced in
+   insights/index.njk markup and JS-free Alpine bindings; renaming it buys
+   nothing and touches more files.) */
 .insights-filter-pill {
   padding: 0.5rem 1.1rem;
-  border-radius: theme("borderRadius.full");
+  border-radius: theme("borderRadius.md");
   border: 1px solid theme("colors.rule.strong");
   font-family: theme("fontFamily.sans");
   font-size: 0.8125rem;
@@ -2160,6 +2229,31 @@
    the page that stops responding the moment it is chosen. */
 .insights-filter-pill.is-active:hover {
   background-color: theme("colors.navy.DEFAULT / 16%");
+}
+
+/* Evidence markers (2026-09-08) — both driven by a post's real `citations`
+   array, never a hand-set flag, so a piece can't claim sourcing it doesn't
+   have. Gold-toned text uses gold.text (5.49:1 on paper); gold.DEFAULT is
+   1.41:1 and is never text on a light ground (design system hard rule). */
+.insights-tag-research {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid theme("colors.gold.text / 35%");
+  border-radius: theme("borderRadius.sm");
+  color: theme("colors.gold.text");
+  background-color: theme("colors.gold.sunk / 45%");
+  letter-spacing: 0.08em;
+}
+.insights-sourced {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: theme("fontFamily.mono");
+  font-size: theme("fontSize.label");
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: theme("colors.gold.text");
 }
 
 /* ---------- Featured row ---------- */

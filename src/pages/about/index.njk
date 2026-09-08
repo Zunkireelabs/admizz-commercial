@@ -58,6 +58,48 @@ permalink: /about/
       {% imageEager "src/assets/images/story/hero-building-branded.png", "The Admizz mark on a building facade, directional brand imagery", "(min-width: 1000px) 44vw, 92vw" %}
     </div>
   </div>
+
+  {# Proof strip (2026-09-08) — this page previously carried NO evidence at
+     all: no number, no credential, nothing a partner could check. Same
+     record-strip idiom as /ventures/'s masthead, paper variant.
+     Deliberately only hard, independently verifiable facts:
+       · 2015 founding year — site.json, from admizz.com itself
+       · 3 businesses — the three ventures this site documents
+       · 9 destinations — destinations.json, real country list
+       · ICEF IAS 6499 — the one independently verified credential in the
+         whole project (docs/01-AUDIT.md §2), verifiable at ICEF's own
+         directory, and scoped correctly: it is held by Admizz Education,
+         which the label states rather than implying it covers the group.
+     The admizzeducation-sourced figures (2,000+ students, 95% visa rate,
+     etc.) are deliberately NOT here — they're status:draft self-reported
+     numbers that need their own provenance caption, and already carry one
+     on the homepage. #}
+  <div class="shell">
+    <dl class="story-proof-strip fade-up" style="animation-delay:160ms">
+      <div class="story-proof-item">
+        <dt class="font-mono text-label uppercase tracking-widest text-ink-faint">Founded</dt>
+        <dd class="story-proof-value mt-2 font-display font-light tabular-nums text-ink">{{ site.founded }}</dd>
+        <p class="mt-1.5 text-small text-ink-muted">Denver, Colorado</p>
+      </div>
+      <div class="story-proof-item">
+        <dt class="font-mono text-label uppercase tracking-widest text-ink-faint">Businesses</dt>
+        <dd class="story-proof-value mt-2 font-display font-light tabular-nums text-ink">{{ ventures | length }}</dd>
+        <p class="mt-1.5 text-small text-ink-muted">Preparation, education, work</p>
+      </div>
+      <div class="story-proof-item">
+        <dt class="font-mono text-label uppercase tracking-widest text-ink-faint">Destinations</dt>
+        <dd class="story-proof-value mt-2 font-display font-light tabular-nums text-ink">{{ destinations.countries | length }}</dd>
+        <p class="mt-1.5 text-small text-ink-muted">Study countries served</p>
+      </div>
+      <div class="story-proof-item">
+        <dt class="font-mono text-label uppercase tracking-widest text-ink-faint">Accreditation</dt>
+        <dd class="story-proof-value mt-2 font-display font-light text-ink">ICEF</dd>
+        <p class="mt-1.5 text-small text-ink-muted">
+          Agency <span class="tabular-nums">IAS&nbsp;6499</span>, held by Admizz Education
+        </p>
+      </div>
+    </dl>
+  </div>
 </section>
 
 {# ============================================================ TIMELINE #}
@@ -77,6 +119,15 @@ permalink: /about/
           <span class="story-timeline-year font-mono text-small font-medium tabular-nums text-navy-soft">{{ t.year }}</span>
           <h3 class="mt-1.5 font-display font-book text-h3 text-ink">{{ t.label }}</h3>
           <p class="mt-1.5 text-body text-ink-muted leading-relaxed max-w-measure-tight">{{ t.text }}</p>
+          {# 2026-09-08: timeline.json has carried an `impact` sentence per
+             milestone since it was written, and no template ever rendered
+             it -- every entry showed only the one-line `text` ("Admizz was
+             founded in Denver, Colorado."), which is why this section read
+             as thin. This is existing, already-written content being shown,
+             not new copy. #}
+          {% if t.impact %}
+          <p class="mt-3 pt-3 border-t border-rule text-small text-ink-faint leading-relaxed max-w-measure-tight">{{ t.impact }}</p>
+          {% endif %}
         </div>
         <div class="story-timeline-photo">
           {% image "src/assets/images/story/" + t.image, t.imageAlt, "(min-width: 700px) 22rem, 90vw" %}
@@ -136,12 +187,44 @@ permalink: /about/
   </div>
 </section>
 
+{# ============================================================ STATEMENT
+   2026-09-08: the page ran paper → grey → paper → grey → CTA with no
+   tonal peak anywhere, so the story had no moment that landed. This is
+   the same navy statement device the homepage already uses, reusing the
+   exact .statement-line hook (main.js staggers those phrase-by-phrase on
+   scroll, generic and page-agnostic) rather than inventing a second
+   motion idiom. Copy is written framing, not a new factual claim — it
+   restates the "three businesses, one group" positioning already
+   established on /ventures/ and in the section directly below. #}
+<section class="relative overflow-hidden bg-navy-deep py-section-sm">
+  {% include "partials/grain-texture.njk" %}
+  <div class="shell relative">
+    <p class="font-display font-light text-h1 text-navy-on max-w-[38ch] text-balance">
+      <span class="statement-line inline-block">Preparation, education and work</span>
+      <span class="statement-line inline-block italic text-navy-accent font-book">aren&rsquo;t three industries.</span>
+      <span class="statement-line inline-block">They&rsquo;re three stages of the same</span>
+      <span class="statement-line inline-block">decision &mdash; so we built for all three.</span>
+    </p>
+    <span class="statement-line inline-block mt-8 md:block font-mono text-label uppercase tracking-widest text-navy-on-muted">&mdash; Why the group exists</span>
+  </div>
+</section>
+
 {# ============================================================ LEADERSHIP #}
+{# 2026-09-08: was `shell grid [22rem_1fr] items-start` on the full
+   min(95vw,2200px) shell — the 1fr text column absorbed the entire
+   remaining width while the statement inside stayed at its own measure,
+   so the block dead-ended in ~200px of empty grey before the CTA. The
+   row now has a reading-width cap of its own and centres its two
+   columns against each other, same fix applied to the timeline track
+   above. Portrait gets the rounded plate treatment the rest of the site
+   uses for photography (.venture-plate, insights cards) instead of a
+   bare square of navy. #}
 <section class="bg-paper-sunk py-section border-t border-rule">
-  <div class="shell grid grid-cols-1 md:grid-cols-[minmax(0,22rem)_1fr] gap-10 md:gap-16 items-start">
+  <div class="shell">
+   <div class="max-w-[64rem] grid grid-cols-1 md:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] gap-10 md:gap-14 items-center">
     <div class="fade-up">
-      <div class="overflow-hidden bg-navy-deep">
-        {% image "src/assets/images/people/founder.png", "Manish K Sah, Founder & CEO of Admizz Group", "(min-width: 768px) 22rem, 90vw", [400, 640, 900] %}
+      <div class="overflow-hidden rounded-lg bg-navy-deep aspect-[4/5] [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-top">
+        {% image "src/assets/images/people/founder.png", "Manish K Sah, Founder & CEO of Admizz Group", "(min-width: 768px) 19rem, 90vw", [400, 640, 900] %}
       </div>
     </div>
     <div class="fade-up" style="animation-delay:100ms">
@@ -159,6 +242,7 @@ permalink: /about/
       <p class="mt-6 text-body font-medium text-ink">{{ site.founder.name }}</p>
       <p class="text-small text-ink-muted">{{ site.founder.title }}, {{ site.founder.org }}</p>
     </div>
+   </div>
   </div>
 </section>
 
