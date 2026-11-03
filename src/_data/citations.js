@@ -91,7 +91,7 @@ export default function () {
   const selfReported = [
     {
       value: String(universities.totalCount),
-      label: `Partner institutions across ${destinations.countries.length} countries, indexed by country on /ventures/.`,
+      label: `Admissions partnerships with ${universities.totalCount} institutions in ${destinations.countries.length} countries, indexed by country on /ventures/.`,
       publisher: "Published by Admizz Education",
       venture: "Admizz Education",
     },
