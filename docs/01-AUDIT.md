@@ -1,3 +1,8 @@
+> **Update 2026-11-03 — ICEF removed from the site at the client's direction.** The ICEF badge, seal and
+> accreditation claim no longer appear anywhere (hero, footer, /about/, /ventures/, /sources/). Wherever this
+> doc calls ICEF "the one verified credential", read it as historical. /about/ now carries a self-reported
+> "Recognized in Nepal" card (MOES, TITI, British Council, ECAN — supplied by Admizz, unverified, no numbers yet).
+
 > **⚠️ SCOPE CORRECTION (2026-08-19):** this audit still contains material pulled from
 > **admizzeducation.com** and **admizzworks.com** — destinations, offices, timeline detail,
 > testimonials, partner universities, the ICEF certification. **None of that is usable.** The

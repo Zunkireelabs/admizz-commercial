@@ -9,10 +9,9 @@ import path from "node:path";
 // real data files instead, so the register and the counts on that page are
 // always exactly what the site actually cites.
 //
-// The three tiers are the page's whole argument and are kept structurally
+// The two tiers are the page's whole argument and are kept structurally
 // separate, not just styled differently:
 //   independent  — third-party research, verifiable at the link
-//   accreditation — the one independently verified credential
 //   selfReported — Admizz's own published figures (status:draft in the
 //                  source data), real and attributed but not audited
 const read = (file) =>
@@ -24,7 +23,7 @@ export default function () {
   const destinations = read("destinations.json");
 
   const ventureNames = {
-    institute: "Admizz Institute",
+    academy: "Admizz Academy",
     education: "Admizz Education",
     workforce: "Admizz Workforce Solutions",
   };
@@ -77,21 +76,10 @@ export default function () {
     }
   );
 
-  const accreditation = [
-    {
-      value: "IAS 6499",
-      label:
-        "ICEF Accredited Agency. Held by Admizz Education specifically — it does not extend to Admizz Institute or Admizz Workforce Solutions.",
-      publisher: "ICEF",
-      href: "https://www.icef.com/",
-      venture: "Admizz Education",
-    },
-  ];
-
   const selfReported = [
     {
       value: String(universities.totalCount),
-      label: `Partner institutions across ${destinations.countries.length} countries, indexed by country on /ventures/.`,
+      label: `Admissions partnerships with ${universities.totalCount} institutions in ${destinations.countries.length} countries, indexed by country on /ventures/.`,
       publisher: "Published by Admizz Education",
       venture: "Admizz Education",
     },
@@ -108,18 +96,24 @@ export default function () {
       publisher: "Published by Admizz Education",
       venture: "Admizz Education",
     },
+    {
+      value: null,
+      label:
+        "Nepal recognition shown on /about/: MOES license, TITI counselor certification, British Council training, ECAN membership. Supplied by Admizz; no license or membership numbers provided yet.",
+      publisher: "Provided by Admizz Education",
+      venture: "Admizz Education",
+    },
   ];
 
   const publishers = new Set(independent.map((s) => s.publisher));
 
   return {
     independent,
-    accreditation,
     selfReported,
     counts: {
       independent: independent.length,
       publishers: publishers.size,
-      total: independent.length + accreditation.length + selfReported.length,
+      total: independent.length + selfReported.length,
     },
   };
 }

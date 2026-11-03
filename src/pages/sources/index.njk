@@ -19,8 +19,7 @@ permalink: /sources/
    only has to be added in one place.
 
    The tiers stay structurally separate because that separation is the
-   page's argument: independently verifiable research, the one verified
-   credential, and Admizz's own published figures — the last clearly
+   page's argument: independently verifiable research and Admizz's own published figures — the last clearly
    marked as self-reported rather than quietly mixed in with the rest. #}
 
 <section class="bg-paper py-section-sm">
@@ -99,30 +98,7 @@ permalink: /sources/
         </div>
       </div>
 
-      {# ---------- Tier 2: accreditation ---------- #}
-      <div class="source-tier mt-6 fade-up">
-        <h2 class="font-display font-book text-h3 text-ink">Accreditation</h2>
-        <p class="mt-2 text-body text-ink-muted max-w-measure">
-          Verifiable directly through ICEF&rsquo;s own agency directory &mdash; not self-reported.
-        </p>
-        <div class="mt-8">
-          {% for c in citations.accreditation %}
-          <div class="source-row">
-            <p class="source-figure font-display font-light text-ink">{{ c.value }}</p>
-            <div>
-              <p class="text-body text-ink leading-relaxed">{{ c.label }}</p>
-              <p class="mt-1.5 font-mono text-label uppercase tracking-widest text-ink-faint">{{ c.venture }}</p>
-            </div>
-            <a href="{{ c.href }}" target="_blank" rel="noopener noreferrer" class="source-publisher text-small font-medium text-ink link-underline">
-              Verify with {{ c.publisher }}
-              <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="shrink-0"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-
-      {# ---------- Tier 3: self-reported ---------- #}
+      {# ---------- Tier 2: self-reported ---------- #}
       <div class="source-tier source-tier-flag mt-6 fade-up">
         <h2 class="font-display font-book text-h3 text-ink">Admizz&rsquo;s own published figures</h2>
         <p class="mt-2 text-body text-ink-muted max-w-measure">

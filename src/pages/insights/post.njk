@@ -142,7 +142,7 @@ eleventyComputed:
       {% endif %}
 
       {# hrefLabel-style fix, same pattern as /ventures/ and /contact/: where
-         there's no real URL (Institute — ventureHref is "#"), render a
+         there's no real URL (Academy — ventureHref is "#"), render a
          status, not a link dressed as one; real links get target=_blank +
          rel=noopener since they leave the site. #}
       {% for v in ventures %}{% if v.name == post.venture %}

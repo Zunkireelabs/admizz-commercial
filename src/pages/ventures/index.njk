@@ -2,7 +2,7 @@
 layout: base.njk
 navyHeader: true
 title: Our Ventures — Admizz Group
-description: Admizz Institute, Admizz Education and Admizz Workforce Solutions — three businesses operating across test preparation, higher education and workforce development.
+description: Admizz Academy, Admizz Education and Admizz Workforce Solutions — three businesses operating across test preparation, higher education and workforce development.
 permalink: /ventures/
 ---
 
@@ -36,15 +36,15 @@ permalink: /ventures/
    block in ecosystem-journey.njk — all three are user-supplied under an
    explicit exception, not this project's default.
 
-   institute-plate.jpg is a NEW derivative cropped for this page: the full
-   institute.jpg frame is dominated by a projector screen carrying unrelated
+   academy-plate.jpg is a NEW derivative cropped for this page: the full
+   academy.jpg frame is dominated by a projector screen carrying unrelated
    third-party branding (ABB Robotics, "Transforming the future of construction
    industry"). At the small sticky size on the homepage it is incidental; at
    this page's plate size it was legible enough to read as a partnership Admizz
    does not have — on the one page whose entire job is verifiable credibility.
    Cropped to the audience only. #}
 {% set ventureImages = {
-  "institute": { file: "institute-plate.jpg", alt: "Students at lecture-hall desks with laptops, facing a speaker" },
+  "academy": { file: "academy-plate.jpg", alt: "Students at lecture-hall desks with laptops, facing a speaker" },
   "education": { file: "education.jpg", alt: "Graduates in caps and gowns walking together" },
   "workforce": { file: "workforce.jpg", alt: "Colleagues collaborating around a table, one using a wheelchair" }
 } %}
@@ -88,7 +88,7 @@ permalink: /ventures/
         Three businesses, <em class="italic text-navy-accent font-book">one group.</em>
       </h1>
       <p class="mt-6 text-body text-navy-on-muted max-w-measure leading-relaxed fade-up" style="animation-delay:140ms">
-        Admizz Institute, Admizz Education and Admizz Workforce Solutions each serve a different audience and answer to a different market. What they share is a conviction that access to opportunity shouldn&rsquo;t depend on where someone starts.
+        Admizz Academy, Admizz Education and Admizz Workforce Solutions each serve a different audience and answer to a different market. What they share is a conviction that access to opportunity shouldn&rsquo;t depend on where someone starts.
       </p>
 
     </div>
@@ -126,7 +126,7 @@ permalink: /ventures/
       {% for v in ventures %}
       <a href="#record-{{ v.id }}" class="field-node field-node-{{ loop.index }}" aria-label="Jump to {{ v.name }}">
         <span class="field-node-icon" aria-hidden="true">
-          {% if v.id == "institute" %}
+          {% if v.id == "academy" %}
           <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
           {% elif v.id == "education" %}
           <svg viewBox="0 0 20 20" fill="none" focusable="false"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 10h15M10 2.5c4 4.5 4 10.5 0 15-4-4.5-4-10.5 0-15z" stroke="currentColor" stroke-width="1.3"/></svg>
@@ -199,7 +199,7 @@ permalink: /ventures/
        index+tick+heading row with no photo and no way to act on it; now
        each item is a real link down to its full record below. #}
     {% set positionImages = {
-      "institute": { file: "preview/institute-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
+      "academy": { file: "preview/academy-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
       "education": { file: "preview/education-preview.jpg", alt: "Student walking outside a university building with a backpack" },
       "workforce": { file: "preview/workforce-preview.jpg", alt: "Three colleagues talking in a modern office" }
     } %}
@@ -228,15 +228,15 @@ permalink: /ventures/
 {# ============================================================ THE RECORDS
    Full entry per venture. Three columns: plate, entry, ledger. The bands
    share a structure on purpose — a spec sheet with inconsistent fields is a
-   worse spec sheet — and what varies between them is the DATA: Institute
-   carries five examinations and no public site, Education carries the
-   group's only accreditation, Workforce carries neither. #}
+   worse spec sheet — and what varies between them is the DATA: Academy
+   carries five examinations and no public site, Education carries a
+   partner network, Workforce carries neither. #}
 {# Icon per venture — the exact same three glyphs already drawn for the
    masthead's field-diagram nodes above (pen/tool, globe, bars), reused here
    rather than a second icon set invented for this section. Ties the
    masthead and the record together as one system. #}
 {% set ventureIcons = {
-  "institute": '<path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>',
+  "academy": '<path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>',
   "education": '<circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 10h15M10 2.5c4 4.5 4 10.5 0 15-4-4.5-4-10.5 0-15z" stroke="currentColor" stroke-width="1.3"/>',
   "workforce": '<path d="M3 16V9M8 16V4M13 16v-5M18 16V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>'
 } %}
@@ -328,7 +328,7 @@ permalink: /ventures/
           </div>
           {% endif %}
 
-          {# Exam coverage + delivery model (Admizz Institute only) —
+          {# Exam coverage + delivery model (Admizz Academy only) —
              2026-09-07 v2: rebuilt on reference (marke-agency.webflow.io's
              services grid: eyebrow + bold intro, icon-badge cards; and
              copora-wbs.webflow.io's step-strip for "how we work") after
@@ -368,7 +368,7 @@ permalink: /ventures/
               class="academic-network-row mt-6"
               @click="open = !open"
               :aria-expanded="open ? 'true' : 'false'"
-              aria-controls="institute-prep-panel"
+              aria-controls="academy-prep-panel"
             >
               <span class="font-mono text-small uppercase tracking-widest text-ink">Exam coverage &amp; how it works</span>
               <span class="flex items-center gap-4">
@@ -381,7 +381,7 @@ permalink: /ventures/
               </span>
             </button>
 
-            <div id="institute-prep-panel" x-show="open" x-collapse x-cloak>
+            <div id="academy-prep-panel" x-show="open" x-collapse x-cloak>
               {# Mobile/tablet (below lg): flex-wrap, 214px fixed-width square
                  cards wrapping to however many fit per row -- see the width
                  derivation note below. Desktop (lg+): a FIXED 2-column grid,
@@ -450,49 +450,6 @@ permalink: /ventures/
 
         {# ---- Ledger ---- #}
         <dl class="venture-ledger">
-          <div class="venture-ledger-row">
-            <dt class="data-label">Accreditation</dt>
-            <dd class="venture-ledger-value">
-              {% if v.id == "education" %}
-              <span class="text-small text-ink">ICEF Accredited Agency &middot; <span class="tabular-nums">IAS 6499</span></span>
-              {% else %}
-              {# Deliberately not "None". Absence of a listed accreditation is
-                 not evidence of absence — this states only what can be verified. #}
-              <span class="text-small text-ink-faint">No accreditation on record</span>
-              {% endif %}
-            </dd>
-          </div>
-
-          {% if v.id == "education" %}
-          {# ICEF — the only accreditation that exists anywhere in this project.
-             AIRC, British Council, NAFSA, PIER and ISO were searched for and
-             NOT found (docs/01-AUDIT.md). Held by Admizz Education alone, and
-             the scope note says so outright rather than letting a seal on the
-             group's page imply group-wide accreditation. Stating precisely
-             what a credential does NOT cover reads as more credible than a
-             badge, and it is the strongest trust signal on this site. #}
-          <div class="icef-seal" data-icef-seal>
-            <div class="icef-seal-head">
-              <svg class="icef-mark" viewBox="0 0 44 44" fill="none" aria-hidden="true" focusable="false">
-                <circle class="icef-ring" cx="22" cy="22" r="20" stroke="currentColor" stroke-width="1"/>
-                <path class="icef-check" d="M14.5 22.5l5 5 10-11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <p class="font-mono text-label uppercase tracking-widest text-gold-text">ICEF Accredited Agency</p>
-            </div>
-            <p class="mt-3 text-small text-ink font-medium tabular-nums">IAS 6499</p>
-            <p class="mt-0.5 text-small text-ink-muted tabular-nums">Valid 15 April 2026 &ndash; 15 April 2027</p>
-            <p class="mt-2.5 text-small text-ink-muted leading-relaxed">
-              Held by Admizz Education. This accreditation does not extend to Admizz Institute or Admizz Workforce Solutions.
-            </p>
-            <a href="https://accreditations.icef.com/certificate?id=c8a7212a-a25c-469f-8a7b-2b2f047e8c0c"
-               class="mt-3 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline"
-               target="_blank" rel="noopener noreferrer">
-              Verify with ICEF
-              <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5M10 4v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-          </div>
-          {% endif %}
-
           <div class="venture-ledger-row">
             <dt class="data-label">Website</dt>
             <dd class="venture-ledger-value">

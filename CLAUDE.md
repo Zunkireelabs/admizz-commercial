@@ -122,6 +122,15 @@ indexed list with a gold connecting line, reframed Prepare/Study/Work using admi
 verbatim) → founder (real photo + the one real quote) → insights (editorial index, not 3 equal
 cards) → navy close.
 
+**Renamed (2026-11-03):** "Admizz Institute" is now **Admizz Academy** everywhere (data, copy, ids/anchors `academy`, image
+files). admizz.com itself may still say "Institute" — expect drift in `/verify-admizz-content` until they update. Older
+docs (`docs/00-BRIEF`, `01-AUDIT`, `02-DIRECTION`, `RESUME-PROMPT`, `briefs/`) keep the old name as history.
+
+**ICEF removed (2026-11-03):** no ICEF badge/seal/accreditation anywhere on the site, by client decision. The
+site currently has **no independently verified credential**. `/about/` shows a self-reported "Recognized in
+Nepal" card (MOES, TITI, British Council, ECAN), labelled as stated by Admizz Education. Ask the client for
+licence / membership numbers so it can link proof.
+
 ### Known, deliberate debts (not bugs — decided under the one-day deadline)
 
 - **Fonts load from Google Fonts CDN**, not self-hosted/axis-instanced yet. `latin-ext` subset

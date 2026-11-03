@@ -27,7 +27,7 @@
            Touch" now, so stating it here too was the same fact twice in
            one footer. "Est." alone still gives the brand block its own
            bit of real, sourced substance (site.json). #}
-        <p class="mt-4 font-mono text-label uppercase tracking-widest text-navy-on-muted/70">Est. {{ site.founded }}</p>
+        <p class="mt-4 font-mono text-label uppercase tracking-widest text-navy-on-muted/70">Operating since {{ site.founded }}</p>
       </div>
 
       {# Column headers upgraded from the small-caps mono eyebrow to a
@@ -86,19 +86,6 @@
       </div>
 
     </div>
-
-      {# ICEF's own official live badge widget, not a hand-built replica.
-         Account #6499 is the exact same accreditation already verified
-         against ICEF's public API (docs/01-AUDIT.md §2) and linked from
-         the hero — this renders ICEF's real, self-updating seal instead
-         of us reproducing their mark by hand. The loader script lives
-         once in base.njk (site-wide, lazyOnload-equivalent), matching
-         admizzeducation.com's own integration exactly. Falls back to
-         nothing (no layout shift) if the 3rd-party script fails to load —
-         it renders into this span itself, no placeholder needed. #}
-      <div class="shrink-0 lg:self-start" data-icef-badge>
-        <span id="iasBadge" data-account-id="6499"></span>
-      </div>
 
     </div>
 
