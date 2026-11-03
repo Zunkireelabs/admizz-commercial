@@ -23,7 +23,7 @@ export default function () {
   const destinations = read("destinations.json");
 
   const ventureNames = {
-    institute: "Admizz Institute",
+    academy: "Admizz Academy",
     education: "Admizz Education",
     workforce: "Admizz Workforce Solutions",
   };

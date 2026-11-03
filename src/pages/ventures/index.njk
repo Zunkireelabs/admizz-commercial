@@ -2,7 +2,7 @@
 layout: base.njk
 navyHeader: true
 title: Our Ventures — Admizz Group
-description: Admizz Institute, Admizz Education and Admizz Workforce Solutions — three businesses operating across test preparation, higher education and workforce development.
+description: Admizz Academy, Admizz Education and Admizz Workforce Solutions — three businesses operating across test preparation, higher education and workforce development.
 permalink: /ventures/
 ---
 
@@ -36,15 +36,15 @@ permalink: /ventures/
    block in ecosystem-journey.njk — all three are user-supplied under an
    explicit exception, not this project's default.
 
-   institute-plate.jpg is a NEW derivative cropped for this page: the full
-   institute.jpg frame is dominated by a projector screen carrying unrelated
+   academy-plate.jpg is a NEW derivative cropped for this page: the full
+   academy.jpg frame is dominated by a projector screen carrying unrelated
    third-party branding (ABB Robotics, "Transforming the future of construction
    industry"). At the small sticky size on the homepage it is incidental; at
    this page's plate size it was legible enough to read as a partnership Admizz
    does not have — on the one page whose entire job is verifiable credibility.
    Cropped to the audience only. #}
 {% set ventureImages = {
-  "institute": { file: "institute-plate.jpg", alt: "Students at lecture-hall desks with laptops, facing a speaker" },
+  "academy": { file: "academy-plate.jpg", alt: "Students at lecture-hall desks with laptops, facing a speaker" },
   "education": { file: "education.jpg", alt: "Graduates in caps and gowns walking together" },
   "workforce": { file: "workforce.jpg", alt: "Colleagues collaborating around a table, one using a wheelchair" }
 } %}
@@ -88,7 +88,7 @@ permalink: /ventures/
         Three businesses, <em class="italic text-navy-accent font-book">one group.</em>
       </h1>
       <p class="mt-6 text-body text-navy-on-muted max-w-measure leading-relaxed fade-up" style="animation-delay:140ms">
-        Admizz Institute, Admizz Education and Admizz Workforce Solutions each serve a different audience and answer to a different market. What they share is a conviction that access to opportunity shouldn&rsquo;t depend on where someone starts.
+        Admizz Academy, Admizz Education and Admizz Workforce Solutions each serve a different audience and answer to a different market. What they share is a conviction that access to opportunity shouldn&rsquo;t depend on where someone starts.
       </p>
 
     </div>
@@ -126,7 +126,7 @@ permalink: /ventures/
       {% for v in ventures %}
       <a href="#record-{{ v.id }}" class="field-node field-node-{{ loop.index }}" aria-label="Jump to {{ v.name }}">
         <span class="field-node-icon" aria-hidden="true">
-          {% if v.id == "institute" %}
+          {% if v.id == "academy" %}
           <svg viewBox="0 0 20 20" fill="none" focusable="false"><path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
           {% elif v.id == "education" %}
           <svg viewBox="0 0 20 20" fill="none" focusable="false"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 10h15M10 2.5c4 4.5 4 10.5 0 15-4-4.5-4-10.5 0-15z" stroke="currentColor" stroke-width="1.3"/></svg>
@@ -199,7 +199,7 @@ permalink: /ventures/
        index+tick+heading row with no photo and no way to act on it; now
        each item is a real link down to its full record below. #}
     {% set positionImages = {
-      "institute": { file: "preview/institute-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
+      "academy": { file: "preview/academy-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
       "education": { file: "preview/education-preview.jpg", alt: "Student walking outside a university building with a backpack" },
       "workforce": { file: "preview/workforce-preview.jpg", alt: "Three colleagues talking in a modern office" }
     } %}
@@ -228,7 +228,7 @@ permalink: /ventures/
 {# ============================================================ THE RECORDS
    Full entry per venture. Three columns: plate, entry, ledger. The bands
    share a structure on purpose — a spec sheet with inconsistent fields is a
-   worse spec sheet — and what varies between them is the DATA: Institute
+   worse spec sheet — and what varies between them is the DATA: Academy
    carries five examinations and no public site, Education carries a
    partner network, Workforce carries neither. #}
 {# Icon per venture — the exact same three glyphs already drawn for the
@@ -236,7 +236,7 @@ permalink: /ventures/
    rather than a second icon set invented for this section. Ties the
    masthead and the record together as one system. #}
 {% set ventureIcons = {
-  "institute": '<path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>',
+  "academy": '<path d="M3 17l1-4 9-9 3 3-9 9-4 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>',
   "education": '<circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 10h15M10 2.5c4 4.5 4 10.5 0 15-4-4.5-4-10.5 0-15z" stroke="currentColor" stroke-width="1.3"/>',
   "workforce": '<path d="M3 16V9M8 16V4M13 16v-5M18 16V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>'
 } %}
@@ -328,7 +328,7 @@ permalink: /ventures/
           </div>
           {% endif %}
 
-          {# Exam coverage + delivery model (Admizz Institute only) —
+          {# Exam coverage + delivery model (Admizz Academy only) —
              2026-09-07 v2: rebuilt on reference (marke-agency.webflow.io's
              services grid: eyebrow + bold intro, icon-badge cards; and
              copora-wbs.webflow.io's step-strip for "how we work") after
@@ -368,7 +368,7 @@ permalink: /ventures/
               class="academic-network-row mt-6"
               @click="open = !open"
               :aria-expanded="open ? 'true' : 'false'"
-              aria-controls="institute-prep-panel"
+              aria-controls="academy-prep-panel"
             >
               <span class="font-mono text-small uppercase tracking-widest text-ink">Exam coverage &amp; how it works</span>
               <span class="flex items-center gap-4">
@@ -381,7 +381,7 @@ permalink: /ventures/
               </span>
             </button>
 
-            <div id="institute-prep-panel" x-show="open" x-collapse x-cloak>
+            <div id="academy-prep-panel" x-show="open" x-collapse x-cloak>
               {# Mobile/tablet (below lg): flex-wrap, 214px fixed-width square
                  cards wrapping to however many fit per row -- see the width
                  derivation note below. Desktop (lg+): a FIXED 2-column grid,

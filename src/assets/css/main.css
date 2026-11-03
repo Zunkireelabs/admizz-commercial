@@ -1247,7 +1247,7 @@
        to its own content instead. */
     align-self: start;
     /* 2026-09-07: self-start alone traded one problem for another --
-       Institute's entry column (exam-coverage grid + how-it-works) runs
+       Academy's entry column (exam-coverage grid + how-it-works) runs
        to 1416px while the ledger is 244px, so the card now just ends
        early and leaves a ~1170px blank void beside the rest of the
        scroll (same shape of issue at every record, just smaller: 226px
@@ -1280,7 +1280,7 @@
   .venture-plate {
     /* Same problem the ledger had, same fix (see .venture-ledger's sticky
        rule above) -- the plate is a fixed aspect-ratio (4/5) photo, so on
-       any record where the entry column (middle, e.g. Institute's
+       any record where the entry column (middle, e.g. Academy's
        exam-coverage grid) runs taller than that photo, the plate column
        just ends and leaves bare paper below it for the rest of the row's
        height. This override MUST come after the base .venture-plate rule
@@ -2499,7 +2499,7 @@
   border-radius: theme("borderRadius.md");
 }
 .story-venture-icon svg { width: 1.15rem; height: 1.15rem; }
-.story-venture-icon-institute { background-color: theme("colors.navy.DEFAULT / 10%"); color: theme("colors.navy.DEFAULT"); }
+.story-venture-icon-academy { background-color: theme("colors.navy.DEFAULT / 10%"); color: theme("colors.navy.DEFAULT"); }
 .story-venture-icon-education { background-color: theme("colors.gold.sunk"); color: theme("colors.gold.text"); }
 .story-venture-icon-workforce { background-color: theme("colors.good.bg"); color: theme("colors.good.DEFAULT"); }
 .story-venture-link {

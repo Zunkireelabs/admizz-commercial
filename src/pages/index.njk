@@ -200,7 +200,7 @@ permalink: /
       </div>
       <div class="fade-up" style="animation-delay:90ms">
         <p class="text-body-lg text-ink-muted leading-relaxed max-w-measure">
-          Admizz Institute, Admizz Education and Admizz Workforce Solutions each answer to a different market &mdash; test preparation, international admissions, and workforce development are not the same business, and we don&rsquo;t run them as one.
+          Admizz Academy, Admizz Education and Admizz Workforce Solutions each answer to a different market &mdash; test preparation, international admissions, and workforce development are not the same business, and we don&rsquo;t run them as one.
         </p>
         <p class="mt-4 text-body text-ink-muted leading-relaxed max-w-measure">
           What connects them is where they sit on the same line: a test score determines what a university application can achieve; a university decision shapes the career that follows it; a career runs on skills that keep changing after graduation. Most organizations serve one point on that line. Admizz was built to serve more than one of them, without pretending the three are interchangeable.
@@ -219,7 +219,7 @@ permalink: /
        same pattern as the ecosystem.jpg exceptions elsewhere, NOT a
        default for future sessions to repeat unprompted). #}
     {% set previewImages = {
-      "institute": { file: "preview/institute-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
+      "academy": { file: "preview/academy-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
       "education": { file: "preview/education-preview.jpg", alt: "Student walking outside a university building with a backpack" },
       "workforce": { file: "preview/workforce-preview.jpg", alt: "Three colleagues talking in a modern office" }
     } %}
@@ -458,7 +458,7 @@ permalink: /
    hover — desktop only, since that's a real hover gesture; touch devices
    tap instead, detected via matchMedia('(hover: none)') inside Alpine
    rather than assuming touch = mobile width. Reuses the exact preview
-   photos already downloaded for the ventures section above (institute/
+   photos already downloaded for the ventures section above (academy/
    education/workforce-preview.jpg) — no new images sourced. Four
    categories, not six: verified against ventures.json's actual
    descriptions — test prep, admissions counseling, visa/scholarship
@@ -493,7 +493,7 @@ permalink: /
       "04": { file: "expertise/workforce-development.jpg", alt: "A job coach and a colleague using a wheelchair reviewing a resume together at an office table" }
     } %}
     {% set expertise = [
-      { index: "01", name: "Test Preparation", ventureId: "institute", venture: "Admizz Institute", text: "Structured preparation for IELTS, PTE, SAT, GRE and GMAT — the tests that determine what an application can achieve before it's even submitted." },
+      { index: "01", name: "Test Preparation", ventureId: "academy", venture: "Admizz Academy", text: "Structured preparation for IELTS, PTE, SAT, GRE and GMAT — the tests that determine what an application can achieve before it's even submitted." },
       { index: "02", name: "Admissions & Counseling", ventureId: "education", venture: "Admizz Education", text: "Choosing a destination, shortlisting institutions, and building an application around a student's actual academic profile, not a template." },
       { index: "03", name: "Visa & Scholarship Support", ventureId: "education", venture: "Admizz Education", text: "Guidance through visa applications and scholarship opportunities — the practical steps that stand between an offer and actually enrolling." },
       { index: "04", name: "Workforce Development", ventureId: "workforce", venture: "Admizz Workforce Solutions", text: "Supported employment, job coaching and career-transition guidance, focused on vocational rehabilitation for individuals with disabilities." }
@@ -556,7 +556,7 @@ permalink: /
    `[data-coverflow]`).
 
    Content: the same 3 real venture photos already used elsewhere on this
-   page (institute/education/workforce-preview.jpg), captioned with each
+   page (academy/education/workforce-preview.jpg), captioned with each
    venture's real name/stage/verticalLine — NOT the source component's demo
    content, which used random stock photos captioned with entirely
    fabricated "album" metadata (Producer, Length, Year).
@@ -582,7 +582,7 @@ permalink: /
   </div>
 
   {% set coverflowImages = {
-    "institute": { file: "preview/institute-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
+    "academy": { file: "preview/academy-preview.jpg", alt: "Student wearing headphones, writing in a notebook" },
     "education": { file: "preview/education-preview.jpg", alt: "Student walking outside a university building with a backpack" },
     "workforce": { file: "preview/workforce-preview.jpg", alt: "Three colleagues talking in a modern office" }
   } %}
