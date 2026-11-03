@@ -496,7 +496,7 @@ if (!prefersReducedMotion) {
           const head = record.querySelector('.venture-head');
           const plate = record.querySelector('.venture-plate');
           const name = record.querySelector('[data-venture-name]');
-          const ledgerRows = gsap.utils.toArray('.venture-ledger-row, .icef-seal', record);
+          const ledgerRows = gsap.utils.toArray('.venture-ledger-row', record);
 
           const tl = gsap.timeline({
             defaults: { ease: 'signature' },
@@ -525,24 +525,6 @@ if (!prefersReducedMotion) {
           }
         });
 
-        // ICEF seal — ring, then the check struck into it. Sequenced rather
-        // than simultaneous so it reads as a mark being made: the credential
-        // is the most load-bearing fact on this site and earns its own beat.
-        const seal = document.querySelector('[data-icef-seal]');
-        if (seal) {
-          const ring = seal.querySelector('.icef-ring');
-          const check = seal.querySelector('.icef-check');
-          const marks = [ring, check].filter(Boolean);
-          if (marks.length) {
-            gsap.set(marks, { drawSVG: '0%' });
-            gsap.timeline({
-              defaults: { ease: 'signature' },
-              scrollTrigger: { trigger: seal, start: 'top 85%' },
-            })
-              .to(ring, { drawSVG: '100%', duration: 0.8 }, 0)
-              .to(check, { drawSVG: '100%', duration: 0.45 }, 0.4);
-          }
-        }
       });
     }
 

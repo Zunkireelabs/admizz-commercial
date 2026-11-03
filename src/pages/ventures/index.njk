@@ -229,8 +229,8 @@ permalink: /ventures/
    Full entry per venture. Three columns: plate, entry, ledger. The bands
    share a structure on purpose — a spec sheet with inconsistent fields is a
    worse spec sheet — and what varies between them is the DATA: Institute
-   carries five examinations and no public site, Education carries the
-   group's only accreditation, Workforce carries neither. #}
+   carries five examinations and no public site, Education carries a
+   partner network, Workforce carries neither. #}
 {# Icon per venture — the exact same three glyphs already drawn for the
    masthead's field-diagram nodes above (pen/tool, globe, bars), reused here
    rather than a second icon set invented for this section. Ties the
@@ -450,49 +450,6 @@ permalink: /ventures/
 
         {# ---- Ledger ---- #}
         <dl class="venture-ledger">
-          <div class="venture-ledger-row">
-            <dt class="data-label">Accreditation</dt>
-            <dd class="venture-ledger-value">
-              {% if v.id == "education" %}
-              <span class="text-small text-ink">ICEF Accredited Agency &middot; <span class="tabular-nums">IAS 6499</span></span>
-              {% else %}
-              {# Deliberately not "None". Absence of a listed accreditation is
-                 not evidence of absence — this states only what can be verified. #}
-              <span class="text-small text-ink-faint">No accreditation on record</span>
-              {% endif %}
-            </dd>
-          </div>
-
-          {% if v.id == "education" %}
-          {# ICEF — the only accreditation that exists anywhere in this project.
-             AIRC, British Council, NAFSA, PIER and ISO were searched for and
-             NOT found (docs/01-AUDIT.md). Held by Admizz Education alone, and
-             the scope note says so outright rather than letting a seal on the
-             group's page imply group-wide accreditation. Stating precisely
-             what a credential does NOT cover reads as more credible than a
-             badge, and it is the strongest trust signal on this site. #}
-          <div class="icef-seal" data-icef-seal>
-            <div class="icef-seal-head">
-              <svg class="icef-mark" viewBox="0 0 44 44" fill="none" aria-hidden="true" focusable="false">
-                <circle class="icef-ring" cx="22" cy="22" r="20" stroke="currentColor" stroke-width="1"/>
-                <path class="icef-check" d="M14.5 22.5l5 5 10-11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <p class="font-mono text-label uppercase tracking-widest text-gold-text">ICEF Accredited Agency</p>
-            </div>
-            <p class="mt-3 text-small text-ink font-medium tabular-nums">IAS 6499</p>
-            <p class="mt-0.5 text-small text-ink-muted tabular-nums">Valid 15 April 2026 &ndash; 15 April 2027</p>
-            <p class="mt-2.5 text-small text-ink-muted leading-relaxed">
-              Held by Admizz Education. This accreditation does not extend to Admizz Institute or Admizz Workforce Solutions.
-            </p>
-            <a href="https://accreditations.icef.com/certificate?id=c8a7212a-a25c-469f-8a7b-2b2f047e8c0c"
-               class="mt-3 inline-flex items-center gap-1.5 text-small font-medium text-ink link-underline"
-               target="_blank" rel="noopener noreferrer">
-              Verify with ICEF
-              <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5M10 4v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-          </div>
-          {% endif %}
-
           <div class="venture-ledger-row">
             <dt class="data-label">Website</dt>
             <dd class="venture-ledger-value">

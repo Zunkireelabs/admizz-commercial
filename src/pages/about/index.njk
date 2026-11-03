@@ -1,7 +1,7 @@
 ---
 layout: base.njk
 title: Our Story — Admizz Group
-description: Founded in 2015, Admizz Group has grown from a single idea into three ventures spanning education, test preparation and workforce development.
+description: Operating since 2015, Admizz Group has grown from a single idea into three ventures spanning education, test preparation and workforce development.
 permalink: /about/
 ---
 
@@ -69,9 +69,8 @@ permalink: /about/
      Attribution matters here: universities.json is source:admizzeducation,
      status:draft — Admizz's own published partner list, not independently
      audited — so the caption says so, exactly as the homepage does. The
-     ICEF card beside it is the opposite kind of claim: independently
-     verifiable, with the real verify route attached. Keeping them adjacent
-     but distinct is the honest presentation. #}
+     Nepal-recognition card beside it is likewise self-reported (supplied by
+     the client, no license/membership numbers yet) and says so on its face. #}
   <div class="shell">
     <div class="page-canvas">
       <div class="bento mt-14 md:mt-20">
@@ -90,7 +89,7 @@ permalink: /about/
              and it stays correct if the harvested data changes. #}
           <div class="logo-wall">
             {% for g in universities.groups | head(5) %}
-              {% for uni in g.universities | head(2) %}
+              {% for uni in g.universities | head(3) %}
               <span class="logo-tile" title="{{ uni.name }}">
                 <img src="{{ uni.logo }}" alt="{{ uni.name }}" width="120" height="72" loading="lazy" decoding="async">
               </span>
@@ -104,25 +103,56 @@ permalink: /about/
           </div>
         </div>
 
-        <div class="bento-item bento-item-navy fade-up" style="animation-delay:90ms">
-          <span class="font-mono text-label uppercase tracking-widest text-navy-accent">Accreditation</span>
-          <div>
-            <p class="bento-num bento-num-word font-display font-light text-navy-on">ICEF</p>
-            <p class="mt-3 text-small text-navy-on-muted">
-              Agency <span class="tabular-nums">IAS&nbsp;6499</span>, held by Admizz Education &mdash; verifiable at ICEF directly, not self-reported.
-            </p>
-            <a href="https://www.icef.com/" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center gap-1.5 text-small font-medium text-navy-on link-underline">
-              Verify with ICEF
-              <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M4 10L10 4M10 4H5.5M10 4v4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
+        <div class="bento-item bento-item-navy fade-up" style="animation-delay:90ms; justify-content:flex-start;">
+          <span class="font-mono text-label uppercase tracking-widest text-navy-accent">Recognized in Nepal</span>
+          <div class="mt-6">
+            <dl class="border-t border-navy-on-muted/25">
+              <div class="grid grid-cols-[1.75rem_1fr] gap-x-2 border-b border-navy-on-muted/25 py-3">
+                <span class="pt-1.5 font-mono text-label tabular-nums text-navy-on-muted" aria-hidden="true">01</span>
+                <div>
+                  <dt class="font-display font-light text-h3 leading-tight text-navy-on">MOES</dt>
+                  <dd class="mt-1 text-small text-navy-on-muted">Licensed by the Ministry of Education and Sports, Nepal</dd>
+                </div>
+              </div>
+              <div class="grid grid-cols-[1.75rem_1fr] gap-x-2 border-b border-navy-on-muted/25 py-3">
+                <span class="pt-1.5 font-mono text-label tabular-nums text-navy-on-muted" aria-hidden="true">02</span>
+                <div>
+                  <dt class="font-display font-light text-h3 leading-tight text-navy-on">TITI</dt>
+                  <dd class="mt-1 text-small text-navy-on-muted">Counselors trained and certified by the Technical Instructors Training Institute</dd>
+                </div>
+              </div>
+              <div class="grid grid-cols-[1.75rem_1fr] gap-x-2 border-b border-navy-on-muted/25 py-3">
+                <span class="pt-1.5 font-mono text-label tabular-nums text-navy-on-muted" aria-hidden="true">03</span>
+                <div>
+                  <dt class="font-display font-light text-h3 leading-tight text-navy-on">British Council</dt>
+                  <dd class="mt-1 text-small text-navy-on-muted">Trained and recognized for global English standards</dd>
+                </div>
+              </div>
+              <div class="grid grid-cols-[1.75rem_1fr] gap-x-2 border-b border-navy-on-muted/25 py-3">
+                <span class="pt-1.5 font-mono text-label tabular-nums text-navy-on-muted" aria-hidden="true">04</span>
+                <div>
+                  <dt class="font-display font-light text-h3 leading-tight text-navy-on">ECAN</dt>
+                  <dd class="mt-1 text-small text-navy-on-muted">Member, Education Consultancy Association of Nepal</dd>
+                </div>
+              </div>
+            </dl>
+            <p class="mt-4 text-label text-navy-on-muted">As stated by Admizz Education &middot; unverified</p>
           </div>
         </div>
 
-        <div class="bento-item bento-item-tint fade-up" style="animation-delay:170ms">
+        <div class="bento-item bento-item-tint bento-span-tablet fade-up" style="animation-delay:170ms">
           <span class="font-mono text-label uppercase tracking-widest text-gold-text">Operating since</span>
           <div>
             <p class="bento-num font-display font-light tabular-nums text-ink">{{ site.founded }}</p>
-            <p class="mt-3 text-small text-ink-muted">Founded in Denver, Colorado &mdash; still the group&rsquo;s headquarters, now behind three businesses.</p>
+            <p class="mt-3 text-small text-ink-muted">Started operations in Denver, Colorado &mdash; still the group&rsquo;s headquarters, now behind three businesses.</p>
+            <ol class="mt-5 border-t border-gold-text/20">
+              {% for m in timeline %}{% if not loop.first %}
+              <li class="grid grid-cols-[3.25rem_1fr] gap-x-2 border-b border-gold-text/20 py-2.5">
+                <span class="font-mono text-label tabular-nums text-gold-text">{{ m.year }}</span>
+                <span class="text-small text-ink-muted">{{ m.text }}</span>
+              </li>
+              {% endif %}{% endfor %}
+            </ol>
           </div>
         </div>
 
@@ -299,9 +329,9 @@ permalink: /about/
   <div class="shell relative"><div class="page-canvas">
     <p class="font-display font-light text-h1 text-navy-on max-w-[38ch] text-balance">
       <span class="statement-line inline-block">Preparation, education and work</span>
-      <span class="statement-line inline-block italic text-navy-accent font-book">aren&rsquo;t three industries.</span>
-      <span class="statement-line inline-block">They&rsquo;re three stages of the same</span>
-      <span class="statement-line inline-block">decision &mdash; so we built for all three.</span>
+      <span class="statement-line inline-block italic text-navy-accent font-book">aren&rsquo;t three separate journeys.</span>
+      <span class="statement-line inline-block">They&rsquo;re three stages of one</span>
+      <span class="statement-line inline-block">journey &mdash; so we built for all three.</span>
     </p>
     <span class="statement-line inline-block mt-8 md:block font-mono text-label uppercase tracking-widest text-navy-on-muted">&mdash; Why the group exists</span>
   </div></div>
@@ -319,13 +349,13 @@ permalink: /about/
    bare square of navy. #}
 <section class="bg-paper-sunk py-section border-t border-rule">
   <div class="shell">
-   <div class="page-canvas grid grid-cols-1 md:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] gap-10 md:gap-14 items-center">
-    <div class="fade-up">
-      <div class="overflow-hidden rounded-lg bg-navy-deep aspect-[4/5] [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-top">
+   <div class="page-canvas grid grid-cols-1 md:grid-cols-[minmax(0,32rem)_minmax(0,22rem)] md:justify-center gap-10 md:gap-16 items-center">
+    <div class="fade-up md:order-2">
+      <div class="overflow-hidden rounded-lg bg-gradient-to-b from-gold-sunk to-gold aspect-[4/5] [&_picture]:block [&_picture]:h-full [&_img]:block [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-top">
         {% image "src/assets/images/people/founder.png", "Manish K Sah, Founder & CEO of Admizz Group", "(min-width: 768px) 19rem, 90vw", [400, 640, 900] %}
       </div>
     </div>
-    <div class="fade-up" style="animation-delay:100ms">
+    <div class="fade-up md:order-1" style="animation-delay:100ms">
       <span class="eyebrow">Leadership</span>
       <h2 class="mt-3 font-display font-light text-h2 text-ink max-w-[16ch] text-balance">A vision for what&rsquo;s next.</h2>
       {# Not a blockquote: no verified personal quote from the founder exists
