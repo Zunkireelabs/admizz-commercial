@@ -127,9 +127,7 @@ files). admizz.com itself may still say "Institute" — expect drift in `/verify
 docs (`docs/00-BRIEF`, `01-AUDIT`, `02-DIRECTION`, `RESUME-PROMPT`, `briefs/`) keep the old name as history.
 
 **ICEF removed (2026-11-03):** no ICEF badge/seal/accreditation anywhere on the site, by client decision. The
-site currently has **no independently verified credential**. `/about/` shows a self-reported "Recognized in
-Nepal" card (MOES, TITI, British Council, ECAN), labelled as stated by Admizz Education. Ask the client for
-licence / membership numbers so it can link proof.
+site currently has **no independently verified credential**.
 
 ### Known, deliberate debts (not bugs — decided under the one-day deadline)
 
