@@ -96,13 +96,6 @@ export default function () {
       publisher: "Published by Admizz Education",
       venture: "Admizz Education",
     },
-    {
-      value: null,
-      label:
-        "Nepal recognition shown on /about/: MOES license, TITI counselor certification, British Council training, ECAN membership. Supplied by Admizz; no license or membership numbers provided yet.",
-      publisher: "Provided by Admizz Education",
-      venture: "Admizz Education",
-    },
   ];
 
   const publishers = new Set(independent.map((s) => s.publisher));
